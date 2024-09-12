@@ -1,6 +1,7 @@
-'use client' // Đảm bảo component chỉ chạy trên client-side
+'use client'
 
-import { useZodForm } from '@/utils/validationUtils'
+import { resetForm } from '@/lib/formUtils'
+import { useZodForm } from '@/lib/validationUtils'
 import { registrationSchema } from '@/lib/zodSchemas'
 import { z } from 'zod'
 
@@ -11,6 +12,17 @@ export const RegisterForm = () => {
 
   const onSubmit = (data: RegistrationData) => {
     console.log('Form Data:', data)
+    // resetForm(methods)
+    resetForm(methods, {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    })
+  }
+
+  const renderError = (field: keyof RegistrationData) => {
+    return methods.formState.errors[field] ? <p>{methods.formState.errors[field]?.message}</p> : null
   }
 
   return (
@@ -18,25 +30,25 @@ export const RegisterForm = () => {
       <div>
         <label>Username</label>
         <input {...methods.register('username')} />
-        {methods.formState.errors.username && <p>{methods.formState.errors.username?.message}</p>}
+        {renderError('username')}
       </div>
 
       <div>
         <label>Email</label>
         <input {...methods.register('email')} />
-        {methods.formState.errors.email && <p>{methods.formState.errors.email?.message}</p>}
+        {renderError('email')}
       </div>
 
       <div>
         <label>Password</label>
         <input type='password' {...methods.register('password')} />
-        {methods.formState.errors.password && <p>{methods.formState.errors.password?.message}</p>}
+        {renderError('password')}
       </div>
 
       <div>
         <label>Confirm Password</label>
         <input type='password' {...methods.register('confirmPassword')} />
-        {methods.formState.errors.confirmPassword && <p>{methods.formState.errors.confirmPassword?.message}</p>}
+        {renderError('confirmPassword')}
       </div>
 
       <button type='submit'>Register</button>
