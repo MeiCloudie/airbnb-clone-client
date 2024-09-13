@@ -3,14 +3,35 @@
 import { RegisterForm } from '@/components/form/RegisterForm'
 import { ModeToggle } from '@/components/theme/mode-toggle'
 import { Button } from '@/components/ui/button'
+import { useAlert } from '@/context/AlertContext'
 import { useNotification } from '@/context/NotificationContext'
 import Image from 'next/image'
 
 export default function Home() {
   const { showNotification } = useNotification()
+  const { showAlert } = useAlert()
 
   const handleClick = () => {
     showNotification('This is a success message!', 'success', 3000)
+    showAlert({
+      title: 'Do you want to save the changes?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+      denyButtonText: `Don't save`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        showAlert({
+          title: 'Saved!',
+          icon: 'success'
+        })
+      } else if (result.isDenied) {
+        showAlert({
+          title: 'Changes are not saved',
+          icon: 'info'
+        })
+      }
+    })
   }
 
   return (
