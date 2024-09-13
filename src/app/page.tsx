@@ -1,14 +1,23 @@
+'use client'
+
 import { RegisterForm } from '@/components/form/RegisterForm'
 import { ModeToggle } from '@/components/theme/mode-toggle'
 import { Button } from '@/components/ui/button'
+import { useNotification } from '@/context/NotificationContext'
 import Image from 'next/image'
 
 export default function Home() {
+  const { showNotification } = useNotification()
+
+  const handleClick = () => {
+    showNotification('This is a success message!', 'success', 3000)
+  }
+
   return (
     <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
       <main className='flex flex-col gap-8 row-start-2 items-center sm:items-start'>
         <ModeToggle />
-        <Button>ShadcnUI Button</Button>
+        <Button onClick={handleClick}>ShadcnUI Button</Button>
         <RegisterForm />
         <Image
           className='dark:invert'

@@ -3,6 +3,7 @@ import { Montserrat } from 'next/font/google'
 import './globals.css'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { ThemeProvider } from '@/components/theme/theme-provider'
+import { NotificationProvider } from '@/context/NotificationContext'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -27,7 +28,9 @@ export default function RootLayout({
     <html lang='en'>
       <body className={montserrat.className}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntdRegistry>
+            <NotificationProvider>{children}</NotificationProvider>
+          </AntdRegistry>
         </ThemeProvider>
       </body>
     </html>
