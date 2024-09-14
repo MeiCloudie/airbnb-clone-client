@@ -5,7 +5,7 @@ import Providers from '@/components/common/Providers'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
   display: 'swap',
   fallback: ['Arial', 'sans-serif'],
