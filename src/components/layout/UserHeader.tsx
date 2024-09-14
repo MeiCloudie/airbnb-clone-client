@@ -1,3 +1,5 @@
+'use client'
+
 import AirbnbLogo from '@/components/icon/AirbnbLogo'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -16,32 +18,50 @@ import {
 } from '@/components/ui/menubar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ModeToggle } from '@/components/theme/mode-toggle'
+import useResponsive from '@/hooks/useResponsive'
 
 const UserHeader = () => {
+  const isResponsive = useResponsive()
+
   return (
-    <header className='sticky top-0 z-50 py-4 border-b shadow-sm'>
-      <div className='container grid grid-cols-3'>
+    <header className='sticky top-0 z-50 pt-2 pb-5 border-b shadow-md'>
+      <div className='container space-y-3 md:flex md:justify-between 2xl:grid 2xl:grid-cols-3'>
         {/* Logo */}
         <Link href={ROUTES.USER.HOME} className='content-center'>
           <AirbnbLogo />
         </Link>
 
         {/* Search */}
-        <div className='content-center'>
+        <div className='content-center lg:w-1/2 xl:w-2/5 2xl:w-full'>
           <ToggleGroup
             type='multiple'
             size='lg'
             className='border rounded-full py-1 shadow-sm divide-x hover:shadow-lg'
           >
-            <ToggleGroupItem value='anywhere' className='font-bold hover:bg-transparent'>
-              <p>Địa điểm bất kỳ</p>
-            </ToggleGroupItem>
-            <ToggleGroupItem value='anyweek' className='font-bold hover:bg-transparent'>
-              <p>tuần bất kỳ</p>
-            </ToggleGroupItem>
-            <ToggleGroupItem value='anyguests' className='font-bold opacity-50 hover:bg-transparent'>
-              <p>Thêm khách</p>
-            </ToggleGroupItem>
+            {isResponsive.lg ? (
+              <>
+                <ToggleGroupItem value='anywhere' className='font-bold hover:bg-transparent'>
+                  <p>Địa điểm bất kỳ</p>
+                </ToggleGroupItem>
+                <ToggleGroupItem value='anyweek' className='font-bold hover:bg-transparent'>
+                  <p>tuần bất kỳ</p>
+                </ToggleGroupItem>
+                <ToggleGroupItem value='anyguests' className='font-bold opacity-50 hover:bg-transparent'>
+                  <p>Thêm khách</p>
+                </ToggleGroupItem>
+              </>
+            ) : (
+              <>
+                <ToggleGroupItem value='all' className='hover:bg-transparent'>
+                  <p className='text-left'>
+                    <span className='font-bold'>Bạn sẽ đi đâu</span>
+                    <br />
+                    <span className='text-xs opacity-75'>Địa điểm bất kỳ • tuần bất kỳ • Thêm khách</span>
+                  </p>
+                </ToggleGroupItem>
+              </>
+            )}
+
             <ToggleGroupItem
               value='anyweek'
               className='w-auto mx-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/80 hover:text-primary-foreground'
@@ -54,7 +74,7 @@ const UserHeader = () => {
         {/* Link & User Menu */}
         <div className='flex justify-end items-center'>
           {/* TODO: Chưa có đường dẫn này */}
-          <Button asChild variant={'ghost'} className='rounded-full font-bold'>
+          <Button asChild variant={'ghost'} className='hidden xl:block rounded-full font-bold'>
             <Link href={'/host/home'}>Cho thuê chỗ ở qua Airbnb</Link>
           </Button>
           {/* TODO: Nút hiển thị chọn ngôn ngữ */}

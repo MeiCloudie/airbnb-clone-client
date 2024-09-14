@@ -10,7 +10,11 @@ const config: Config = {
   theme: {
     extend: {
       container: {
-        center: true
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '2rem',
+        }
       },
       fontFamily: {
         montserrat: ['Montserrat', 'Arial', 'sans-serif']
