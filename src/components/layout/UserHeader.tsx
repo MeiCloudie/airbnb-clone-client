@@ -24,7 +24,7 @@ const UserHeader = () => {
   const isResponsive = useResponsive()
 
   return (
-    <header className='sticky top-0 z-50 pt-2 pb-5 border-b shadow-md'>
+    <header className='sticky top-0 z-50 pt-2 pb-5 border-b shadow-md bg-background'>
       <div className='container space-y-3 md:flex md:justify-between 2xl:grid 2xl:grid-cols-3'>
         {/* Logo */}
         <Link href={ROUTES.USER.HOME} className='content-center'>

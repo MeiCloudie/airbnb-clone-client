@@ -1,3 +1,4 @@
+import UserFooter from '@/components/layout/UserFooter'
 import UserHeader from '@/components/layout/UserHeader'
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {
@@ -5,7 +6,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
     <>
       <UserHeader />
       <main>{children}</main>
-      <footer>User Footer</footer>
+      <UserFooter />
     </>
   )
 }
