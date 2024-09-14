@@ -1,7 +1,7 @@
 'use client'
 
+import { useZodForm } from '@/hooks/useZodForm'
 import { resetForm } from '@/lib/formUtils'
-import { useZodForm } from '@/lib/validationUtils'
 import { registrationSchema } from '@/lib/zodSchemas'
 import { z } from 'zod'
 

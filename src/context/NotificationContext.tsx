@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode } from 'react'
 import { toast, ToastContainer, ToastOptions, Bounce } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -40,10 +40,4 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
-export const useNotification = () => {
-  const context = useContext(NotificationContext)
-  if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider')
-  }
-  return context
-}
+export default NotificationContext
