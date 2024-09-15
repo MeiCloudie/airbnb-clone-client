@@ -32,7 +32,7 @@ const UserHeader = () => {
         </Link>
 
         {/* Search */}
-        <div className='content-center lg:w-1/2 xl:w-2/5 2xl:w-full'>
+        <div className='content-center lg:w-3/5 xl:w-2/5 2xl:w-full'>
           <ToggleGroup
             type='multiple'
             size='lg'

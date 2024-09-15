@@ -8,10 +8,10 @@ import { faFacebookF, faTwitter, faInstagram } from '@fortawesome/free-brands-sv
 const UserFooter = () => {
   return (
     <footer className='pt-10 pb-5 border-t bg-background'>
-      <div className='container text-sm'>
-        <div className='grid grid-cols-3'>
+      <div className='container text-xs md:text-sm'>
+        <div className='grid grid-cols-1 space-y-6 lg:space-y-0 space lg:grid-cols-3'>
           {/* TODO: Cập nhật href link sau */}
-          <div>
+          <div className='border-b pb-6 lg:border-none lg:pb-0'>
             <h4 className='font-semibold mb-3'>Hỗ trợ</h4>
             <ul className='space-y-3'>
               <li className='hover:underline'>
@@ -38,7 +38,7 @@ const UserFooter = () => {
             </ul>
           </div>
 
-          <div>
+          <div className='border-b pb-6 lg:border-none lg:pb-0'>
             <h4 className='font-semibold mb-3'>Đón tiếp khách</h4>
             <ul className='space-y-3'>
               <li className='hover:underline'>
@@ -62,7 +62,7 @@ const UserFooter = () => {
             </ul>
           </div>
 
-          <div>
+          <div className=''>
             <h4 className='font-semibold mb-3'>Airbnb</h4>
             <ul className='space-y-3'>
               <li className='hover:underline'>
@@ -86,24 +86,28 @@ const UserFooter = () => {
 
         <hr className='mt-10 mb-5' />
 
-        <div className='flex justify-between items-center font-semibold'>
-          <div className='flex gap-2'>
-            <p>© 2024 Airbnb, Inc.</p>
-            <p>•</p>
-            <Link href={'/'} className='hover:underline'>
-              Quyền riêng tư
-            </Link>
-            <p>•</p>
-            <Link href={'/'} className='hover:underline'>
-              Điều khoản
-            </Link>
-            <p>•</p>
-            <Link href={'/'} className='hover:underline'>
-              Sơ đồ trang web
-            </Link>
+        <div className='font-semibold flex flex-col justify-center text-center lg:flex-row lg:justify-between items-center'>
+          <div className='flex flex-col lg:flex-row gap-2'>
+            <div>
+              <p>© 2024 Airbnb, Inc.</p>
+            </div>
+            <div className='flex gap-2'>
+              <p>•</p>
+              <Link href={'/'} className='hover:underline'>
+                Quyền riêng tư
+              </Link>
+              <p>•</p>
+              <Link href={'/'} className='hover:underline'>
+                Điều khoản
+              </Link>
+              <p>•</p>
+              <Link href={'/'} className='hover:underline'>
+                Sơ đồ trang web
+              </Link>
+            </div>
           </div>
 
-          <div className='flex gap-2'>
+          <div className='flex gap-2 mt-4 lg:mt-0'>
             <Button variant={'ghost'} className='hover:bg-transparent hover:underline'>
               <FontAwesomeIcon icon={faGlobe} className='w-4 h-auto me-2' /> Tiếng Việt (VN)
             </Button>
