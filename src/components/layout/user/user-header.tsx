@@ -39,8 +39,8 @@ const UserHeader = () => {
             <ToggleGroupItem value='anyweek' className='hidden lg:flex font-bold hover:bg-transparent'>
               <p>tuần bất kỳ</p>
             </ToggleGroupItem>
-            <ToggleGroupItem value='anyguests' className='hidden lg:flex font-bold opacity-50 hover:bg-transparent'>
-              <p>Thêm khách</p>
+            <ToggleGroupItem value='anyguests' className='hidden lg:flex font-bold hover:bg-transparent'>
+              <p className='opacity-50'>Thêm khách</p>
             </ToggleGroupItem>
 
             <ToggleGroupItem value='all' className='flex lg:hidden hover:bg-transparent'>
