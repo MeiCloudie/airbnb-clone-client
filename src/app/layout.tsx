@@ -17,7 +17,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: 'Airbnb Clone | MeiCloudie',
   description:
-    'Airbnb clone client app with Next.js 14 (App Router), React 18, TypeScript, TailwindCSS, Ant Design, ShadcnUI, Prettier & Eslint, Fontawesome, Lottie React, React Toastify, SweetAlert2, React Hook Form, Zod, Axios, Zustand',
+    'Airbnb clone client app with Next.js 14 (App Router), React 18, TypeScript, TailwindCSS, Auth.js, Ant Design, ShadcnUI, Prettier & Eslint, Fontawesome, Lottie React, React Toastify, SweetAlert2, React Hook Form, Zod, Axios, Zustand',
   icons: {
     icon: '/logo/favicon.ico'
   }
