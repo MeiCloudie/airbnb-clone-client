@@ -1,5 +1,5 @@
-import UserFooter from '@/components/layout/UserFooter'
-import UserHeader from '@/components/layout/UserHeader'
+import UserFooter from '@/components/layout/user/UserFooter'
+import UserHeader from '@/components/layout/user/UserHeader'
 
 export default function Home() {
   return (
