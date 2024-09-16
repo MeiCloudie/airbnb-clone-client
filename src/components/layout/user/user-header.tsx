@@ -33,7 +33,7 @@ const UserHeader = () => {
             size='lg'
             className='border rounded-full py-1 shadow-sm divide-x hover:shadow-lg'
           >
-            <ToggleGroupItem value='anywhere' className='hidden lg:flex font-bold hover:bg-transparent'>
+            <ToggleGroupItem value='anywhere' className='hidden lg:flex font-bold rounded-l-full hover:bg-transparent'>
               <p>Địa điểm bất kỳ</p>
             </ToggleGroupItem>
             <ToggleGroupItem value='anyweek' className='hidden lg:flex font-bold hover:bg-transparent'>
@@ -52,7 +52,7 @@ const UserHeader = () => {
             </ToggleGroupItem>
 
             <ToggleGroupItem
-              value='anyweek'
+              value='search'
               className='w-auto mx-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/80 hover:text-primary-foreground'
             >
               <FontAwesomeIcon icon={faMagnifyingGlass} className='w-4 h-auto' />
@@ -78,7 +78,7 @@ const UserHeader = () => {
           {/* TODO: Các đường dẫn còn lại phát triển sau */}
           <Menubar className='rounded-full ms-3 py-6 hover:shadow-lg'>
             <MenubarMenu>
-              <MenubarTrigger className='cursor-pointer space-x-2'>
+              <MenubarTrigger className='cursor-pointer space-x-2 rounded-full'>
                 <FontAwesomeIcon icon={faBars} className='w-4 h-auto' />
                 <Avatar className='w-9 h-9'>
                   <AvatarImage src={''} alt='avatar' />
