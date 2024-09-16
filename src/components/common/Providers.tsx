@@ -3,19 +3,23 @@ import { ThemeProvider } from '@/components/theme/theme-provider'
 import { NotificationProvider } from '@/context/NotificationContext'
 import { AlertProvider } from '@/context/AlertContext'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
+import { SessionProvider, SessionProviderProps } from 'next-auth/react'
 
 interface ProvidersProps {
+  session: SessionProviderProps['session']
   children: ReactNode
 }
 
-const Providers = ({ children }: ProvidersProps) => {
+const Providers = ({ session, children }: ProvidersProps) => {
   return (
     <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-      <AntdRegistry>
-        <NotificationProvider>
-          <AlertProvider>{children}</AlertProvider>
-        </NotificationProvider>
-      </AntdRegistry>
+      <SessionProvider session={session}>
+        <AntdRegistry>
+          <NotificationProvider>
+            <AlertProvider>{children}</AlertProvider>
+          </NotificationProvider>
+        </AntdRegistry>
+      </SessionProvider>
     </ThemeProvider>
   )
 }

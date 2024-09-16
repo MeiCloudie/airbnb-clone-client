@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/common/Providers'
+import { auth } from '@/auth/auth'
+import NextTopLoader from 'nextjs-toploader'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -21,15 +23,31 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await auth()
   return (
     <html lang='en'>
-      <body className={montserrat.className}>
-        <Providers>{children}</Providers>
+      <body className={montserrat.className} suppressHydrationWarning={true}>
+        <NextTopLoader
+          color='#ff385c'
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={5}
+          crawl={true}
+          showSpinner={true}
+          easing='ease'
+          speed={100}
+          shadow='0 0 10px #2299DD,0 0 5px #2299DD'
+          template='<div class="bar" role="bar"><div class="peg"></div></div> 
+  <div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+          zIndex={1600}
+          showAtBottom={false}
+        />
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   )
