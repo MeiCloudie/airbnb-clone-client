@@ -1,4 +1,4 @@
-import NotificationContext from '@/context/NotificationContext'
+import NotificationContext from '@/context/notification-context'
 import { useContext } from 'react'
 
 export const useToastifyNotification = () => {

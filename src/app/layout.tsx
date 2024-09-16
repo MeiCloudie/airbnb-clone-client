@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
-import Providers from '@/components/common/Providers'
+import Providers from '@/components/common/providers'
 import { auth } from '@/auth/auth'
 import NextTopLoader from 'nextjs-toploader'
 

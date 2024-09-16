@@ -1,4 +1,4 @@
-import AlertContext from '@/context/AlertContext'
+import AlertContext from '@/context/alert-context'
 import { useContext } from 'react'
 
 export const useSwalAlert = () => {

@@ -1,6 +1,6 @@
 'use client'
 
-import AirbnbLogo from '@/components/icon/AirbnbLogo'
+import AirbnbLogo from '@/components/icon/airbnb-logo'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ROUTES } from '@/constants/routes'
