@@ -4,8 +4,9 @@ import { SignInPayload, SignInResponse } from '@/types/auth.type'
 import { JWT } from 'next-auth/jwt'
 import { DefaultSession, Session, User } from 'next-auth'
 import { AdapterUser } from 'next-auth/adapters'
+import NextAuth from 'next-auth'
 
-const authConfig = {
+export const { auth, handlers, signOut, signIn } = NextAuth({
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -37,9 +38,9 @@ const authConfig = {
               id: String(user.id),
               email: user.email,
               name: user.name,
-              role: user.role, // Bạn có thể thêm role nếu cần
-              token: token // Thêm token vào AdapterUser
-            } as AdapterUser // Trả về kiểu AdapterUser mở rộng
+              role: user.role,
+              token: token
+            } as AdapterUser
           }
 
           return null
@@ -51,24 +52,16 @@ const authConfig = {
     })
   ],
   callbacks: {
-    async jwt({
-      token,
-      user
-    }: {
-      token: JWT
-      user?: AdapterUser | User // Điều chỉnh kiểu của user
-    }) {
-      // Nếu user tồn tại, thêm thông tin user vào token
+    async jwt({ token, user }: { token: JWT; user?: AdapterUser | User }) {
       if (user) {
         token.id = user.id
         token.email = user.email
-        token.role = (user as AdapterUser).role // Thêm role vào token
-        token.accessToken = (user as AdapterUser).token // Thêm token vào JWT
+        token.role = (user as AdapterUser).role
+        token.accessToken = (user as AdapterUser).token
       }
       return token
     },
     async session({ session, token }: { session: Session; token: JWT }) {
-      // session.user và session.accessToken giờ đã tồn tại
       if (session.user) {
         session.user.id = token.id as string
         session.user.email = token.email as string
@@ -78,30 +71,29 @@ const authConfig = {
       return session
     }
   },
-  secret: process.env.AUTH_SECRET
-}
+  secret: process.env.AUTH_SECRET,
+  pages: {
+    signIn: '/sign-in'
+  }
+})
 
-export default authConfig
-
-// Mở rộng kiểu AdapterUser trong next-auth
 declare module 'next-auth' {
   interface Session {
     user: {
       id?: string
       email: string
       name?: string | null
-      role?: string // Thêm thuộc tính role
+      role?: string
     } & DefaultSession['user']
-    accessToken?: string // Thêm thuộc tính accessToken
+    accessToken?: string
   }
 
   interface User {
-    id?: string // Cho phép undefined để khớp với khai báo gốc
+    id?: string
     role: string
     token: string
   }
 
-  // Mở rộng AdapterUser để thêm role và token
   interface AdapterUser {
     role: string
     token: string

@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/common/providers'
-import { auth } from '@/auth/auth'
 import NextTopLoader from 'nextjs-toploader'
+import { auth } from '@/auth/auth.config'
 
 const montserrat = Montserrat({
   subsets: ['latin'],

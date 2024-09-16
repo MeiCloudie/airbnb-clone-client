@@ -2,7 +2,6 @@
 export interface SignUpPayload {
   email: string
   password: string
-  // Bạn có thể thêm các field khác nếu cần như name, phone, etc.
 }
 
 // Request payload cho đăng nhập (sign in)
@@ -16,7 +15,7 @@ export interface User {
   id: string
   name: string | null
   email: string
-  password: string // Thông thường bạn sẽ không trả về password, nhưng theo response ở ví dụ của bạn
+  password: string // Trả về theo response ở api
   phone?: string | null
   birthday?: string | null
   avatar?: string | null
