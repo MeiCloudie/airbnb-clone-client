@@ -6,6 +6,7 @@ import { authService } from '@/services/auth.service'
 import { useRouter } from 'next/navigation'
 
 export default function SignUp() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -15,7 +16,7 @@ export default function SignUp() {
     e.preventDefault()
 
     try {
-      const response = await authService.signUp({ email, password })
+      const response = await authService.signUp({ email, password, name })
 
       if (response.status === 200) {
         // Nếu đăng ký thành công, chuyển hướng sang trang đăng nhập hoặc dashboard
@@ -32,6 +33,10 @@ export default function SignUp() {
     <div>
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name</label>
+          <input type='text' value={name} onChange={(e) => setName(e.target.value)} required />
+        </div>
         <div>
           <label>Email</label>
           <input type='email' value={email} onChange={(e) => setEmail(e.target.value)} required />

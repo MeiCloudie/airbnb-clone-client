@@ -1,5 +1,6 @@
 // Request payload cho đăng ký (sign up)
 export interface SignUpPayload {
+  name: string
   email: string
   password: string
 }
