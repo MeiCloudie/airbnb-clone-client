@@ -1,15 +1,17 @@
 import { useAuthStore } from '@/store/authStore'
 
 export const useAuth = () => {
-  const { isLoading, error, signUp } = useAuthStore((state) => ({
+  const { isLoading, error, signUp, signIn } = useAuthStore((state) => ({
     isLoading: state.isLoading,
     error: state.error,
-    signUp: state.signUp
+    signUp: state.signUp,
+    signIn: state.signIn
   }))
 
   return {
     isLoading,
     error,
-    signUp
+    signUp,
+    signIn
   }
 }

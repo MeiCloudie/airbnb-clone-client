@@ -1,6 +1,6 @@
 import CredentialsProvider from 'next-auth/providers/credentials'
-import axios from 'axios'
-import { SignInPayload, SignInResponse } from '@/types/auth.type'
+import axios, { AxiosError } from 'axios'
+import { AuthError, SignInPayload, SignInResponse } from '@/types/auth.type'
 import { JWT } from 'next-auth/jwt'
 import { DefaultSession, Session, User } from 'next-auth'
 import { AdapterUser } from 'next-auth/adapters'
@@ -45,8 +45,15 @@ export const { auth, handlers, signOut, signIn } = NextAuth({
 
           return null
         } catch (error) {
-          console.error('Login failed', error)
-          return null
+          console.log(error)
+          if (error instanceof AxiosError && error.response) {
+            const apiError: AuthError = error.response.data
+            // Ném lỗi với thông báo từ API
+            throw new Error(apiError.content)
+          }
+
+          // Ném lỗi nếu không phải là lỗi từ API
+          throw new Error('Login failed due to an unknown error')
         }
       }
     })

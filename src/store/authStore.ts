@@ -1,12 +1,14 @@
 import { createStore } from '@/lib/zustandStore'
-import { SignUpPayload, AuthError } from '@/types/auth.type'
+import { SignUpPayload, AuthError, SignInPayload } from '@/types/auth.type'
 import { authService } from '@/services/auth.service'
+import { signIn as nextAuthSignIn } from 'next-auth/react'
 import { AxiosError } from 'axios'
 
 interface AuthState {
   isLoading: boolean
   error: string | null // Quản lý lỗi dưới dạng string
   signUp: (data: SignUpPayload) => Promise<void> // Hàm xử lý đăng ký
+  signIn: (data: SignInPayload) => Promise<void> // Hàm xử lý đăng nhập
 }
 
 export const useAuthStore = createStore<AuthState>(
@@ -36,6 +38,37 @@ export const useAuthStore = createStore<AuthState>(
           set({ isLoading: false, error: apiError.content }) // Lấy thông báo lỗi từ API
         } else {
           // Xử lý lỗi chung nếu không có phản hồi rõ ràng từ API
+          set({ isLoading: false, error: 'Something went wrong' })
+        }
+      }
+    },
+
+    // Hàm sign in
+    signIn: async (data: SignInPayload) => {
+      set({ isLoading: true, error: null })
+
+      try {
+        const result = await nextAuthSignIn('credentials', {
+          redirect: false,
+          email: data.email,
+          password: data.password
+        })
+
+        console.log(result)
+
+        if (result?.error) {
+          // Lấy lỗi từ `result.error` trả về từ NextAuth
+          if (result.error === 'Configuration') {
+            set({ isLoading: false, error: 'Invalid email or password' })
+          }
+        } else {
+          set({ isLoading: false, error: null })
+        }
+      } catch (error) {
+        if (error instanceof AxiosError && error.response) {
+          const apiError = error.response.data
+          set({ isLoading: false, error: apiError.content })
+        } else {
           set({ isLoading: false, error: 'Something went wrong' })
         }
       }
