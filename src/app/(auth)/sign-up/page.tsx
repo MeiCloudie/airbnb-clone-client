@@ -1,53 +1,126 @@
-// app/signup/page.tsx
 'use client'
 
-import { useState } from 'react'
-import { authService } from '@/services/auth.service'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useZodForm } from '@/hooks/useZodForm'
+import { signUpSchema } from '@/lib/zodSchemas'
+import { SignUpPayload } from '@/types/auth.type'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function SignUp() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const router = useRouter()
+  const { signUp, isLoading, error } = useAuth()
+  const [hasSubmitted, setHasSubmitted] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const form = useZodForm(signUpSchema)
 
-    try {
-      const response = await authService.signUp({ email, password, name })
+  const onSubmit = async (data: SignUpPayload) => {
+    setHasSubmitted(true)
+    await signUp(data)
 
-      if (response.status === 200) {
-        // Nếu đăng ký thành công, chuyển hướng sang trang đăng nhập hoặc dashboard
-        router.push('/sign-in')
-      } else {
-        setError('Failed to sign up')
-      }
-    } catch (err) {
-      setError('Something went wrong')
+    if (!error) {
+      // Nếu không có lỗi, chuyển hướng tới trang đăng nhập
+      router.push('/sign-in')
+    } else {
+      // Nếu có lỗi, hiển thị lỗi
+      form.setError('root', { message: error })
     }
   }
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input type='text' value={name} onChange={(e) => setName(e.target.value)} required />
-        </div>
-        <div>
-          <label>Email</label>
-          <input type='email' value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div>
-          <label>Password</label>
-          <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type='submit'>Sign Up</button>
-      </form>
+    <div className='max-w-md mx-auto'>
+      <h1 className='text-2xl font-bold mb-4'>Sign Up</h1>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          {/* Name */}
+          <FormField
+            control={form.control}
+            name='name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your name' {...field} hasError={!!form.formState.errors.name} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Email */}
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type='email'
+                    placeholder='Enter your email'
+                    {...field}
+                    hasError={!!form.formState.errors.email}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Password */}
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    placeholder='Enter your password'
+                    {...field}
+                    hasError={!!form.formState.errors.password}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Confirm Password */}
+          <FormField
+            control={form.control}
+            name='confirmPassword'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    placeholder='Re-enter your password'
+                    {...field}
+                    hasError={!!form.formState.errors.confirmPassword}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Error message */}
+          {/* Chỉ hiển thị lỗi nếu không phải null và form đã được submit */}
+          {hasSubmitted && error && <p className='text-red-500 text-sm'>{error}</p>}
+
+          {/* Submit button */}
+          <Button type='submit' className='w-full' disabled={isLoading}>
+            {isLoading ? 'Signing up...' : 'Sign Up'} {/* Hiển thị trạng thái loading */}
+          </Button>
+        </form>
+      </Form>
     </div>
   )
 }

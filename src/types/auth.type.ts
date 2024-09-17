@@ -44,3 +44,11 @@ export interface SignUpResponse {
   content: User
   dateTime: string
 }
+
+// Định nghĩa kiểu lỗi trả về từ API
+export interface AuthError {
+  statusCode: number
+  message: string
+  content: string
+  dateTime: string
+}
