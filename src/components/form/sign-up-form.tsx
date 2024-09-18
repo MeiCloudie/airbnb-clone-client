@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useZodForm } from '@/hooks/useZodForm'
@@ -12,24 +12,31 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
 import { Loader2 } from 'lucide-react'
 import { PasswordInput } from '@/components/ui/password-input'
+import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 
 const SignUpForm = () => {
   const router = useRouter()
   const { signUp, isLoading, error } = useAuth()
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const { showNotification } = useToastifyNotification()
 
   const form = useZodForm(signUpSchema)
 
   const onSubmit = async (data: SignUpPayload) => {
     setHasSubmitted(true)
     await signUp(data)
-
-    if (!error) {
-      router.push('/sign-in')
-    } else {
-      form.setError('root', { message: error })
-    }
   }
+
+  useEffect(() => {
+    if (hasSubmitted && !error && !isLoading) {
+      showNotification('Đăng ký thành công!', 'success')
+      router.push('/sign-in')
+    }
+    if (hasSubmitted && error) {
+      form.setError('root', { message: error })
+      showNotification(error, 'error')
+    }
+  }, [error, isLoading, hasSubmitted, router, form, showNotification])
 
   return (
     <Form {...form}>
@@ -109,9 +116,6 @@ const SignUpForm = () => {
             </FormItem>
           )}
         />
-
-        {/* Error message */}
-        {hasSubmitted && error && <p className='text-red-500 text-sm'>{error}</p>}
 
         {/* Submit button */}
         {isLoading ? (

@@ -45,7 +45,6 @@ export const { auth, handlers, signOut, signIn } = NextAuth({
 
           return null
         } catch (error) {
-          console.log(error)
           if (error instanceof AxiosError && error.response) {
             const apiError: AuthError = error.response.data
             // Ném lỗi với thông báo từ API

@@ -4,29 +4,29 @@ export const signUpSchema = z
   .object({
     name: z
       .string()
-      .min(1, { message: 'Name is required' })
-      .max(50, { message: 'Name cannot exceed 50 characters' })
-      .regex(/^[a-zA-Z\s]+$/, { message: 'Name can only contain letters' })
-      .refine((value) => value.trim().length > 0, { message: 'Name cannot be only spaces' }),
-    email: z.string().email({ message: 'Invalid email address' }),
+      .min(1, { message: 'Họ Tên là bắt buộc' })
+      .max(50, { message: 'Họ Tên không được vượt quá 50 ký tự' })
+      .regex(/^[a-zA-Z\s]+$/, { message: 'Họ Tên chỉ có thể chứa các chữ cái' })
+      .refine((value) => value.trim().length > 0, { message: 'Tên không thể chỉ chứa khoảng trắng' }),
+    email: z.string().email({ message: 'Địa chỉ email không hợp lệ' }),
     password: z
       .string()
-      .min(6, { message: 'Password must be at least 6 characters' })
-      .max(15, { message: 'Please enter no more than 15 characters' })
-      .refine((value) => !/\s/.test(value), { message: 'Password cannot contain spaces' })
-      .refine((value) => /[A-Z]/.test(value), { message: 'Password must contain at least one uppercase letter' })
-      .refine((value) => /[0-9]/.test(value), { message: 'Password must contain at least one number' })
+      .min(6, { message: 'Mật khẩu phải chứa ít nhất 6 ký tự' })
+      .max(15, { message: 'Vui lòng nhập không quá 15 ký tự' })
+      .refine((value) => !/\s/.test(value), { message: 'Mật khẩu không được chứa khoảng trắng' })
+      .refine((value) => /[A-Z]/.test(value), { message: 'Mật khẩu phải chứa ít nhất một chữ cái viết hoa' })
+      .refine((value) => /[0-9]/.test(value), { message: 'Mật khẩu phải chứa ít nhất một số' })
       .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
-        message: 'Password must contain at least one special character'
+        message: 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt'
       }),
     confirmPassword: z.string()
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: 'Mật khẩu không khớp',
     path: ['confirmPassword']
   })
 
 export const signInSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }), // Xác thực email
-  password: z.string().min(6, { message: 'Password must be at least 6 characters' }) // Xác thực mật khẩu
+  email: z.string().email({ message: 'Địa chỉ email không hợp lệ' }),
+  password: z.string().min(6, { message: 'Mật khẩu phải chứa ít nhất 6 ký tự' })
 })

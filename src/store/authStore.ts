@@ -6,9 +6,9 @@ import { AxiosError } from 'axios'
 
 interface AuthState {
   isLoading: boolean
-  error: string | null // Quản lý lỗi dưới dạng string
-  signUp: (data: SignUpPayload) => Promise<void> // Hàm xử lý đăng ký
-  signIn: (data: SignInPayload) => Promise<void> // Hàm xử lý đăng nhập
+  error: string | null
+  signUp: (data: SignUpPayload) => Promise<void>
+  signIn: (data: SignInPayload) => Promise<void>
 }
 
 export const useAuthStore = createStore<AuthState>(
@@ -16,7 +16,6 @@ export const useAuthStore = createStore<AuthState>(
     isLoading: false,
     error: null,
 
-    // Hàm sign up
     signUp: async (data: SignUpPayload) => {
       set({ isLoading: true, error: null }) // Reset trạng thái khi bắt đầu đăng ký
 
@@ -28,7 +27,7 @@ export const useAuthStore = createStore<AuthState>(
           set({ isLoading: false, error: null }) // Đăng ký thành công
         } else {
           // Xử lý lỗi từ API (lấy thông báo từ response.data.content hoặc thông báo chung)
-          const errorMessage = typeof response.data?.content === 'string' ? response.data.content : 'Failed to sign up'
+          const errorMessage = typeof response.data?.content === 'string' ? response.data.content : 'Đăng ký thất bại'
           set({ isLoading: false, error: errorMessage })
         }
       } catch (error) {
@@ -38,7 +37,7 @@ export const useAuthStore = createStore<AuthState>(
           set({ isLoading: false, error: apiError.content }) // Lấy thông báo lỗi từ API
         } else {
           // Xử lý lỗi chung nếu không có phản hồi rõ ràng từ API
-          set({ isLoading: false, error: 'Something went wrong' })
+          set({ isLoading: false, error: 'Có lỗi xảy ra' })
         }
       }
     },
@@ -54,13 +53,15 @@ export const useAuthStore = createStore<AuthState>(
           password: data.password
         })
 
-        console.log(result)
-
-        if (result?.error) {
-          // Lấy lỗi từ `result.error` trả về từ NextAuth
-          // PROBLEM: Chưa handle được vấn đề server - client side của Authjs v5 Beta
-          if (result.error === 'Configuration') {
-            set({ isLoading: false, error: 'Invalid email or password' })
+        if (result) {
+          if (result.error) {
+            // Lấy lỗi từ `result.error` trả về từ NextAuth
+            // PROBLEM: Chưa handle được vấn đề server - client side của Authjs v5 Beta
+            if (result.error === 'Configuration') {
+              set({ isLoading: false, error: 'Email hoặc mật khẩu không đúng !' })
+            }
+          } else {
+            set({ isLoading: false, error: null })
           }
         } else {
           set({ isLoading: false, error: null })
@@ -70,7 +71,7 @@ export const useAuthStore = createStore<AuthState>(
           const apiError = error.response.data
           set({ isLoading: false, error: apiError.content })
         } else {
-          set({ isLoading: false, error: 'Something went wrong' })
+          set({ isLoading: false, error: 'Có lỗi xảy ra' })
         }
       }
     }

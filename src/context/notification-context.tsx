@@ -21,7 +21,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
     const showToast = toastTypes[type]
     showToast(content, {
-      position: 'top-right',
+      position: 'bottom-right',
       autoClose: duration,
       hideProgressBar: false,
       closeOnClick: true,

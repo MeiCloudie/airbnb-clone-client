@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useZodForm } from '@/hooks/useZodForm'
 import { signInSchema } from '@/lib/zodSchemas'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
@@ -11,24 +11,31 @@ import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Loader2 } from 'lucide-react'
+import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 
 const SignInForm = () => {
   const router = useRouter()
   const { signIn, isLoading, error } = useAuth()
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const { showNotification } = useToastifyNotification()
 
   const form = useZodForm(signInSchema)
 
   const onSubmit = async (data: { email: string; password: string }) => {
     setHasSubmitted(true)
     await signIn(data)
-
-    if (!error) {
-      router.push('/')
-    } else {
-      form.setError('root', { message: error })
-    }
   }
+
+  useEffect(() => {
+    if (hasSubmitted && !error && !isLoading) {
+      showNotification('Đăng nhập thành công!', 'success')
+      router.push('/')
+    }
+    if (hasSubmitted && error) {
+      form.setError('root', { message: error })
+      showNotification(error, 'error')
+    }
+  }, [error, isLoading, hasSubmitted, router, form, showNotification])
 
   return (
     <Form {...form}>
@@ -73,9 +80,6 @@ const SignInForm = () => {
             </FormItem>
           )}
         />
-
-        {/* Error message */}
-        {hasSubmitted && error && <p className='text-red-500 text-sm'>{error}</p>}
 
         {/* Submit button */}
         {isLoading ? (
