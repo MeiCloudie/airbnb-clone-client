@@ -70,7 +70,7 @@ const UserHeader = () => {
         <div className='flex justify-end items-center'>
           {/* TODO: Chưa có đường dẫn này */}
           <Button asChild variant={'ghost'} className='hidden xl:block rounded-full font-bold'>
-            <Link href={'/host/home'}>Cho thuê chỗ ở qua Airbnb</Link>
+            <Link href='#'>Cho thuê chỗ ở qua Airbnb</Link>
           </Button>
           {/* TODO: Nút hiển thị chọn ngôn ngữ */}
           <Button variant={'ghost'} size={'icon'} className='rounded-full me-1'>
