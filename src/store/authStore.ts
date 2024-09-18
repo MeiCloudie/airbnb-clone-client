@@ -58,6 +58,7 @@ export const useAuthStore = createStore<AuthState>(
 
         if (result?.error) {
           // Lấy lỗi từ `result.error` trả về từ NextAuth
+          // PROBLEM: Chưa handle được vấn đề server - client side của Authjs v5 Beta
           if (result.error === 'Configuration') {
             set({ isLoading: false, error: 'Invalid email or password' })
           }
