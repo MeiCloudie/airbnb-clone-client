@@ -1,3 +1,5 @@
+'use client'
+
 import AirbnbLogo from '@/components/icon/airbnb-logo'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -16,8 +18,12 @@ import {
 } from '@/components/ui/menubar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ModeToggle } from '@/components/theme/mode-toggle'
+import { signOut, useSession } from 'next-auth/react'
+import { User } from 'lucide-react'
 
 const UserHeader = () => {
+  const { data: session } = useSession()
+
   return (
     <header className='sticky top-0 z-50 pt-2 pb-5 border-b shadow-md bg-background'>
       <div className='container space-y-3 md:flex md:justify-between 2xl:grid 2xl:grid-cols-3'>
@@ -82,17 +88,57 @@ const UserHeader = () => {
                 <FontAwesomeIcon icon={faBars} className='w-4 h-auto' />
                 <Avatar className='w-9 h-9'>
                   <AvatarImage src={''} alt='avatar' />
-                  <AvatarFallback className='bg-slate-800 text-white'>A</AvatarFallback>
+                  <AvatarFallback className='bg-slate-800 text-white'>
+                    {session?.user?.name && session.user.name !== '' ? (
+                      session.user.name.charAt(0)
+                    ) : session ? (
+                      'N'
+                    ) : (
+                      <User />
+                    )}
+                  </AvatarFallback>
                 </Avatar>
               </MenubarTrigger>
-              <MenubarContent className='rounded-xl py-3'>
-                <MenubarItem>Đăng ký</MenubarItem>
-                <MenubarItem>Đăng nhập</MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>Cho thuê chỗ ở qua Airbnb</MenubarItem>
-                <MenubarItem>Tổ chức trải nghiệm</MenubarItem>
-                <MenubarItem>Trung tâm trợ giúp</MenubarItem>
-              </MenubarContent>
+              {session ? (
+                <MenubarContent className='rounded-xl py-3'>
+                  {session.user.role === 'ADMIN' && (
+                    <>
+                      <Link href={ROUTES.ADMIN.HOME}>
+                        <MenubarItem className='font-semibold'>Hệ thống quản trị</MenubarItem>
+                      </Link>
+                      <MenubarSeparator />
+                    </>
+                  )}
+                  <MenubarItem className='font-semibold'>Tin Nhắn</MenubarItem>
+                  <MenubarItem className='font-semibold'>Chuyến đi</MenubarItem>
+                  <MenubarItem className='font-semibold'>Danh sách yêu thích</MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>Cho thuê chỗ ở qua Airbnb</MenubarItem>
+                  <MenubarItem>Tổ chức trải nghiệm</MenubarItem>
+                  <MenubarItem>Giới thiệu chủ nhà</MenubarItem>
+                  <Link href={ROUTES.USER.ACCOUNT_SETTINGS}>
+                    <MenubarItem>Tài khoản</MenubarItem>
+                  </Link>
+                  <MenubarSeparator />
+                  <MenubarItem>Trung tâm trợ giúp</MenubarItem>
+                  <MenubarItem className='font-semibold' onClick={() => signOut({ callbackUrl: '/sign-in' })}>
+                    Đăng xuất
+                  </MenubarItem>
+                </MenubarContent>
+              ) : (
+                <MenubarContent className='rounded-xl py-3'>
+                  <Link href={ROUTES.AUTH.SIGNUP}>
+                    <MenubarItem className='font-semibold'>Đăng ký</MenubarItem>
+                  </Link>
+                  <Link href={ROUTES.AUTH.SIGNIN}>
+                    <MenubarItem>Đăng nhập</MenubarItem>
+                  </Link>
+                  <MenubarSeparator />
+                  <MenubarItem>Cho thuê chỗ ở qua Airbnb</MenubarItem>
+                  <MenubarItem>Tổ chức trải nghiệm</MenubarItem>
+                  <MenubarItem>Trung tâm trợ giúp</MenubarItem>
+                </MenubarContent>
+              )}
             </MenubarMenu>
           </Menubar>
         </div>

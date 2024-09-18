@@ -1,4 +1,5 @@
 import AirbnbLogo from '@/components/icon/airbnb-logo'
+import { ROUTES } from '@/constants/routes'
 import Link from 'next/link'
 
 export default function AuthenticationLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +15,9 @@ export default function AuthenticationLayout({ children }: { children: React.Rea
 
           {/* Logo */}
           <div className='relative z-20 flex items-center text-lg font-medium'>
-            <AirbnbLogo />
+            <Link href={ROUTES.USER.HOME}>
+              <AirbnbLogo />
+            </Link>
           </div>
 
           {/* Slogan */}
