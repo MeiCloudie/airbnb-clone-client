@@ -6,6 +6,12 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .bg-airbnb {
+    background-image: url('/images/airbnb-background.jpg');
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 @layer base {

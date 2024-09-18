@@ -9,6 +9,10 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
+import { Loader2 } from 'lucide-react'
+import { PasswordInput } from '@/components/ui/password-input'
+import { ROUTES } from '@/constants/routes'
+import Link from 'next/link'
 
 export default function SignUp() {
   const router = useRouter()
@@ -32,19 +36,22 @@ export default function SignUp() {
 
   return (
     <div className='max-w-md mx-auto'>
-      <h1 className='text-2xl font-bold mb-4'>Sign Up</h1>
+      <div className='flex flex-col space-y-2 mb-5 text-center'>
+        <h1 className='text-2xl font-semibold tracking-tight'>Chào mừng bạn đến với Airbnb</h1>
+        <p className='text-sm text-muted-foreground'>Hãy tạo tài khoản để trải nghiệm dịch vụ của chúng tôi</p>
+      </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
           {/* Name */}
           <FormField
             control={form.control}
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Họ Tên</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your name' {...field} hasError={!!form.formState.errors.name} />
+                  <Input placeholder='Nhập họ tên của bạn' {...field} hasError={!!form.formState.errors.name} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -61,7 +68,7 @@ export default function SignUp() {
                 <FormControl>
                   <Input
                     type='email'
-                    placeholder='Enter your email'
+                    placeholder='Nhập email của bạn'
                     autoComplete='email'
                     {...field}
                     hasError={!!form.formState.errors.email}
@@ -78,11 +85,10 @@ export default function SignUp() {
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Mật Khẩu</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Enter your password'
+                  <PasswordInput
+                    placeholder='Nhập mật khẩu của bạn'
                     autoComplete='new-password'
                     {...field}
                     hasError={!!form.formState.errors.password}
@@ -99,11 +105,10 @@ export default function SignUp() {
             name='confirmPassword'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel>Xác Nhận Mật Khẩu</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Re-enter your password'
+                  <PasswordInput
+                    placeholder='Nhập lại mật khẩu của bạn'
                     autoComplete='new-password'
                     {...field}
                     hasError={!!form.formState.errors.confirmPassword}
@@ -115,15 +120,29 @@ export default function SignUp() {
           />
 
           {/* Error message */}
-          {/* Chỉ hiển thị lỗi nếu không phải null và form đã được submit */}
           {hasSubmitted && error && <p className='text-red-500 text-sm'>{error}</p>}
 
           {/* Submit button */}
-          <Button type='submit' className='w-full' disabled={isLoading}>
-            {isLoading ? 'Signing up...' : 'Sign Up'} {/* Hiển thị trạng thái loading */}
-          </Button>
+          {isLoading ? (
+            <Button className='w-full' disabled>
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              Vui Lòng Chờ
+            </Button>
+          ) : (
+            <Button type='submit' className='w-full'>
+              Tiếp Tục
+            </Button>
+          )}
         </form>
       </Form>
+
+      {/* Chuyển hướng đăng nhập */}
+      <p className='text-center text-sm text-muted-foreground mt-2'>
+        Bạn đã có tài khoản?{' '}
+        <Button asChild variant='link' className='text-primary px-0'>
+          <Link href={ROUTES.AUTH.SIGNIN}>Đăng Nhập</Link>
+        </Button>
+      </p>
     </div>
   )
 }
