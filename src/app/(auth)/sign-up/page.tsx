@@ -62,6 +62,7 @@ export default function SignUp() {
                   <Input
                     type='email'
                     placeholder='Enter your email'
+                    autoComplete='email'
                     {...field}
                     hasError={!!form.formState.errors.email}
                   />
@@ -82,6 +83,7 @@ export default function SignUp() {
                   <Input
                     type='password'
                     placeholder='Enter your password'
+                    autoComplete='new-password'
                     {...field}
                     hasError={!!form.formState.errors.password}
                   />
@@ -102,6 +104,7 @@ export default function SignUp() {
                   <Input
                     type='password'
                     placeholder='Re-enter your password'
+                    autoComplete='new-password'
                     {...field}
                     hasError={!!form.formState.errors.confirmPassword}
                   />

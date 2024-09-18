@@ -44,6 +44,7 @@ export default function SignIn() {
                   <Input
                     type='email'
                     placeholder='Enter your email'
+                    autoComplete='email'
                     {...field}
                     hasError={!!form.formState.errors.email}
                   />
@@ -64,6 +65,7 @@ export default function SignIn() {
                   <Input
                     type='password'
                     placeholder='Enter your password'
+                    autoComplete='current-password'
                     {...field}
                     hasError={!!form.formState.errors.password}
                   />
