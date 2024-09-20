@@ -44,7 +44,13 @@ const CategoryHeader = () => {
                       <Card className='border-t-0 border-b-2 border-b-transparent border-x-0 rounded-none shadow-none cursor-pointer opacity-70 hover:border-b-border hover:border-b-2 hover:opacity-100'>
                         <CardContent className='flex flex-col gap-2 text-center  items-center justify-center p-2'>
                           <span>
-                            <Image src={category.icon ?? ''} alt={`icon-${index}`} width={20} height={20} />
+                            <Image
+                              src={category.icon ?? ''}
+                              alt={`icon-${index}`}
+                              width={20}
+                              height={20}
+                              loading='eager'
+                            />
                           </span>
                           <span className='text-xs font-semibold'>{category.name}</span>
                         </CardContent>
