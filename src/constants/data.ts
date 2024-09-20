@@ -5,312 +5,312 @@ export const categories: Category[] = [
   {
     id: '1',
     name: 'Biểu tượng',
-    icon: ''
+    icon: '/icons/icons.jpg'
   },
   {
     id: '2',
     name: 'Nhiệt đới',
-    icon: ''
+    icon: '/icons/tropical.jpg'
   },
   {
     id: '3',
     name: 'Cabin',
-    icon: ''
+    icon: '/icons/cabins.jpg'
   },
   {
     id: '4',
     name: 'Bắc Cực',
-    icon: ''
+    icon: '/icons/arctic.jpg'
   },
   {
     id: '5',
     name: 'Được ưu chuộng',
-    icon: ''
+    icon: '/icons/trending.jpg'
   },
   {
     id: '6',
     name: 'Hồ',
-    icon: ''
+    icon: '/icons/lake.jpg'
   },
   {
     id: '7',
     name: 'Phòng',
-    icon: ''
+    icon: '/icons/rooms.jpg'
   },
   {
     id: '8',
     name: 'Khung cảnh tuyệt vời',
-    icon: ''
+    icon: '/icons/amazing-views.jpg'
   },
   {
     id: '9',
     name: 'Hồ bơi tuyệt vời',
-    icon: ''
+    icon: '/icons/amazing-pools.jpg'
   },
   {
     id: '10',
     name: 'Container',
-    icon: ''
+    icon: '/icons/containers.jpg'
   },
   {
     id: '11',
     name: 'Luxe',
-    icon: ''
+    icon: '/icons/luxe.jpg'
   },
   {
     id: '12',
     name: 'Nhà nông trại',
-    icon: ''
+    icon: '/icons/earth-homes.jpg'
   },
   {
     id: '13',
     name: 'Nông trại',
-    icon: ''
+    icon: '/icons/farms.jpg'
   },
   {
     id: '14',
     name: 'Mới',
-    icon: ''
+    icon: '/icons/new.jpg'
   },
   {
     id: '15',
     name: 'Nhà nhỏ',
-    icon: ''
+    icon: '/icons/tiny-homes.jpg'
   },
   {
     id: '16',
     name: 'Thiết kế',
-    icon: ''
+    icon: '/icons/design.jpg'
   },
   {
     id: '17',
     name: 'Ven hồ',
-    icon: ''
+    icon: '/icons/lakefront.jpg'
   },
   {
     id: '18',
     name: 'Lâu đài',
-    icon: ''
+    icon: '/icons/castles.jpg'
   },
   {
     id: '19',
     name: 'Biệt thự',
-    icon: ''
+    icon: '/icons/mansions.jpg'
   },
   {
     id: '20',
     name: 'Bãi biển',
-    icon: ''
+    icon: '/icons/beachfront.jpg'
   },
   {
     id: '21',
     name: 'Nông thôn',
-    icon: ''
+    icon: '/icons/countryside.jpg'
   },
   {
     id: '22',
     name: 'Đảo',
-    icon: ''
+    icon: '/icons/islands.jpg'
   },
   {
     id: '23',
     name: 'Bếp của bếp trưởng',
-    icon: ''
+    icon: '/icons/chefs-kitchens.jpg'
   },
   {
     id: '24',
     name: 'Nhà không sử dụng điện lưới',
-    icon: ''
+    icon: '/icons/off-the-grid.jpg'
   },
   {
     id: '25',
     name: 'Nhà mái vòm',
-    icon: ''
+    icon: '/icons/domes.jpg'
   },
   {
     id: '26',
     name: 'Casa Particular',
-    icon: ''
+    icon: '/icons/casas-particulares.jpg'
   },
   {
     id: '27',
     name: 'Khu cắm trại',
-    icon: ''
+    icon: '/icons/camping.jpg'
   },
   {
     id: '28',
     name: 'Chơi golf',
-    icon: ''
+    icon: '/icons/golfing.jpg'
   },
   {
     id: '29',
     name: 'Nhà trên cây',
-    icon: ''
+    icon: '/icons/treehouses.jpg'
   },
   {
     id: '30',
     name: 'Công viên quốc gia',
-    icon: ''
+    icon: '/icons/national-parks.jpg'
   },
   {
     id: '31',
     name: 'Hướng biển',
-    icon: ''
+    icon: '/icons/lake.jpg'
   },
   {
     id: '32',
     name: 'Hanok',
-    icon: ''
+    icon: '/icons/hanoks.jpg'
   },
   {
     id: '33',
     name: 'Minsu',
-    icon: ''
+    icon: '/icons/minsus.jpg'
   },
   {
     id: '34',
     name: 'Nhà khung chữ A',
-    icon: ''
+    icon: '/icons/a-frames.jpg'
   },
   {
     id: '35',
     name: 'Thật ấn tượng!',
-    icon: ''
+    icon: '/icons/amazing-views.jpg'
   },
   {
     id: '36',
     name: 'Xe cắm trại',
-    icon: ''
+    icon: '/icons/campers.jpg'
   },
   {
     id: '37',
     name: 'Lướt sóng',
-    icon: ''
+    icon: '/icons/surfing.jpg'
   },
   {
     id: '38',
     name: 'Hang động',
-    icon: ''
+    icon: '/icons/caves.jpg'
   },
   {
     id: '39',
     name: 'Thành phố hàng đầu',
-    icon: ''
+    icon: '/icons/top-cities.jpg'
   },
   {
     id: '40',
     name: 'Phục vụ bữa sáng',
-    icon: ''
+    icon: '/icons/bed-and-breakfasts.jpg'
   },
   {
     id: '41',
     name: 'Nhà dưới lòng đất',
-    icon: ''
+    icon: '/icons/earth-homes.jpg'
   },
   {
     id: '42',
     name: 'Vườn nho',
-    icon: ''
+    icon: '/icons/vineyards.jpg'
   },
   {
     id: '43',
     name: 'Nhà mang tính lịch sử',
-    icon: ''
+    icon: '/icons/historical-homes.jpg'
   },
   {
     id: '44',
     name: 'Trượt tuyết',
-    icon: ''
+    icon: '/icons/skiing.jpg'
   },
   {
     id: '45',
     name: 'Nhà trên núi',
-    icon: ''
+    icon: '/icons/top-of-the-world.jpg'
   },
   {
     id: '46',
     name: 'Nhà phong cách Cycladic',
-    icon: ''
+    icon: '/icons/cycladic-homes.jpg'
   },
   {
     id: '47',
     name: 'Ryokan',
-    icon: ''
+    icon: '/icons/ryokans.jpg'
   },
   {
     id: '48',
     name: 'Vui chơi',
-    icon: ''
+    icon: '/icons/play.jpg'
   },
   {
     id: '49',
     name: 'Cối xay gió',
-    icon: ''
+    icon: '/icons/windmills.jpg'
   },
   {
     id: '50',
     name: 'Lều mục đồng',
-    icon: ''
+    icon: '/icons/shepherds-huts.jpg'
   },
   {
     id: '51',
     name: 'Grand piano',
-    icon: ''
+    icon: '/icons/grand-pianos.jpg'
   },
   {
     id: '52',
     name: 'Lều yurt',
-    icon: ''
+    icon: '/icons/yurts.jpg'
   },
   {
     id: '53',
     name: 'Sa mạc',
-    icon: ''
+    icon: '/icons/desert.jpg'
   },
   {
     id: '54',
     name: 'Tháp',
-    icon: ''
+    icon: '/icons/towers.jpg'
   },
   {
     id: '55',
     name: 'Đường trượt tuyết tới thẳng chỗ ở',
-    icon: ''
+    icon: '/icons/ski-in-out.jpg'
   },
   {
     id: '56',
     name: 'Hỗ trợ người dùng xe lăn',
-    icon: ''
+    icon: '/icons/adapted.jpg'
   },
   {
     id: '57',
     name: 'Thuyền',
-    icon: ''
+    icon: '/icons/boats.jpg'
   },
   {
     id: '58',
     name: 'Nhà thuyền',
-    icon: ''
+    icon: '/icons/houseboats.jpg'
   },
   {
     id: '59',
     name: 'Không gian sáng tạo',
-    icon: ''
+    icon: '/icons/creative-spaces.jpg'
   },
   {
     id: '60',
     name: 'Dammuso',
-    icon: ''
+    icon: '/icons/dammuso.jpg'
   },
   {
     id: '61',
     name: 'Nhà chỏm nón',
-    icon: ''
+    icon: '/icons/trulli.jpg'
   },
   {
     id: '62',
     name: 'Riad',
-    icon: ''
+    icon: '/icons/riads.jpg'
   }
 ]
 

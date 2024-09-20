@@ -23,8 +23,7 @@ export default function Home() {
 
   return (
     <>
-      <UserHeader />
-      <CategoryHeader />
+      <UserHeader CategoryHeader={CategoryHeader} />
       <h1>Home Page</h1>
       <br />
       <br />
