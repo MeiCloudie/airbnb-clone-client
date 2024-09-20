@@ -7,7 +7,11 @@ export default function Home() {
     <>
       <UserHeader CategoryHeader={CategoryHeader} />
 
-      <main></main>
+      <main className='container'>
+        {/* Rooms List - Card */}
+
+        {/* Recommend Locations */}
+      </main>
 
       <UserFooter />
     </>
