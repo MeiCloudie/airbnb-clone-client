@@ -20,7 +20,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ModeToggle } from '@/components/theme/mode-toggle'
 import { signOut, useSession } from 'next-auth/react'
 import { User } from 'lucide-react'
-import CategoryHeader from '@/components/layout/user/category-header'
 
 interface UserHeaderProps {
   CategoryHeader?: React.ComponentType
