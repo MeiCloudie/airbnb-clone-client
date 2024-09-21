@@ -1,3 +1,4 @@
+import RecommendLocations from '@/app/recommend-locations'
 import RoomList from '@/app/room-list'
 import CategoryHeader from '@/components/layout/user/category-header'
 import UserFooter from '@/components/layout/user/user-footer'
@@ -13,6 +14,7 @@ export default function Home() {
         <RoomList />
 
         {/* Recommend Locations */}
+        <RecommendLocations />
       </main>
 
       <UserFooter />
