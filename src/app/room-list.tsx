@@ -36,9 +36,9 @@ const RoomList = () => {
   }
 
   return (
-    <div className='grid grid-cols-5 gap-4'>
+    <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4'>
       {Array.from({ length: 7 }).map((_, index) => (
-        <Card key={index} className='group border-none shadow-none cursor-pointer hover:overflow-hidden'>
+        <Card key={index} className='group bg-background border-none shadow-none cursor-pointer hover:overflow-hidden'>
           <div className='relative overflow-hidden rounded-xl'>
             <CardImage
               src='/images/airbnb-background.jpg'
