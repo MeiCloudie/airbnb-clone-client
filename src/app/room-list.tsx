@@ -49,15 +49,17 @@ const RoomList = () => {
             <Button
               variant='ghost'
               size='icon'
-              className='absolute top-3 right-3 rounded-full transition-transform duration-300 hover:bg-transparent hover:scale-125'
+              className='absolute top-2 right-2 md:top-3 md:right-3 rounded-full transition-transform duration-300 hover:bg-transparent hover:scale-125'
               onClick={() => toggleWishlist(index)}
             >
-              <Heart className={`w-7 h-7 text-white ${wishlist[index] ? 'fill-primary' : 'fill-black/50'}`} />
+              <Heart
+                className={`w-5 h-5 md:w-7 md:h-7 text-white ${wishlist[index] ? 'fill-primary' : 'fill-black/50'}`}
+              />
             </Button>
             {/* Guest Favorite */}
             {ratings[index] >= 4.5 && (
               <div className='absolute top-4 left-3 rounded-full bg-white px-2 py-1'>
-                <p className='text-sm font-semibold'>Được khách yêu thích</p>
+                <p className='text-[9px] md:text-sm text-black font-semibold'>Được khách yêu thích</p>
               </div>
             )}
           </div>

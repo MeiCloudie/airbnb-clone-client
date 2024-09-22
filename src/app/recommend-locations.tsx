@@ -1,18 +1,17 @@
 import React from 'react'
 import Image from 'next/image'
-import { CardImage } from '@/components/ui/card'
 
 const RecommendLocations = () => {
   return (
-    <div className='mt-4'>
+    <div className='mt-8'>
       {/* Title */}
-      <div className='mb-4'>
+      <div className='mb-6'>
         <h1 className='font-bold text-2xl'>Khám phá những điểm đến được yêu thích</h1>
         <p className='text-muted-foreground text-lg'>Đề xuất cho bạn những vị trí gần đây</p>
       </div>
 
       {/* List */}
-      <div className='grid grid-cols-4 gap-4'>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {Array.from({ length: 7 }).map((_, index) => (
           <div
             key={index}
