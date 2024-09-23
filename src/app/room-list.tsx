@@ -5,15 +5,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardImage, 
 import { useState } from 'react'
 import { Heart, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useRoomStore } from '@/store/roomStore'
 import CustomPagination from '@/components/pagination/custom-pagination'
 import { convertUSDToVND } from '@/format/currency'
+import { useLocation } from '@/hooks/useLocation'
+import { useRoom } from '@/hooks/useRoom'
 
 const RoomList = () => {
   const [wishlist, setWishlist] = useState(Array(7).fill(false)) // TODO: Tạm thời - chưa có tính năng
   const [ratings, setRatings] = useState<number[]>([]) // TODO: Tạm thời random - chưa có tính năng
   const [mounted, setMounted] = useState(false)
-  const { isLoading, data, error, getRoomPagination } = useRoomStore()
+  const { isLoading, data, error, getRoomPagination } = useRoom()
+  const { dataAllLocations, getAllLocations } = useLocation()
   const [pageIndex, setPageIndex] = useState(1)
   const pageSize = 10 // Cố định pageSize là 10 - số lượng item trên 1 trang
   const totalPages = data ? Math.ceil(data.content.totalRow / pageSize) : 1 // Tính tổng số trang dựa trên totalRow
@@ -28,6 +30,10 @@ const RoomList = () => {
   const getRandomRating = () => {
     return parseFloat((Math.random() * 5).toFixed(2))
   }
+
+  useEffect(() => {
+    getAllLocations()
+  }, [getAllLocations])
 
   useEffect(() => {
     // Gọi API phân trang khi component mount
@@ -72,6 +78,16 @@ const RoomList = () => {
             room.banUi && 'Bàn ủi'
           ].filter(Boolean) // Lọc ra các giá trị 'true'
 
+          // Tạo mảng chứa thông tin phòng ngủ, giường, phòng tắm
+          const roomDetails = [
+            room.phongNgu > 0 && `${room.phongNgu} phòng ngủ`,
+            room.giuong > 0 && `${room.giuong} giường`,
+            room.phongTam > 0 && `${room.phongTam} phòng tắm`
+          ].filter(Boolean) // Lọc ra các giá trị hợp lệ
+
+          // Tìm thông tin vị trí từ dataAllLocations dựa vào room.maViTri
+          const location = dataAllLocations?.content.find((loc) => loc.id === room.maViTri)
+
           return (
             <Card
               key={index}
@@ -111,15 +127,23 @@ const RoomList = () => {
                   </p>
                 </CardTitle>
                 <CardDescription className='truncate'>
-                  Cái Răng | Cần Thơ <br />
-                  Việt Nam
+                  {location ? (
+                    <>
+                      {location.tenViTri} | {location.tinhThanh} <br />
+                      {location.quocGia}
+                    </>
+                  ) : (
+                    <>
+                      {'Chưa cập nhật vị trí'} <br /> {'???'}
+                    </>
+                  )}
                 </CardDescription>
               </CardHeader>
               <CardContent className='text-sm px-0 pb-3 text-muted-foreground'>
                 <p className='truncate font-semibold'>
-                  {room.phongNgu} phòng ngủ • {room.giuong} giường • {room.phongTam} phòng tắm
+                  {roomDetails.length > 0 ? roomDetails.join(' • ') : 'Chưa cập nhật thông tin phòng'}
                 </p>
-                <p className='truncate'>{amenities.join(' • ')}</p>
+                <p className='truncate'>{amenities.length > 0 ? amenities.join(' • ') : 'Chưa cập nhật tiện nghi'}</p>
               </CardContent>
               <CardFooter className='px-0'>
                 <p>

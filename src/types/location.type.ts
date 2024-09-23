@@ -8,6 +8,12 @@ export interface Location {
   hinhAnh: string
 }
 
+export interface LocationResponse {
+  statusCode: number
+  content: Location[]
+  dateTime: string
+}
+
 export interface LocationPaginationPayload extends PaginationPayload {}
 
 export interface LocationPaginationResponse extends PaginationResponse<Location> {}

@@ -1,17 +1,22 @@
 import { useLocationStore } from '@/store/locationStore'
 
 export const useLocation = () => {
-  const { isLoading, data, error, getLocationPagination } = useLocationStore((state) => ({
-    isLoading: state.isLoading,
-    data: state.data,
-    error: state.error,
-    getLocationPagination: state.getLocationPagination
-  }))
+  const { isLoading, dataLocationPagination, dataAllLocations, error, getLocationPagination, getAllLocations } =
+    useLocationStore((state) => ({
+      isLoading: state.isLoading,
+      dataLocationPagination: state.dataLocationPagination,
+      dataAllLocations: state.dataAllLocations,
+      error: state.error,
+      getLocationPagination: state.getLocationPagination,
+      getAllLocations: state.getAllLocations
+    }))
 
   return {
     isLoading,
-    data,
+    dataLocationPagination,
+    dataAllLocations,
     error,
-    getLocationPagination
+    getLocationPagination,
+    getAllLocations
   }
 }

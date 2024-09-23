@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useLocationStore } from '@/store/locationStore'
 import CustomPagination from '@/components/pagination/custom-pagination'
+import { useLocation } from '@/hooks/useLocation'
 
 const RecommendLocations = () => {
-  const { isLoading, data, error, getLocationPagination } = useLocationStore()
+  const { isLoading, dataLocationPagination, error, getLocationPagination } = useLocation()
   const [pageIndex, setPageIndex] = useState(1)
   const pageSize = 8 // Cố định pageSize là 8 - số lượng item trên 1 trang
-  const totalPages = data ? Math.ceil(data.content.totalRow / pageSize) : 1 // Tính tổng số trang dựa trên totalRow
+  const totalPages = dataLocationPagination ? Math.ceil(dataLocationPagination.content.totalRow / pageSize) : 1 // Tính tổng số trang dựa trên totalRow
 
   useEffect(() => {
     // Gọi API phân trang khi component mount
@@ -34,7 +34,7 @@ const RecommendLocations = () => {
 
       {/* List */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {data?.content.data.map((location, index) => (
+        {dataLocationPagination?.content.data.map((location, index) => (
           <div
             key={location.id}
             className='flex gap-4 justify-start items-center rounded-md cursor-pointer group transition-colors duration-300 hover:bg-muted'
