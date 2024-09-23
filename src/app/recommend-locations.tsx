@@ -1,16 +1,20 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useLocationStore } from '@/store/locationStore'
+import CustomPagination from '@/components/pagination/custom-pagination'
 
 const RecommendLocations = () => {
   const { isLoading, data, error, getLocationPagination } = useLocationStore()
+  const [pageIndex, setPageIndex] = useState(1)
+  const pageSize = 8 // Cố định pageSize là 8 - số lượng item trên 1 trang
+  const totalPages = data ? Math.ceil(data.content.totalRow / pageSize) : 1 // Tính tổng số trang dựa trên totalRow
 
   useEffect(() => {
     // Gọi API phân trang khi component mount
-    getLocationPagination({ pageIndex: 1, pageSize: 8, keywords: null })
-  }, [getLocationPagination])
+    getLocationPagination({ pageIndex, pageSize, keywords: null })
+  }, [getLocationPagination, pageIndex])
 
   if (isLoading) {
     return <p>Loading...</p>
@@ -37,11 +41,13 @@ const RecommendLocations = () => {
           >
             {/* Image */}
             <Image
+              loader={({ src }) => src}
               src={location.hinhAnh}
               alt={`location-${index}`}
               width={500}
               height={500}
               loading='lazy'
+              unoptimized
               className='w-20 h-auto rounded-md aspect-square object-cover object-center'
             />
             {/* Content */}
@@ -55,6 +61,11 @@ const RecommendLocations = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className='mt-10' id='location-pagination'>
+        <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
       </div>
     </div>
   )
