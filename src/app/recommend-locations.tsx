@@ -4,8 +4,10 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import CustomPagination from '@/components/pagination/custom-pagination'
 import { useLocation } from '@/hooks/useLocation'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const RecommendLocations = () => {
+  const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const { isLoading, dataLocationPagination, error, getLocationPagination } = useLocation()
   const [pageIndex, setPageIndex] = useState(1)
   const pageSize = 8 // Cố định pageSize là 8 - số lượng item trên 1 trang
@@ -13,11 +15,30 @@ const RecommendLocations = () => {
 
   useEffect(() => {
     // Gọi API phân trang khi component mount
-    getLocationPagination({ pageIndex, pageSize, keywords: null })
+    getLocationPagination({ pageIndex, pageSize, keywords: null }).finally(() => setIsFirstLoading(false))
   }, [getLocationPagination, pageIndex])
 
-  if (isLoading) {
-    return <p>Loading...</p>
+  if (isFirstLoading || isLoading) {
+    return (
+      <div className='mt-14'>
+        <div className='mb-6'>
+          <h1 className='font-bold text-2xl'>Khám phá những điểm đến được yêu thích</h1>
+          <p className='text-muted-foreground text-lg'>Đề xuất cho bạn những vị trí gần đây</p>
+        </div>
+
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+          {Array.from({ length: pageSize }).map((_, index) => (
+            <div key={index} className='flex gap-4 justify-start items-center'>
+              <Skeleton className='w-20 h-20 rounded-md' /> {/* Image Skeleton */}
+              <div className='flex flex-col'>
+                <Skeleton className='h-5 w-40 mb-2' /> {/* Title Skeleton */}
+                <Skeleton className='h-4 w-24' /> {/* Subtitle Skeleton */}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   if (error) {
@@ -25,7 +46,7 @@ const RecommendLocations = () => {
   }
 
   return (
-    <div className='mt-8'>
+    <div className='mt-14'>
       {/* Title */}
       <div className='mb-6'>
         <h1 className='font-bold text-2xl'>Khám phá những điểm đến được yêu thích</h1>
@@ -64,7 +85,7 @@ const RecommendLocations = () => {
       </div>
 
       {/* Pagination */}
-      <div className='mt-10' id='location-pagination'>
+      <div className='mt-10'>
         <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
       </div>
     </div>

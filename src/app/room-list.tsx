@@ -9,11 +9,12 @@ import CustomPagination from '@/components/pagination/custom-pagination'
 import { convertUSDToVND } from '@/format/currency'
 import { useLocation } from '@/hooks/useLocation'
 import { useRoom } from '@/hooks/useRoom'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const RoomList = () => {
+  const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const [wishlist, setWishlist] = useState(Array(7).fill(false)) // TODO: Tạm thời - chưa có tính năng
   const [ratings, setRatings] = useState<number[]>([]) // TODO: Tạm thời random - chưa có tính năng
-  const [mounted, setMounted] = useState(false)
   const { isLoading, data, error, getRoomPagination } = useRoom()
   const { dataAllLocations, getAllLocations } = useLocation()
   const [pageIndex, setPageIndex] = useState(1)
@@ -26,43 +27,51 @@ const RoomList = () => {
     setWishlist(newWishlist)
   }
 
-  // Hàm random số đánh giá
-  const getRandomRating = () => {
-    return parseFloat((Math.random() * 5).toFixed(2))
-  }
-
   useEffect(() => {
     getAllLocations()
   }, [getAllLocations])
 
   useEffect(() => {
     // Gọi API phân trang khi component mount
-    getRoomPagination({ pageIndex, pageSize, keywords: null })
+    getRoomPagination({ pageIndex, pageSize, keywords: null }).finally(() => setIsFirstLoading(false))
+
+    // Random ratings cho từng phòng
+    const initialRatings = Array.from({ length: pageSize }, () => parseFloat((Math.random() * 5).toFixed(2)))
+    setRatings(initialRatings)
   }, [getRoomPagination, pageIndex])
 
-  useEffect(() => {
-    // Khi component mount, khởi tạo các giá trị đánh giá random cho từng card
-    const initialRatings = Array.from({ length: 7 }, () => getRandomRating())
-    setRatings(initialRatings)
-
-    // Đánh dấu component đã mount
-    setMounted(true)
-  }, [])
-
-  if (isLoading) {
-    return <p>Loading...</p>
+  // Render các Skeleton Card khi đang loading
+  if (isFirstLoading || isLoading) {
+    return (
+      <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4'>
+        {Array.from({ length: pageSize }).map((_, index) => (
+          <Card key={index} className='group bg-background border-none shadow-none'>
+            <div className='relative overflow-hidden rounded-xl'>
+              <Skeleton className='aspect-square w-full' />
+            </div>
+            <CardHeader className='px-0 pt-4 pb-1'>
+              <Skeleton className='h-6 w-3/4' /> {/* Title Skeleton */}
+            </CardHeader>
+            <CardContent className='px-0 pb-3'>
+              <Skeleton className='h-4 w-full mb-1' /> {/* Description Skeleton */}
+              <Skeleton className='h-4 w-2/3' /> {/* Description Skeleton */}
+            </CardContent>
+            <CardFooter className='px-0'>
+              <Skeleton className='h-5 w-1/2' /> {/* Price Skeleton */}
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    )
   }
 
   if (error) {
     return <p>Error: {error.content}</p>
   }
 
-  if (!mounted) {
-    return null
-  }
-
   return (
     <>
+      {/* Room List */}
       <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4'>
         {data?.content.data.map((room, index) => {
           // Tạo mảng các tiện nghi dựa trên giá trị boolean

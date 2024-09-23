@@ -41,7 +41,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
           <div className='content-center lg:w-3/5 xl:w-1/2 2xl:w-full'>
             <ToggleGroup type='multiple' size='lg' className='border rounded-full ps-1 py-1 shadow-sm hover:shadow-lg'>
               <ToggleGroupItem value='anywhere' className='hidden lg:flex font-bold hover:bg-transparent'>
-                <p>Địa điểm bất kỳ</p>
+                <p className='text-[13px]'>Địa điểm bất kỳ</p>
               </ToggleGroupItem>
               <span className='text-border hidden lg:flex'>|</span>
               <ToggleGroupItem value='anyweek' className='hidden lg:flex font-bold hover:bg-transparent'>

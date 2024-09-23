@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { categories } from '@/constants/data'
 import Image from 'next/image'
@@ -23,7 +24,29 @@ const CategoryHeader = () => {
   }
 
   if (!mounted) {
-    return null
+    return (
+      <div className='py-2 shadow bg-background'>
+        <div className='container'>
+          <div className='grid grid-cols-12 justify-center items-center w-full gap-2'>
+            {/* Carousel Skeleton */}
+            <div className='col-span-12 md:col-span-5 lg:col-span-7 xl:col-span-8 2xl:col-span-9'>
+              <div className='flex gap-2 py-[11.85px]'>
+                {/* {Array.from({ length: 12 }).map((_, index) => ( */}
+                <Skeleton className='h-14 w-full' />
+                {/* ))} */}
+              </div>
+            </div>
+
+            <div className='col-span-12 md:col-span-7 lg:col-span-5 xl:col-span-4 2xl:col-span-3 flex justify-center md:justify-end items-center gap-2'>
+              {/* Filters Skeleton */}
+              <Skeleton className='h-14 w-24' />
+              {/* Taxes Switch Skeleton */}
+              <Skeleton className='h-14 w-60' />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
