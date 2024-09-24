@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -15,29 +15,8 @@ import { Check, ChevronsUpDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js'
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit'
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js'
-  },
-  {
-    value: 'remix',
-    label: 'Remix'
-  },
-  {
-    value: 'astro',
-    label: 'Astro'
-  }
-]
+import { useLocation } from '@/hooks/useLocation'
+import { Location } from '@/types/location.type'
 
 interface SearchDialogProps {
   open: boolean
@@ -48,7 +27,16 @@ interface SearchDialogProps {
 const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [openCombobox, setOpenCombobox] = React.useState(false)
-  const [value, setValue] = React.useState('')
+  const [selectedLocation, setSelectedLocation] = useState<{ id: number; label: string } | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const { dataAllLocations, getAllLocations, isLoading } = useLocation()
+
+  useEffect(() => {
+    if (open) {
+      getAllLocations()
+    }
+  }, [open, getAllLocations])
 
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 2 ? prevStep + 1 : prevStep))
@@ -56,6 +44,16 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
   const prevStep = () => {
     setCurrentStep((prevStep) => (prevStep > 0 ? prevStep - 1 : prevStep))
+  }
+
+  const handleSelectLocation = (location: Location) => {
+    console.log('Selected Location:', location)
+    setSelectedLocation({
+      id: location.id,
+      label: `${location.tenViTri}, ${location.tinhThanh}, ${location.quocGia}`
+    })
+    setOpenCombobox(false)
+    setSearchTerm('') // Reset searchTerm để hiển thị lại danh sách đầy đủ
   }
 
   const steps = [
@@ -126,34 +124,43 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
         {/* Body Content */}
         <div>{steps[currentStep].content}</div>
-        {/* Test Combobox */}
+
+        {/* Combobox for Locations */}
         <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
           <PopoverTrigger asChild>
-            <Button variant='outline' role='combobox' aria-expanded={open} className='w-[200px] justify-between'>
-              {value ? frameworks.find((framework) => framework.value === value)?.label : 'Select framework...'}
+            <Button variant='outline' role='combobox' aria-expanded={openCombobox} className='w-full justify-between'>
+              {selectedLocation ? selectedLocation.label : 'Chọn địa điểm...'}
               <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className='w-[200px] p-0'>
+          <PopoverContent className='w-full min-w-80 p-0' align='start'>
             <Command>
-              <CommandInput placeholder='Search framework...' />
+              <CommandInput placeholder='Tìm kiếm địa điểm...' value={searchTerm} onValueChange={setSearchTerm} />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
-                <CommandGroup>
-                  {frameworks.map((framework) => (
-                    <CommandItem
-                      key={framework.value}
-                      value={framework.value}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? '' : currentValue)
-                        setOpenCombobox(false)
-                      }}
-                    >
-                      <Check className={cn('mr-2 h-4 w-4', value === framework.value ? 'opacity-100' : 'opacity-0')} />
-                      {framework.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                {isLoading ? (
+                  <CommandEmpty>Đang tải...</CommandEmpty>
+                ) : dataAllLocations?.content.length === 0 ? (
+                  <CommandEmpty>Không có địa điểm nào.</CommandEmpty>
+                ) : (
+                  <CommandGroup className='w-full'>
+                    {dataAllLocations?.content.map((location) => (
+                      <CommandItem
+                        key={location.id}
+                        value={`${location.tenViTri}, ${location.tinhThanh}, ${location.quocGia}`}
+                        onSelect={() => handleSelectLocation(location)}
+                        className='w-full'
+                      >
+                        <Check
+                          className={cn(
+                            'mr-2 h-4 w-4',
+                            selectedLocation?.id === location.id ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                        {location.tenViTri}, {location.tinhThanh}, {location.quocGia}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )}
               </CommandList>
             </Command>
           </PopoverContent>
