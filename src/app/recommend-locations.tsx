@@ -6,6 +6,8 @@ import CustomPagination from '@/components/pagination/custom-pagination'
 import { useLocation } from '@/hooks/useLocation'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSwalAlert } from '@/hooks/useSwalAlert'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
 
 const RecommendLocations = () => {
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
@@ -79,31 +81,30 @@ const RecommendLocations = () => {
       {/* List */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {dataLocationPagination?.content.data.map((location, index) => (
-          <div
-            key={location.id}
-            className='flex gap-4 justify-start items-center rounded-md cursor-pointer group transition-colors duration-300 hover:bg-muted'
-          >
-            {/* Image */}
-            <Image
-              loader={({ src }) => src}
-              src={location.hinhAnh}
-              alt={`location-${index}`}
-              width={500}
-              height={500}
-              loading='lazy'
-              unoptimized
-              className='w-20 h-auto rounded-md aspect-square object-cover object-center'
-            />
-            {/* Content */}
-            <div>
-              <h3 className='truncate text-lg font-semibold transition-colors duration-300 group-hover:text-primary'>
-                {location.tenViTri}
-              </h3>
-              <h5 className='truncate text-md text-muted-foreground transition-colors duration-300 group-hover:text-primary/75'>
-                {location.tinhThanh}, {location.quocGia}
-              </h5>
+          <Link key={location.id} href={ROUTES.USER.ROOMS.LOCATION(location.id.toString())}>
+            <div className='flex gap-4 justify-start items-center rounded-md cursor-pointer group transition-colors duration-300 hover:bg-muted'>
+              {/* Image */}
+              <Image
+                loader={({ src }) => src}
+                src={location.hinhAnh}
+                alt={`location-${index}`}
+                width={500}
+                height={500}
+                loading='lazy'
+                unoptimized
+                className='w-20 h-auto rounded-md aspect-square object-cover object-center'
+              />
+              {/* Content */}
+              <div>
+                <h3 className='truncate text-lg font-semibold transition-colors duration-300 group-hover:text-primary'>
+                  {location.tenViTri}
+                </h3>
+                <h5 className='truncate text-md text-muted-foreground transition-colors duration-300 group-hover:text-primary/75'>
+                  {location.tinhThanh}, {location.quocGia}
+                </h5>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
