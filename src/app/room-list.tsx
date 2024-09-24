@@ -10,13 +10,19 @@ import { convertUSDToVND } from '@/format/currency'
 import { useLocation } from '@/hooks/useLocation'
 import { useRoom } from '@/hooks/useRoom'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 
 const RoomList = () => {
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const [wishlist, setWishlist] = useState(Array(7).fill(false)) // TODO: Tạm thời - chưa có tính năng
   const [ratings, setRatings] = useState<number[]>([]) // TODO: Tạm thời random - chưa có tính năng
+
   const { isLoading, data, error, getRoomPagination } = useRoom()
   const { dataAllLocations, getAllLocations } = useLocation()
+
+  const { showNotification } = useToastifyNotification()
+  const [hasShownError, setHasShownError] = useState(false) // Flag để theo dõi nếu lỗi đã được hiển thị
+
   const [pageIndex, setPageIndex] = useState(1)
   const pageSize = 10 // Cố định pageSize là 10 - số lượng item trên 1 trang
   const totalPages = data ? Math.ceil(data.content.totalRow / pageSize) : 1 // Tính tổng số trang dựa trên totalRow
@@ -39,6 +45,15 @@ const RoomList = () => {
     const initialRatings = Array.from({ length: pageSize }, () => parseFloat((Math.random() * 5).toFixed(2)))
     setRatings(initialRatings)
   }, [getRoomPagination, pageIndex])
+
+  useEffect(() => {
+    if (error && !hasShownError) {
+      // Chỉ hiển thị thông báo lỗi 1 lần
+      console.log(error.content)
+      showNotification('Có lỗi xảy ra', 'error')
+      setHasShownError(true) // Đánh dấu đã hiển thị lỗi
+    }
+  }, [error, hasShownError, showNotification])
 
   // Render các Skeleton Card khi đang loading
   if (isFirstLoading || isLoading) {
@@ -66,7 +81,7 @@ const RoomList = () => {
   }
 
   if (error) {
-    return <p>Error: {error.content}</p>
+    return null
   }
 
   return (

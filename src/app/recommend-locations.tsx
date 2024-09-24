@@ -5,10 +5,15 @@ import Image from 'next/image'
 import CustomPagination from '@/components/pagination/custom-pagination'
 import { useLocation } from '@/hooks/useLocation'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 
 const RecommendLocations = () => {
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const { isLoading, dataLocationPagination, error, getLocationPagination } = useLocation()
+
+  const { showNotification } = useToastifyNotification()
+  const [hasShownError, setHasShownError] = useState(false) // Flag để theo dõi nếu lỗi đã được hiển thị
+
   const [pageIndex, setPageIndex] = useState(1)
   const pageSize = 8 // Cố định pageSize là 8 - số lượng item trên 1 trang
   const totalPages = dataLocationPagination ? Math.ceil(dataLocationPagination.content.totalRow / pageSize) : 1 // Tính tổng số trang dựa trên totalRow
@@ -17,6 +22,15 @@ const RecommendLocations = () => {
     // Gọi API phân trang khi component mount
     getLocationPagination({ pageIndex, pageSize, keywords: null }).finally(() => setIsFirstLoading(false))
   }, [getLocationPagination, pageIndex])
+
+  useEffect(() => {
+    if (error && !hasShownError) {
+      // Chỉ hiển thị thông báo lỗi 1 lần
+      console.log(error.content)
+      showNotification('Có lỗi xảy ra', 'error')
+      setHasShownError(true) // Đánh dấu đã hiển thị lỗi
+    }
+  }, [error, hasShownError, showNotification])
 
   if (isFirstLoading || isLoading) {
     return (
@@ -42,7 +56,7 @@ const RecommendLocations = () => {
   }
 
   if (error) {
-    return <p>Error: {error.content}</p>
+    return null
   }
 
   return (
