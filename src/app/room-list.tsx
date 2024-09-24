@@ -49,7 +49,7 @@ const RoomList = () => {
   useEffect(() => {
     if (error && !hasShownError) {
       // Chỉ hiển thị thông báo lỗi 1 lần
-      console.log(error.content)
+      // console.log(error.content)
       showNotification('Có lỗi xảy ra', 'error')
       setHasShownError(true) // Đánh dấu đã hiển thị lỗi
     }
