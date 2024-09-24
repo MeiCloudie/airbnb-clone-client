@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ROUTES } from '@/constants/routes'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faGlobe, faBars } from '@fortawesome/free-solid-svg-icons'
 import {
@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ModeToggle } from '@/components/theme/mode-toggle'
 import { signOut, useSession } from 'next-auth/react'
 import { User } from 'lucide-react'
+import SearchDialog from '@/components/dialog/search-dialog'
 
 interface UserHeaderProps {
   CategoryHeader?: React.ComponentType
@@ -27,6 +28,11 @@ interface UserHeaderProps {
 
 const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
   const { data: session } = useSession()
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const openDialog = () => setIsDialogOpen(true)
+  const closeDialog = () => setIsDialogOpen(false)
 
   return (
     <header className='sticky top-0 z-50'>
@@ -40,7 +46,11 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
           {/* Search */}
           <div className='content-center lg:w-3/5 xl:w-1/2 2xl:w-full'>
             <ToggleGroup type='multiple' size='lg' className='border rounded-full ps-1 py-1 shadow-sm hover:shadow-lg'>
-              <ToggleGroupItem value='anywhere' className='hidden lg:flex font-bold hover:bg-transparent'>
+              <ToggleGroupItem
+                value='anywhere'
+                onClick={openDialog}
+                className='hidden lg:flex font-bold hover:bg-transparent'
+              >
                 <p className='text-[13px]'>Địa điểm bất kỳ</p>
               </ToggleGroupItem>
               <span className='text-border hidden lg:flex'>|</span>
@@ -147,7 +157,12 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
           </div>
         </div>
       </div>
+
+      {/* CategoryHeader */}
       {CategoryHeader && <CategoryHeader />}
+
+      {/* SearchDialog */}
+      <SearchDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} onClose={closeDialog} />
     </header>
   )
 }
