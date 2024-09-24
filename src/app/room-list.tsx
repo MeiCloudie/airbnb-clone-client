@@ -10,7 +10,7 @@ import { convertUSDToVND } from '@/format/currency'
 import { useLocation } from '@/hooks/useLocation'
 import { useRoom } from '@/hooks/useRoom'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useToastifyNotification } from '@/hooks/useToastifyNotification'
+import { useSwalAlert } from '@/hooks/useSwalAlert'
 
 const RoomList = () => {
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
@@ -20,7 +20,7 @@ const RoomList = () => {
   const { isLoading, data, error, getRoomPagination } = useRoom()
   const { dataAllLocations, getAllLocations } = useLocation()
 
-  const { showNotification } = useToastifyNotification()
+  const { showAlert } = useSwalAlert()
   const [hasShownError, setHasShownError] = useState(false) // Flag để theo dõi nếu lỗi đã được hiển thị
 
   const [pageIndex, setPageIndex] = useState(1)
@@ -50,10 +50,19 @@ const RoomList = () => {
     if (error && !hasShownError) {
       // Chỉ hiển thị thông báo lỗi 1 lần
       // console.log(error.content)
-      showNotification('Có lỗi xảy ra', 'error')
+      showAlert({
+        title: 'Phát hiện lỗi',
+        text: 'Đã có lỗi xảy ra khi tải dữ liệu, vui lòng thử lại sau',
+        icon: 'question',
+        confirmButtonText: 'Đã hiểu'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload()
+        }
+      })
       setHasShownError(true) // Đánh dấu đã hiển thị lỗi
     }
-  }, [error, hasShownError, showNotification])
+  }, [error, hasShownError, showAlert])
 
   // Render các Skeleton Card khi đang loading
   if (isFirstLoading || isLoading) {
