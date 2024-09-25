@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 
-import { Check, ChevronsUpDown, Clock } from 'lucide-react'
+import { CalendarIcon, Check, ChevronsUpDown, Clock } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
@@ -20,6 +20,10 @@ import { Location } from '@/types/location.type'
 import localStorageService from '@/services/localStorage.service'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
+import { DateRange } from 'react-day-picker'
+import { addDays, format } from 'date-fns'
+import { Input } from '@/components/ui/input'
+import { Calendar } from '@/components/ui/calendar'
 
 interface SearchDialogProps {
   open: boolean
@@ -33,6 +37,10 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
   const [selectedLocation, setSelectedLocation] = useState<{ id: number; label: string } | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [recentSearches, setRecentSearches] = useState<{ id: number; label: string }[]>([])
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 7)
+  })
 
   const { dataAllLocations, getAllLocations, isLoading } = useLocation()
 
@@ -45,6 +53,11 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
       setRecentSearches(recent)
     }
   }, [open, getAllLocations])
+
+  const handleDateRangeChange = (dateRange: DateRange | undefined) => {
+    console.log('Selected Date Range:', dateRange)
+    setSelectedDateRange(dateRange)
+  }
 
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 2 ? prevStep + 1 : prevStep))
@@ -234,7 +247,51 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
       name: 'Tuần',
       title: 'Tuần bất kỳ',
       description: 'Chọn khoảng thời gian bạn muốn đi du lịch',
-      content: <div>Step 2: Nội dung chọn tuần</div>
+      content: (
+        <>
+          {/* Date Picker With Range */}
+          <div className={cn('grid gap-4')}>
+            <div className='grid grid-cols-2 gap-6'>
+              <div>
+                <p className='text-sm mb-2 font-semibold flex items-center'>
+                  <CalendarIcon className='mr-2 h-4 w-4' />
+                  Nhận phòng
+                </p>
+                <Input
+                  readOnly
+                  type='text'
+                  placeholder='Ngày nhận phòng'
+                  value={selectedDateRange?.from ? format(selectedDateRange.from, "dd 'thg' MM, yyyy") : ''}
+                />
+              </div>
+              <div>
+                <p className='text-sm mb-2 font-semibold flex items-center'>
+                  <CalendarIcon className='mr-2 h-4 w-4' />
+                  Trả phòng
+                </p>
+                <Input
+                  readOnly
+                  type='text'
+                  placeholder='Ngày trả phòng'
+                  value={selectedDateRange?.to ? format(selectedDateRange.to, "dd 'thg' MM, yyyy") : ''}
+                />
+              </div>
+            </div>
+
+            <div className='border rounded-lg p-4 shadow-sm'>
+              <Calendar
+                initialFocus
+                mode='range'
+                defaultMonth={selectedDateRange?.from}
+                selected={selectedDateRange}
+                onSelect={handleDateRangeChange}
+                numberOfMonths={2}
+                disabled={{ before: new Date() }}
+              />
+            </div>
+          </div>
+        </>
+      )
     },
     {
       id: 3,
@@ -288,7 +345,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
         </DialogHeader>
 
         {/* Body Content */}
-        <div className='h-full min-h-[610px] overflow-y-auto'>{steps[currentStep].content}</div>
+        <div className=''>{steps[currentStep].content}</div>
 
         {/* Footer Buttons */}
         <DialogFooter>
