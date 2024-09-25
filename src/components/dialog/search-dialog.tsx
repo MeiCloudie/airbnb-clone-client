@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 
-import { CalendarIcon, Check, ChevronsUpDown, Clock } from 'lucide-react'
+import { CalendarIcon, Check, ChevronsUpDown, Clock, Minus, Plus } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
@@ -24,6 +24,8 @@ import { DateRange } from 'react-day-picker'
 import { addDays, format } from 'date-fns'
 import { Input } from '@/components/ui/input'
 import { Calendar } from '@/components/ui/calendar'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
 interface SearchDialogProps {
   open: boolean
@@ -34,6 +36,9 @@ interface SearchDialogProps {
 const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [openCombobox, setOpenCombobox] = React.useState(false)
+
+  const { dataAllLocations, getAllLocations, isLoading } = useLocation()
+
   const [selectedLocation, setSelectedLocation] = useState<{ id: number; label: string } | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [recentSearches, setRecentSearches] = useState<{ id: number; label: string }[]>([])
@@ -41,8 +46,33 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
     from: new Date(),
     to: addDays(new Date(), 7)
   })
+  const [guests, setGuests] = useState({
+    adults: 1,
+    children: 0,
+    infants: 0,
+    pets: 0
+  })
 
-  const { dataAllLocations, getAllLocations, isLoading } = useLocation()
+  const totalGuests = guests.adults + guests.children + guests.infants
+
+  const updateGuests = (type: string, action: 'increase' | 'decrease') => {
+    setGuests((prevGuests) => {
+      const value = prevGuests[type as keyof typeof guests]
+
+      // Kiểm tra điều kiện tăng/giảm số lượng
+      const updatedGuests = { ...prevGuests }
+      if (action === 'increase') {
+        updatedGuests[type as keyof typeof guests] = value + 1
+      } else if (action === 'decrease' && value > 0 && (type !== 'adults' || value > 1)) {
+        updatedGuests[type as keyof typeof guests] = value - 1
+      }
+
+      // Log kết quả sau khi thay đổi
+      console.log('Selected Guests:', updatedGuests)
+
+      return updatedGuests
+    })
+  }
 
   useEffect(() => {
     if (open) {
@@ -136,6 +166,13 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
       name: 'Úc',
       imageSrc: '/images/australia.jpg'
     }
+  ]
+
+  const customerTypes = [
+    { id: 1, type: 'adults', label: 'Người lớn', description: 'Từ 13 tuổi trở lên' },
+    { id: 2, type: 'children', label: 'Trẻ em', description: 'Độ tuổi 2 - 12' },
+    { id: 3, type: 'infants', label: 'Em bé', description: 'Dưới 2 tuổi' },
+    { id: 4, type: 'pets', label: 'Thú cưng', description: 'Bạn sẽ mang theo động vật phục vụ?' }
   ]
 
   const steps = [
@@ -298,7 +335,53 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
       name: 'Khách',
       title: 'Thêm số lượng khách',
       description: 'Chọn số lượng khách đi cùng',
-      content: <div>Step 3: Nội dung thêm số lượng khách</div>
+      content: (
+        <>
+          {/* Tổng số khách */}
+          <div className='border rounded-md px-3 py-2'>
+            <h2 className='truncate text-md font-semibold'>
+              <FontAwesomeIcon icon={faUsers} className='me-1' /> Tổng khách: {totalGuests} khách
+              {guests.pets > 0 && ` và ${guests.pets} thú cưng`}
+            </h2>
+          </div>
+
+          {/* Loại khách */}
+          <div className='flex flex-col divide-y border rounded-md px-3 py-1 mt-2'>
+            {customerTypes.map((customer, index) => (
+              <div key={index} className='flex justify-between items-center py-4'>
+                <div>
+                  <h2 className='text-lg font-semibold'>{customer.label}</h2>
+                  <p className='text-sm text-muted-foreground'>{customer.description}</p>
+                </div>
+                {/* Counter */}
+                <div className='flex justify-end items-center gap-4'>
+                  <Button
+                    variant={'outline'}
+                    className='rounded-full'
+                    size={'icon'}
+                    onClick={() => updateGuests(customer.type, 'decrease')}
+                    disabled={
+                      guests[customer.type as keyof typeof guests] === 0 ||
+                      (customer.type === 'adults' && guests.adults === 1)
+                    }
+                  >
+                    <Minus className='w-4 h-4' />
+                  </Button>
+                  <p className='text-lg font-semibold'>{guests[customer.type as keyof typeof guests]}</p>
+                  <Button
+                    variant={'outline'}
+                    className='rounded-full'
+                    size={'icon'}
+                    onClick={() => updateGuests(customer.type, 'increase')}
+                  >
+                    <Plus className='w-4 h-4' />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )
     }
   ]
 
