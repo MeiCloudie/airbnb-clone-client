@@ -33,6 +33,17 @@ interface SearchDialogProps {
   onClose: () => void
 }
 
+interface SearchResults {
+  location: { id: number; label: string } | null
+  dateRange: { from: Date | undefined; to: Date | undefined } | undefined
+  guests: {
+    adults: number
+    children: number
+    infants: number
+    pets: number
+  }
+}
+
 const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [openCombobox, setOpenCombobox] = React.useState(false)
@@ -81,6 +92,22 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
       // Lấy lại dữ liệu recent searches từ localStorage
       const recent = localStorageService.get<{ id: number; label: string }[], []>('recentSearches', [])
       setRecentSearches(recent)
+
+      // Lấy lại kết quả tìm kiếm đã lưu từ localStorage
+      const savedResults = localStorageService.get<SearchResults, null>('searchResults', null)
+      if (savedResults) {
+        setSelectedLocation(savedResults.location)
+
+        // Kiểm tra và gán giá trị cho dateRange nếu không null hoặc undefined
+        if (savedResults.dateRange) {
+          setSelectedDateRange({
+            from: savedResults.dateRange.from || undefined,
+            to: savedResults.dateRange.to || undefined
+          })
+        }
+
+        setGuests(savedResults.guests)
+      }
     }
   }, [open, getAllLocations])
 
@@ -395,6 +422,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
   }
 
   const handleSearch = () => {
+    localStorageService.set('searchResults', searchResults)
     console.log('Search Results:', searchResults)
     onClose()
   }
