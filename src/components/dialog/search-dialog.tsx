@@ -18,6 +18,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useLocation } from '@/hooks/useLocation'
 import { Location } from '@/types/location.type'
 import localStorageService from '@/services/localStorage.service'
+import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
 
 interface SearchDialogProps {
   open: boolean
@@ -80,6 +82,49 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
     setOpenCombobox(false)
   }
 
+  const regions = [
+    {
+      id: 1,
+      name: 'Tìm kiếm linh hoạt',
+      imageSrc: '/images/region.jpg'
+    },
+    {
+      id: 2,
+      name: 'Thái Lan',
+      imageSrc: '/images/thailand.jpg'
+    },
+    {
+      id: 3,
+      name: 'Canada',
+      imageSrc: '/images/canada.jpg'
+    },
+    {
+      id: 4,
+      name: 'Châu Âu',
+      imageSrc: '/images/europe.jpg'
+    },
+    {
+      id: 5,
+      name: 'Hàn Quốc',
+      imageSrc: '/images/south-korea.jpg'
+    },
+    {
+      id: 6,
+      name: 'Hoa Kỳ',
+      imageSrc: '/images/united-states.jpg'
+    },
+    {
+      id: 7,
+      name: 'Nhật Bản',
+      imageSrc: '/images/japan.jpg'
+    },
+    {
+      id: 8,
+      name: 'Úc',
+      imageSrc: '/images/australia.jpg'
+    }
+  ]
+
   const steps = [
     {
       id: 1,
@@ -91,7 +136,12 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
           {/* Combobox for Locations */}
           <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
             <PopoverTrigger asChild>
-              <Button variant='outline' role='combobox' aria-expanded={openCombobox} className='w-full justify-between'>
+              <Button
+                variant='outline'
+                role='combobox'
+                aria-expanded={openCombobox}
+                className='w-full justify-between font-semibold'
+              >
                 {selectedLocation ? selectedLocation.label : 'Chọn địa điểm...'}
                 <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
               </Button>
@@ -149,6 +199,33 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
               </div>
             </div>
           )}
+
+          {/* Search Location By Region */}
+          <div className='mt-6'>
+            <h3 className='text-md font-semibold mb-3'>
+              Tìm kiếm theo khu vực{' '}
+              <Badge className='ms-2' variant={'outline'}>
+                Coming Soon
+              </Badge>
+            </h3>
+            <div className='grid grid-cols-4 gap-2'>
+              {regions.map((region) => (
+                <div
+                  key={region.id}
+                  className='flex flex-col p-1 justify-center items-start rounded-md cursor-pointer hover:bg-muted'
+                >
+                  <Image
+                    className='aspect-square border rounded-md w-full h-auto'
+                    src={region.imageSrc}
+                    alt={region.name}
+                    width={500}
+                    height={500}
+                  />
+                  <p className='text-sm mt-2 truncate w-20 md:w-24'>{region.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </>
       )
     },
@@ -211,7 +288,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
         </DialogHeader>
 
         {/* Body Content */}
-        <div>{steps[currentStep].content}</div>
+        <div className='h-full min-h-[610px] overflow-y-auto'>{steps[currentStep].content}</div>
 
         {/* Footer Buttons */}
         <DialogFooter>
