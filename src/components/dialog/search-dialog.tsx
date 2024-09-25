@@ -387,6 +387,18 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
   const isLastStep = currentStep === steps.length - 1
 
+  // Tạo biến lưu kết quả tìm kiếm
+  const searchResults = {
+    location: selectedLocation,
+    dateRange: selectedDateRange,
+    guests: guests
+  }
+
+  const handleSearch = () => {
+    console.log('Search Results:', searchResults)
+    onClose()
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -437,7 +449,16 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
               Quay lại
             </Button>
           )}
-          <Button onClick={isLastStep ? onClose : nextStep}>{isLastStep ? 'Tìm kiếm ngay' : 'Tiếp theo'}</Button>
+          <Button
+            onClick={isLastStep ? handleSearch : nextStep}
+            disabled={
+              (currentStep === 0 && !selectedLocation) ||
+              (currentStep === 1 && (!selectedDateRange?.from || !selectedDateRange?.to)) ||
+              (currentStep === 2 && totalGuests === 0)
+            }
+          >
+            {isLastStep ? 'Tìm kiếm ngay' : 'Tiếp theo'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
