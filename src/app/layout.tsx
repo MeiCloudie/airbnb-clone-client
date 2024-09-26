@@ -41,7 +41,7 @@ export default async function RootLayout({
           showSpinner={true}
           easing='ease'
           speed={100}
-          shadow='0 0 10px #2299DD,0 0 5px #2299DD'
+          shadow='0 0 10px #e74a6d,0 0 5px #e74a6d'
           template='<div class="bar" role="bar"><div class="peg"></div></div> 
   <div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
           zIndex={1600}
