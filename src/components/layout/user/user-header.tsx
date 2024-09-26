@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ROUTES } from '@/constants/routes'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faGlobe, faBars } from '@fortawesome/free-solid-svg-icons'
 import {
@@ -25,6 +25,7 @@ import { SearchResults } from '@/types/search.type'
 import localStorageService from '@/services/localStorage.service'
 import { format } from 'date-fns'
 import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
 
 interface UserHeaderProps {
   CategoryHeader?: React.ComponentType
@@ -37,6 +38,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
   const [searchResults, setSearchResults] = useState<SearchResults | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [initialStep, setInitialStep] = useState(0)
+
+  // Tạo một ref để truy cập hàm handleSearch bên trong SearchDialog
+  const handleSearchRef = useRef<() => void>()
 
   // Hàm mở và đóng dialog tìm kiếm
   const openDialog = (step: number) => {
@@ -158,9 +162,15 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                 </p>
               </ToggleGroupItem>
 
+              {/* Search Icon Button */}
               <ToggleGroupItem
                 value='search'
-                className='w-auto mx-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/80 hover:text-primary-foreground'
+                onClick={() => openDialog(0)}
+                className={cn(
+                  'w-auto mx-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/80 hover:text-primary-foreground',
+                  'data-[state=on]:bg-primary/80',
+                  'data-[state=on]:text-white'
+                )}
               >
                 <FontAwesomeIcon icon={faMagnifyingGlass} className='w-4 h-auto' />
               </ToggleGroupItem>
@@ -181,7 +191,6 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
             {/* Theme */}
             <ModeToggle />
 
-            {/* IMPORTANT: Cần xác định Menu khác nhau khi hoàn thành Auth Service */}
             {/* TODO: Các đường dẫn còn lại phát triển sau */}
             <Menubar className='rounded-full ms-3 py-6 hover:shadow-lg'>
               <MenubarMenu>
@@ -256,6 +265,8 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
         onClose={closeDialog}
         onSearchSubmit={handleSearchSubmit}
         initialStep={initialStep}
+        // Đặt tham chiếu handleSearch để có thể kích hoạt từ bên ngoài
+        passHandleSearch={(handleSearch: () => void) => (handleSearchRef.current = handleSearch)}
       />
     </header>
   )

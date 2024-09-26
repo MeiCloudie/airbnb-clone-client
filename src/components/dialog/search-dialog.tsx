@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,6 +27,8 @@ import { Calendar } from '@/components/ui/calendar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import { SearchResults } from '@/types/search.type'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 interface SearchDialogProps {
   open: boolean
@@ -34,9 +36,18 @@ interface SearchDialogProps {
   onClose: () => void
   onSearchSubmit: (results: SearchResults) => void
   initialStep: number
+  passHandleSearch: (handleSearch: () => void) => void
 }
 
-const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose, onSearchSubmit, initialStep }) => {
+const SearchDialog: React.FC<SearchDialogProps> = ({
+  open,
+  onOpenChange,
+  onClose,
+  onSearchSubmit,
+  initialStep,
+  passHandleSearch
+}) => {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(initialStep)
   const [openCombobox, setOpenCombobox] = React.useState(false)
 
@@ -408,7 +419,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
   const isLastStep = currentStep === steps.length - 1
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const searchResults: SearchResults = {
       location: selectedLocation,
       dateRange: selectedDateRange,
@@ -421,8 +432,50 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
     // Gọi callback để cập nhật lại searchResults trong UserHeader
     onSearchSubmit(searchResults)
 
-    onClose() // Đóng dialog
-  }
+    // Tạo URL với các search params
+    const searchParams = new URLSearchParams()
+
+    if (selectedLocation) {
+      searchParams.append('location_id', selectedLocation.id.toString())
+      searchParams.append('location_label', encodeURIComponent(selectedLocation.label))
+    }
+
+    if (selectedDateRange?.from) {
+      // Kiểm tra nếu selectedDateRange.from là chuỗi, chuyển thành đối tượng Date
+      const fromDate =
+        typeof selectedDateRange.from === 'string' ? new Date(selectedDateRange.from) : selectedDateRange.from
+      searchParams.append('date_range_from', fromDate.toISOString())
+    }
+
+    if (selectedDateRange?.to) {
+      // Kiểm tra nếu selectedDateRange.to là chuỗi, chuyển thành đối tượng Date
+      const toDate = typeof selectedDateRange.to === 'string' ? new Date(selectedDateRange.to) : selectedDateRange.to
+      searchParams.append('date_range_to', toDate.toISOString())
+    }
+
+    if (guests.adults > 0) {
+      searchParams.append('guests_adults', guests.adults.toString())
+    }
+    if (guests.children > 0) {
+      searchParams.append('guests_children', guests.children.toString())
+    }
+    if (guests.infants > 0) {
+      searchParams.append('guests_infants', guests.infants.toString())
+    }
+    if (guests.pets > 0) {
+      searchParams.append('guests_pets', guests.pets.toString())
+    }
+
+    // Chuyển hướng đến trang /rooms với các query params
+    const url = `${ROUTES.USER.ROOMS.LOCATION}?${searchParams.toString()}`
+    router.push(url)
+
+    onClose()
+  }, [guests, onClose, onSearchSubmit, router, selectedDateRange, selectedLocation])
+
+  useEffect(() => {
+    passHandleSearch(handleSearch) // Truyền hàm handleSearch ra ngoài
+  }, [passHandleSearch, handleSearch])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

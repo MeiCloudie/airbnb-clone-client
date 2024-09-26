@@ -6,10 +6,11 @@ import CustomPagination from '@/components/pagination/custom-pagination'
 import { useLocation } from '@/hooks/useLocation'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSwalAlert } from '@/hooks/useSwalAlert'
-import Link from 'next/link'
 import { ROUTES } from '@/constants/routes'
+import { useRouter } from 'next/navigation'
 
 const RecommendLocations = () => {
+  const router = useRouter()
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const { isLoading, dataLocationPagination, error, getLocationPagination } = useLocation()
 
@@ -70,6 +71,15 @@ const RecommendLocations = () => {
     return null
   }
 
+  const handleCardClick = (location: { id: number; tenViTri: string; tinhThanh: string; quocGia: string }) => {
+    // Xử lý điều hướng khi click vào card vị trí
+    const params = new URLSearchParams({
+      location_id: location.id.toString(),
+      location_label: encodeURIComponent(`${location.tenViTri}, ${location.tinhThanh}, ${location.quocGia}`)
+    })
+    router.push(`${ROUTES.USER.ROOMS.LOCATION}?${params.toString()}`)
+  }
+
   return (
     <div className='mt-14'>
       {/* Title */}
@@ -81,30 +91,32 @@ const RecommendLocations = () => {
       {/* List */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {dataLocationPagination?.content.data.map((location, index) => (
-          <Link key={location.id} href={ROUTES.USER.ROOMS.LOCATION(location.id.toString())}>
-            <div className='flex gap-4 justify-start items-center rounded-md cursor-pointer group transition-colors duration-300 hover:bg-muted'>
-              {/* Image */}
-              <Image
-                loader={({ src }) => src}
-                src={location.hinhAnh}
-                alt={`location-${index}`}
-                width={500}
-                height={500}
-                loading='lazy'
-                unoptimized
-                className='w-20 h-auto rounded-md aspect-square object-cover object-center'
-              />
-              {/* Content */}
-              <div>
-                <h3 className='truncate text-lg font-semibold transition-colors duration-300 group-hover:text-primary'>
-                  {location.tenViTri}
-                </h3>
-                <h5 className='truncate text-md text-muted-foreground transition-colors duration-300 group-hover:text-primary/75'>
-                  {location.tinhThanh}, {location.quocGia}
-                </h5>
-              </div>
+          <div
+            key={location.id}
+            onClick={() => handleCardClick(location)}
+            className='flex gap-4 justify-start items-center rounded-md cursor-pointer group transition-colors duration-300 hover:bg-muted'
+          >
+            {/* Image */}
+            <Image
+              loader={({ src }) => src}
+              src={location.hinhAnh}
+              alt={`location-${index}`}
+              width={500}
+              height={500}
+              loading='lazy'
+              unoptimized
+              className='w-20 h-auto rounded-md aspect-square object-cover object-center'
+            />
+            {/* Content */}
+            <div>
+              <h3 className='truncate text-lg font-semibold transition-colors duration-300 group-hover:text-primary'>
+                {location.tenViTri}
+              </h3>
+              <h5 className='truncate text-md text-muted-foreground transition-colors duration-300 group-hover:text-primary/75'>
+                {location.tinhThanh}, {location.quocGia}
+              </h5>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 

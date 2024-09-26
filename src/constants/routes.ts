@@ -15,7 +15,7 @@ export const ROUTES = {
     ACCOUNT_SETTINGS: '/account-settings',
     ROOMS: {
       ROOM_DETAIL: (id: string) => `/rooms/${id}`,
-      LOCATION: (location: string) => `/rooms/location/${location}`
+      LOCATION: '/rooms/location'
     },
     USER_PROFILE: {
       SHOW: (id: string) => `/users/show/${id}`
