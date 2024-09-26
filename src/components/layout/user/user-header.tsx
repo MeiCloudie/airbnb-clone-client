@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ROUTES } from '@/constants/routes'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faGlobe, faBars } from '@fortawesome/free-solid-svg-icons'
 import {
@@ -21,6 +21,10 @@ import { ModeToggle } from '@/components/theme/mode-toggle'
 import { signOut, useSession } from 'next-auth/react'
 import { User } from 'lucide-react'
 import SearchDialog from '@/components/dialog/search-dialog'
+import { SearchResults } from '@/types/search.type'
+import localStorageService from '@/services/localStorage.service'
+import { format } from 'date-fns'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface UserHeaderProps {
   CategoryHeader?: React.ComponentType
@@ -30,9 +34,39 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
   const { data: session } = useSession()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [searchResults, setSearchResults] = useState<SearchResults | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
+  // Hàm mở và đóng dialog tìm kiếm
   const openDialog = () => setIsDialogOpen(true)
   const closeDialog = () => setIsDialogOpen(false)
+
+  // Lấy dữ liệu từ localStorage khi component được mount
+  useEffect(() => {
+    const savedResults = localStorageService.get<SearchResults, null>('searchResults', null)
+    if (savedResults) {
+      setSearchResults(savedResults)
+    } else {
+      setSearchResults(null) // Reset nếu không có dữ liệu
+    }
+
+    setIsLoading(false)
+  }, [])
+
+  // Hàm tính tổng số khách
+  // Hàm tính tổng số khách và định dạng chuỗi kết quả
+  const getTotalGuests = (guests: SearchResults['guests']) => {
+    const totalGuests = guests.adults + guests.children
+    const infantsText = guests.infants > 0 ? `, ${guests.infants} em bé` : ''
+    const petsText = guests.pets > 0 ? `, ${guests.pets} thú cưng` : ''
+
+    return `${totalGuests} khách${infantsText}${petsText}`
+  }
+
+  // Cập nhật lại searchResults khi tìm kiếm được submit
+  const handleSearchSubmit = (results: SearchResults) => {
+    setSearchResults(results)
+  }
 
   return (
     <header className='sticky top-0 z-50'>
@@ -51,15 +85,39 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                 onClick={openDialog}
                 className='hidden lg:flex font-bold hover:bg-transparent'
               >
-                <p className='text-[13px]'>Địa điểm bất kỳ</p>
+                {isLoading ? (
+                  <Skeleton className='w-full h-5' />
+                ) : (
+                  <p className='text-[13px] truncate w-28 flex'>
+                    {searchResults?.location ? searchResults.location.label : 'Địa điểm bất kỳ'}
+                  </p>
+                )}
               </ToggleGroupItem>
               <span className='text-border hidden lg:flex'>|</span>
               <ToggleGroupItem value='anyweek' className='hidden lg:flex font-bold hover:bg-transparent'>
-                <p>tuần bất kỳ</p>
+                {isLoading ? (
+                  <Skeleton className='w-full h-5' />
+                ) : (
+                  <p>
+                    {searchResults?.dateRange && searchResults.dateRange.from
+                      ? `${format(new Date(searchResults.dateRange.from), 'dd/MM')}${
+                          searchResults.dateRange.to
+                            ? ` - ${format(new Date(searchResults.dateRange.to), 'dd/MM')}`
+                            : ''
+                        }`
+                      : 'tuần bất kỳ'}
+                  </p>
+                )}
               </ToggleGroupItem>
               <span className='text-border hidden lg:flex'>|</span>
               <ToggleGroupItem value='anyguests' className='hidden lg:flex font-bold hover:bg-transparent'>
-                <p className='opacity-50'>Thêm khách</p>
+                {isLoading ? (
+                  <Skeleton className='w-full h-5' />
+                ) : (
+                  <p className='truncate w-28'>
+                    {searchResults?.guests ? getTotalGuests(searchResults.guests) : 'Thêm khách'}
+                  </p>
+                )}
               </ToggleGroupItem>
 
               <ToggleGroupItem value='all' className='flex lg:hidden hover:bg-transparent'>
@@ -162,7 +220,12 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
       {CategoryHeader && <CategoryHeader />}
 
       {/* SearchDialog */}
-      <SearchDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} onClose={closeDialog} />
+      <SearchDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onClose={closeDialog}
+        onSearchSubmit={handleSearchSubmit}
+      />
     </header>
   )
 }

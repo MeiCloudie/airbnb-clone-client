@@ -26,25 +26,16 @@ import { Input } from '@/components/ui/input'
 import { Calendar } from '@/components/ui/calendar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
+import { SearchResults } from '@/types/search.type'
 
 interface SearchDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onClose: () => void
+  onSearchSubmit: (results: SearchResults) => void
 }
 
-interface SearchResults {
-  location: { id: number; label: string } | null
-  dateRange: { from: Date | undefined; to: Date | undefined } | undefined
-  guests: {
-    adults: number
-    children: number
-    infants: number
-    pets: number
-  }
-}
-
-const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose }) => {
+const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose, onSearchSubmit }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [openCombobox, setOpenCombobox] = React.useState(false)
 
@@ -414,17 +405,20 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
   const isLastStep = currentStep === steps.length - 1
 
-  // Tạo biến lưu kết quả tìm kiếm
-  const searchResults = {
-    location: selectedLocation,
-    dateRange: selectedDateRange,
-    guests: guests
-  }
-
   const handleSearch = () => {
+    const searchResults: SearchResults = {
+      location: selectedLocation,
+      dateRange: selectedDateRange,
+      guests: guests
+    }
+
+    // Lưu vào localStorage
     localStorageService.set('searchResults', searchResults)
-    console.log('Search Results:', searchResults)
-    onClose()
+
+    // Gọi callback để cập nhật lại searchResults trong UserHeader
+    onSearchSubmit(searchResults)
+
+    onClose() // Đóng dialog
   }
 
   return (
