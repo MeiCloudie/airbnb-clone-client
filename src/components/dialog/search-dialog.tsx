@@ -342,7 +342,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
               </div>
             </div>
 
-            <div className='border rounded-lg p-4 shadow-sm'>
+            <div className='flex justify-center items-center border rounded-lg p-4 shadow-sm'>
               <Calendar
                 initialFocus
                 mode='range'
@@ -429,7 +429,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className='h-full overflow-auto md:h-fit'>
         {/* Step Indicator */}
         <div className='mt-6'>
           <ul className='flex gap-4'>
