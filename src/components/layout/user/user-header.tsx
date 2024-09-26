@@ -36,9 +36,13 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchResults, setSearchResults] = useState<SearchResults | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [initialStep, setInitialStep] = useState(0)
 
   // Hàm mở và đóng dialog tìm kiếm
-  const openDialog = () => setIsDialogOpen(true)
+  const openDialog = (step: number) => {
+    setInitialStep(step) // Mở dialog với step ban đầu cụ thể
+    setIsDialogOpen(true)
+  }
   const closeDialog = () => setIsDialogOpen(false)
 
   // Lấy dữ liệu từ localStorage khi component được mount
@@ -82,7 +86,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
             <ToggleGroup type='multiple' size='lg' className='border rounded-full ps-1 py-1 shadow-sm hover:shadow-lg'>
               <ToggleGroupItem
                 value='anywhere'
-                onClick={openDialog}
+                onClick={() => openDialog(0)}
                 className='hidden lg:flex font-bold hover:bg-transparent'
               >
                 {isLoading ? (
@@ -94,7 +98,17 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                 )}
               </ToggleGroupItem>
               <span className='text-border hidden lg:flex'>|</span>
-              <ToggleGroupItem value='anyweek' className='hidden lg:flex font-bold hover:bg-transparent'>
+              <ToggleGroupItem
+                value='anyweek'
+                onClick={() => {
+                  if (searchResults?.location) {
+                    openDialog(1) // Mở dialog ở step 2 nếu đã có địa điểm
+                  } else {
+                    openDialog(0) // Nếu không có địa điểm thì quay lại step 1
+                  }
+                }}
+                className='hidden lg:flex font-bold hover:bg-transparent'
+              >
                 {isLoading ? (
                   <Skeleton className='w-full h-5' />
                 ) : (
@@ -110,7 +124,19 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                 )}
               </ToggleGroupItem>
               <span className='text-border hidden lg:flex'>|</span>
-              <ToggleGroupItem value='anyguests' className='hidden lg:flex font-bold hover:bg-transparent'>
+              <ToggleGroupItem
+                value='anyguests'
+                onClick={() => {
+                  if (searchResults?.location && searchResults?.dateRange?.from && searchResults?.dateRange?.to) {
+                    openDialog(2) // Mở dialog ở step 3 nếu có dữ liệu của step 1 và step 2
+                  } else if (searchResults?.location) {
+                    openDialog(1) // Nếu có địa điểm nhưng chưa chọn ngày thì quay lại step 2
+                  } else {
+                    openDialog(0) // Nếu không có dữ liệu step 1 thì quay lại step 1
+                  }
+                }}
+                className='hidden lg:flex font-bold hover:bg-transparent'
+              >
                 {isLoading ? (
                   <Skeleton className='w-full h-5' />
                 ) : (
@@ -120,7 +146,11 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                 )}
               </ToggleGroupItem>
 
-              <ToggleGroupItem value='all' className='flex lg:hidden hover:bg-transparent'>
+              <ToggleGroupItem
+                value='all'
+                onClick={() => openDialog(0)}
+                className='flex lg:hidden hover:bg-transparent'
+              >
                 <p className='text-left'>
                   <span className='font-bold'>Bạn sẽ đi đâu</span>
                   <br />
@@ -225,6 +255,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
         onOpenChange={setIsDialogOpen}
         onClose={closeDialog}
         onSearchSubmit={handleSearchSubmit}
+        initialStep={initialStep}
       />
     </header>
   )

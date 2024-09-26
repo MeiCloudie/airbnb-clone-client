@@ -33,10 +33,11 @@ interface SearchDialogProps {
   onOpenChange: (open: boolean) => void
   onClose: () => void
   onSearchSubmit: (results: SearchResults) => void
+  initialStep: number
 }
 
-const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose, onSearchSubmit }) => {
-  const [currentStep, setCurrentStep] = useState(0)
+const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose, onSearchSubmit, initialStep }) => {
+  const [currentStep, setCurrentStep] = useState(initialStep)
   const [openCombobox, setOpenCombobox] = React.useState(false)
 
   const { dataAllLocations, getAllLocations, isLoading } = useLocation()
@@ -78,6 +79,8 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
 
   useEffect(() => {
     if (open) {
+      setCurrentStep(initialStep)
+
       getAllLocations()
 
       // Lấy lại dữ liệu recent searches từ localStorage
@@ -100,7 +103,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, onClose
         setGuests(savedResults.guests)
       }
     }
-  }, [open, getAllLocations])
+  }, [open, getAllLocations, initialStep])
 
   const handleDateRangeChange = (dateRange: DateRange | undefined) => {
     console.log('Selected Date Range:', dateRange)
