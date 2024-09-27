@@ -155,10 +155,22 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                 onClick={() => openDialog(0)}
                 className='flex lg:hidden hover:bg-transparent'
               >
-                <p className='text-left'>
-                  <span className='font-bold'>Bạn sẽ đi đâu</span>
+                <p className='text-left truncate'>
+                  <span className='font-bold'>
+                    {searchResults?.location ? searchResults.location.label : 'Bạn sẽ đi đâu'}
+                  </span>
                   <br />
-                  <span className='text-xs opacity-75'>Địa điểm bất kỳ • tuần bất kỳ • Thêm khách</span>
+                  <span className='text-xs opacity-75 truncate'>
+                    {`${searchResults?.location ? '' : 'Địa điểm bất kỳ • '}${
+                      searchResults?.dateRange && searchResults.dateRange.from
+                        ? `${format(new Date(searchResults.dateRange.from), 'dd/MM')}${
+                            searchResults.dateRange.to
+                              ? ` - ${format(new Date(searchResults.dateRange.to), 'dd/MM')}`
+                              : ''
+                          }`
+                        : 'tuần bất kỳ'
+                    } • ${searchResults?.guests ? getTotalGuests(searchResults.guests) : 'Thêm khách'}`}
+                  </span>
                 </p>
               </ToggleGroupItem>
 
