@@ -34,6 +34,14 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri, locati
     setWishlist(newWishlist)
   }
 
+  // Scroll to top when pageIndex changes
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }, [pageIndex])
+
   useEffect(() => {
     getAllLocations()
   }, [getAllLocations])

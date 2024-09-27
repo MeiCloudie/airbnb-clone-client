@@ -30,6 +30,14 @@ const RoomListHomePage = () => {
     setWishlist(newWishlist)
   }
 
+  // Scroll to top when pageIndex changes
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }, [pageIndex])
+
   useEffect(() => {
     getAllLocations()
   }, [getAllLocations])
