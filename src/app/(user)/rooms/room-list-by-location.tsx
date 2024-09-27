@@ -11,9 +11,10 @@ import CustomPagination from '@/components/pagination/custom-pagination'
 
 interface RoomListByLocationProps {
   maViTri: number
+  locationLabel: string
 }
 
-const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
+const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri, locationLabel }) => {
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const [wishlist, setWishlist] = useState(Array(7).fill(false)) // TODO: Tạm thời - chưa có tính năng
   const [ratings, setRatings] = useState<number[]>([]) // TODO: Tạm thời random - chưa có tính năng
@@ -86,6 +87,11 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
 
   return (
     <>
+      {/* Title */}
+      <h1 className='mb-4 font-semibold text-lg'>
+        Tìm thấy {roomsByLocation ? roomsByLocation.content.length : 0} chỗ ở
+      </h1>
+
       {/* Room List */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {paginatedData.map((room, index) => {
@@ -106,9 +112,17 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
       </div>
 
       {/* Pagination */}
-      <div className='mt-10'>
-        <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
-      </div>
+      {roomsByLocation && roomsByLocation.content.length > 0 ? (
+        <div className='mt-10'>
+          <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
+        </div>
+      ) : (
+        <h2 className='italic text-md'>
+          {locationLabel && locationLabel !== ''
+            ? `"${locationLabel}" hiện chưa được cập nhật phòng. Hãy liên hệ chúng tôi để được hỗ trợ sớm nhất!`
+            : 'Vị trí bạn chọn chưa được xác định rõ. Hãy thử tìm kiếm lại nhé!'}
+        </h2>
+      )}
     </>
   )
 }
