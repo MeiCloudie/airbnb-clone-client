@@ -5,7 +5,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <UserHeader />
-      <main>{children}</main>
+      <main className='container py-7'>{children}</main>
       <UserFooter />
     </>
   )

@@ -7,6 +7,7 @@ import { useRoom } from '@/hooks/useRoom'
 import { useSwalAlert } from '@/hooks/useSwalAlert'
 import RoomCard from '@/app/(user)/rooms/room-card'
 import SkeletonRoomCard from '@/app/(user)/rooms/skeleton-room-card'
+import CustomPagination from '@/components/pagination/custom-pagination'
 
 interface RoomListByLocationProps {
   maViTri: number
@@ -23,6 +24,9 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
   const { showAlert } = useSwalAlert()
   const [hasShownError, setHasShownError] = useState(false) // Flag để theo dõi nếu lỗi đã được hiển thị
 
+  const [pageIndex, setPageIndex] = useState(1)
+  const pageSize = 6 // Cố định pageSize là 6 - số lượng item trên 1 trang
+
   const toggleWishlist = (index: number) => {
     const newWishlist = [...wishlist]
     newWishlist[index] = !newWishlist[index]
@@ -38,7 +42,7 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
     getRoomByLocation({ maViTri }).finally(() => setIsFirstLoading(false))
 
     // Random ratings cho từng phòng
-    const initialRatings = Array.from({ length: 9 }, () => parseFloat((Math.random() * 5).toFixed(2)))
+    const initialRatings = Array.from({ length: pageSize }, () => parseFloat((Math.random() * 5).toFixed(2)))
     setRatings(initialRatings)
   }, [getRoomByLocation, maViTri])
 
@@ -59,12 +63,17 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
       setHasShownError(true) // Đánh dấu đã hiển thị lỗi
     }
   }, [error, hasShownError, showAlert])
+  // Tính toán dữ liệu hiển thị dựa trên phân trang
+  const paginatedData = roomsByLocation?.content.slice((pageIndex - 1) * pageSize, pageIndex * pageSize) || []
+
+  // Tính tổng số trang
+  const totalPages = roomsByLocation ? Math.ceil(roomsByLocation.content.length / pageSize) : 1
 
   // Render các Skeleton Card khi đang loading
   if (isFirstLoading || isLoading) {
     return (
-      <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4'>
-        {Array.from({ length: 9 || 0 }).map((_, index) => (
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        {Array.from({ length: pageSize }).map((_, index) => (
           <SkeletonRoomCard key={index} />
         ))}
       </div>
@@ -78,8 +87,8 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
   return (
     <>
       {/* Room List */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4'>
-        {roomsByLocation?.content.map((room, index) => {
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        {paginatedData.map((room, index) => {
           // Tìm thông tin vị trí từ dataAllLocations dựa vào room.maViTri
           const location = dataAllLocations?.content.find((loc) => loc.id === room.maViTri)
 
@@ -94,6 +103,11 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri }) => {
             />
           )
         })}
+      </div>
+
+      {/* Pagination */}
+      <div className='mt-10'>
+        <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
       </div>
     </>
   )
