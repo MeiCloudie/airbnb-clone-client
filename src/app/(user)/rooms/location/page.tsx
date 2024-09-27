@@ -1,5 +1,6 @@
 'use client'
 
+// import SimpleMap from '@/components/map/map'
 import { useSearchParams } from 'next/navigation' // Import useSearchParams từ Next.js
 
 interface RoomsByLocationProps {}
@@ -27,6 +28,8 @@ export default function RoomsByLocation({}: RoomsByLocationProps) {
       <p>Guests Children: {guestsChildren}</p>
       <p>Guests Infants: {guestsInfants}</p>
       <p>Guests Pets: {guestsPets}</p>
+
+      <div>{/* <SimpleMap /> */}</div>
     </div>
   )
 }
