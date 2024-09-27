@@ -1,16 +1,15 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { useState } from 'react'
 import CustomPagination from '@/components/pagination/custom-pagination'
 import { useLocation } from '@/hooks/useLocation'
 import { useRoom } from '@/hooks/useRoom'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useSwalAlert } from '@/hooks/useSwalAlert'
 import RoomCard from '@/app/(user)/rooms/room-card'
+import SkeletonRoomCard from '@/app/(user)/rooms/skeleton-room-card'
 
-const RoomList = () => {
+const RoomListHomePage = () => {
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const [wishlist, setWishlist] = useState(Array(7).fill(false)) // TODO: Tạm thời - chưa có tính năng
   const [ratings, setRatings] = useState<number[]>([]) // TODO: Tạm thời random - chưa có tính năng
@@ -67,21 +66,7 @@ const RoomList = () => {
     return (
       <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4'>
         {Array.from({ length: pageSize }).map((_, index) => (
-          <Card key={index} className='group bg-background border-none shadow-none'>
-            <div className='relative overflow-hidden rounded-xl'>
-              <Skeleton className='aspect-square w-full' />
-            </div>
-            <CardHeader className='px-0 pt-4 pb-1'>
-              <Skeleton className='h-6 w-3/4' /> {/* Title Skeleton */}
-            </CardHeader>
-            <CardContent className='px-0 pb-3'>
-              <Skeleton className='h-4 w-full mb-1' /> {/* Description Skeleton */}
-              <Skeleton className='h-4 w-2/3' /> {/* Description Skeleton */}
-            </CardContent>
-            <CardFooter className='px-0'>
-              <Skeleton className='h-5 w-1/2' /> {/* Price Skeleton */}
-            </CardFooter>
-          </Card>
+          <SkeletonRoomCard key={index} />
         ))}
       </div>
     )
@@ -113,11 +98,11 @@ const RoomList = () => {
       </div>
 
       {/* Pagination */}
-      <div className='mt-10' id='location-pagination'>
+      <div className='mt-10'>
         <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
       </div>
     </>
   )
 }
 
-export default RoomList
+export default RoomListHomePage

@@ -47,10 +47,13 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, location, isInWishlist, ratin
     <Card className='group bg-background border-none shadow-none cursor-pointer hover:overflow-hidden'>
       <div className='relative overflow-hidden rounded-xl'>
         <CardImage
-          src={room.hinhAnh}
+          src={room.hinhAnh || '/images/image-alternative.jpg'}
           alt={`image-${room.id}`}
           className='aspect-square object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-105'
           onClick={handleCardClick}
+          onError={(e) => {
+            e.currentTarget.src = '/images/image-alternative.jpg' // Thay thế bằng ảnh khác khi xảy ra lỗi
+          }}
         />
         {/* Heart Icon Button */}
         <Button
@@ -65,11 +68,15 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, location, isInWishlist, ratin
           <Heart className={`w-5 h-5 md:w-7 md:h-7 text-white ${isInWishlist ? 'fill-primary' : 'fill-black/50'}`} />
         </Button>
         {/* Guest Favorite */}
-        {rating >= 4.5 && (
+        {rating >= 4.5 ? (
           <div className='absolute top-4 left-3 rounded-full bg-white px-2 py-1 shadow-md'>
             <p className='text-[9px] md:text-sm text-black font-semibold'>Được khách yêu thích</p>
           </div>
-        )}
+        ) : rating >= 3.5 ? (
+          <div className='absolute top-4 left-3 rounded-full bg-black/75 px-2 py-1 shadow-md'>
+            <p className='text-[9px] md:text-sm text-white font-semibold'>Chủ nhà siêu cấp</p>
+          </div>
+        ) : null}
       </div>
       <CardHeader className='px-0 pt-4 pb-1 space-y-1' onClick={handleCardClick}>
         <CardTitle className='flex justify-between gap-5'>

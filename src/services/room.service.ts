@@ -1,9 +1,15 @@
-import { RoomPaginationPayload, RoomPaginationResponse, RoomError } from '@/types/room.type'
+import {
+  RoomPaginationPayload,
+  RoomPaginationResponse,
+  RoomError,
+  RoomByLocationPayload,
+  RoomByLocationResponse
+} from '@/types/room.type'
 import { http } from './http.service'
 import axios from 'axios'
 
 export const roomService = {
-  roomPagination: async (data: RoomPaginationPayload) => {
+  getRoomPagination: async (data: RoomPaginationPayload) => {
     const { pageIndex, pageSize, keywords } = data
 
     try {
@@ -13,6 +19,24 @@ export const roomService = {
           pageSize,
           keywords: keywords || ''
         }
+      })
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as RoomError
+        }
+      }
+      throw error
+    }
+  },
+
+  getRoomByLocation: async (data: RoomByLocationPayload) => {
+    const { maViTri } = data
+
+    try {
+      const response = await http.get<RoomByLocationResponse>(`/phong-thue/lay-phong-theo-vi-tri`, {
+        params: { maViTri }
       })
       return response.data
     } catch (error) {

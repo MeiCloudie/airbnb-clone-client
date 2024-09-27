@@ -32,3 +32,13 @@ export interface RoomError {
   content: string
   dateTime: string
 }
+
+export interface RoomByLocationPayload {
+  maViTri: number
+}
+
+export interface RoomByLocationResponse {
+  statusCode: number
+  content: Room[]
+  dateTime: string
+}

@@ -1,5 +1,6 @@
 'use client'
 
+import RoomListByLocation from '@/app/(user)/rooms/room-list-by-location'
 // import SimpleMap from '@/components/map/map'
 import { useSearchParams } from 'next/navigation' // Import useSearchParams từ Next.js
 
@@ -30,6 +31,10 @@ export default function RoomsByLocation({}: RoomsByLocationProps) {
       <p>Guests Pets: {guestsPets}</p>
 
       <div>{/* <SimpleMap /> */}</div>
+
+      <div>
+        <RoomListByLocation maViTri={locationId ? parseInt(locationId, 10) : 0} />
+      </div>
     </div>
   )
 }
