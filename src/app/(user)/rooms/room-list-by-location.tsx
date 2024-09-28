@@ -125,7 +125,7 @@ const RoomListByLocation: React.FC<RoomListByLocationProps> = ({ maViTri, locati
           <CustomPagination pageIndex={pageIndex} setPageIndex={setPageIndex} totalPages={totalPages} />
         </div>
       ) : (
-        <h2 className='italic text-md'>
+        <h2 className='italic text-base'>
           {locationLabel && locationLabel !== ''
             ? `"${locationLabel}" hiện chưa được cập nhật phòng. Hãy liên hệ chúng tôi để được hỗ trợ sớm nhất!`
             : 'Vị trí bạn chọn chưa được xác định rõ. Hãy thử tìm kiếm lại nhé!'}

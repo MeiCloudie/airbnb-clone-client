@@ -264,7 +264,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
           {/* Recent Search Locations */}
           {recentSearches.length > 0 && (
             <div className='mt-6'>
-              <h3 className='text-md font-semibold mb-3'>Tìm kiếm gần đây</h3>
+              <h3 className='text-base font-semibold mb-3'>Tìm kiếm gần đây</h3>
               <div className='flex flex-col gap-2'>
                 {recentSearches.map((item, index) => (
                   <div
@@ -284,7 +284,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
 
           {/* Search Location By Region */}
           <div className='mt-6'>
-            <h3 className='text-md font-semibold mb-3'>
+            <h3 className='text-base font-semibold mb-3'>
               Tìm kiếm theo khu vực{' '}
               <Badge className='ms-2' variant={'outline'}>
                 Coming Soon
@@ -371,7 +371,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         <>
           {/* Tổng số khách */}
           <div className='border rounded-md px-3 py-2'>
-            <h2 className='truncate text-md font-semibold'>
+            <h2 className='truncate text-base font-semibold'>
               <FontAwesomeIcon icon={faUsers} className='me-1' /> Tổng khách: {totalGuests} khách
               {guests.pets > 0 && ` và ${guests.pets} thú cưng`}
             </h2>
@@ -479,7 +479,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='h-full overflow-auto md:h-fit'>
+      <DialogContent className='h-full overflow-auto md:max-h-[80vh]'>
         {/* Step Indicator */}
         <div className='mt-6'>
           <ul className='flex gap-4'>
@@ -518,7 +518,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         </DialogHeader>
 
         {/* Body Content */}
-        <div className=''>{steps[currentStep].content}</div>
+        <div className='overflow-auto'>{steps[currentStep].content}</div>
 
         {/* Footer Buttons */}
         <DialogFooter>

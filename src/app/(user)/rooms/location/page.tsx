@@ -2,7 +2,6 @@
 
 import RoomListByLocation from '@/app/(user)/rooms/room-list-by-location'
 import SimpleMap from '@/components/map/map'
-import { Separator } from '@/components/ui/separator'
 import { useSearchParams } from 'next/navigation'
 
 interface RoomsByLocationProps {}

@@ -112,7 +112,7 @@ const RecommendLocations = () => {
               <h3 className='truncate text-lg font-semibold transition-colors duration-300 group-hover:text-primary'>
                 {location.tenViTri}
               </h3>
-              <h5 className='truncate text-md text-muted-foreground transition-colors duration-300 group-hover:text-primary/75'>
+              <h5 className='truncate text-base text-muted-foreground transition-colors duration-300 group-hover:text-primary/75'>
                 {location.tinhThanh}, {location.quocGia}
               </h5>
             </div>
