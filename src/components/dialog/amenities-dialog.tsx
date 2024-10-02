@@ -22,7 +22,6 @@ import TiviIcon from '@/components/icon/tivi-icon'
 import WashingMachineIcon from '@/components/icon/washing-machine-icon'
 import WifiIcon from '@/components/icon/wifi-icon'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { icon } from '@fortawesome/fontawesome-svg-core'
 import React from 'react'
 
 interface AmenitiesProps {

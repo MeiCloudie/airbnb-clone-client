@@ -1,6 +1,7 @@
 'use client'
 
 import AmenitiesDialog from '@/components/dialog/amenities-dialog'
+import CommentRatingDialogDialog from '@/components/dialog/comment-rating-dialog'
 import RoomDescriptionDialog from '@/components/dialog/room-description-dialog'
 import AccuracyIcon from '@/components/icon/accuracy-icon'
 import AirConditionerIcon from '@/components/icon/air-conditioner-icon'
@@ -22,6 +23,7 @@ import WifiIcon from '@/components/icon/wifi-icon'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Ratings } from '@/components/ui/custom-rating'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -45,6 +47,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
   const [isRoomDesDialogOpen, setIsRoomDesDialogOpen] = useState(false)
   const [isAmenitiesDialogOpen, setIsAmenitiesDialogOpen] = useState(false)
+  const [isCommentRatingDialogOpen, setIsCommentRatingDialogOpen] = useState(false)
 
   const openRoomDesDialogOpen = () => {
     setIsRoomDesDialogOpen(true)
@@ -55,6 +58,11 @@ export default function RoomDetail({ params }: RoomDetailProps) {
     setIsAmenitiesDialogOpen(true)
   }
   const closeAmenitiesDialogOpen = () => setIsAmenitiesDialogOpen(false)
+
+  const openCommentRatingDialogOpen = () => {
+    setIsCommentRatingDialogOpen(true)
+  }
+  const closeCommentRatingDialogOpen = () => setIsCommentRatingDialogOpen(false)
 
   useEffect(() => {
     setRandomHost(hosts[Math.floor(Math.random() * hosts.length)])
@@ -441,6 +449,8 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             <span className='mx-1'>•</span>
             <span>120 đánh giá</span>
           </h1>
+          {/* Nếu chưa có đánh giá (SL = 0) */}
+          {/* <p className='text-sm italic text-muted-foreground mt-1'>Phòng này chưa có đánh giá chi tiết</p> */}
         </div>
 
         {/* Desktop */}
@@ -515,7 +525,63 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
       <Separator className='my-7' />
 
-      <section>{/* Bình luận */}</section>
+      <section>
+        {/* Bình luận */}
+        {/* TODO: Có một số điều chỉnh so với bản gốc */}
+
+        {/* Nếu chưa có bình luận nào (SL bình luận = 0) */}
+        {/* <p className='flex gap-1 items-center text-xs md:text-sm lg:text-base font-semibold'>
+          <MessageCircleMore /> Phòng này chưa có bình luận đánh giá nào. Hãy cho chúng tôi biết cảm nhận của bạn nhé!
+        </p> */}
+        {/* Danh sách bình luận (hiển thị tối đa 4 items đầu) */}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-16'>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className='space-y-4'>
+              <div className='flex w-full gap-4 justify-start item-center'>
+                <Avatar className='w-12 h-12'>
+                  <AvatarImage src={'/avatars/avatar-girl.jpg'} alt='avatar' className='object-cover object-top' />
+                  <AvatarFallback>G</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h4 className='text-base font-semibold'>Rose Thompson</h4>
+                  <div className='flex items-center text-sm text-muted-foreground'>
+                    <Ratings rating={2.5} totalStars={5} size={12} variant='default' interactive={false} />
+                    <p className='mx-2'>•</p>
+                    <p>08/23/2024, 04:24:58 PM</p>
+                  </div>
+                </div>
+              </div>
+              <div className='w-full'>
+                <p className='text-sm text-pretty w-full leading-relaxed'>
+                  nơi tuyệt vời với phong cách tuyệt vời. cảm thấy rất tốt khi ở đây. khu vực này là trung tâm và chìa
+                  khóa thấp. khu phố siêu an toàn đầy đủ các đại sứ quán. ẩm thực đường phố tuyệt vời và tôi yêu thích
+                  quán cà phê gần đó. rất khuyên dùng!! một điều tôi không thích là khi tôi hỏi bao nhiêu để giặt quần
+                  áo của tôi họ trích dẫn gấp 5 lần giá địa phương. nhưng đó là quyền của họ. các quý cô siêu chuyên
+                  nghiệp và rất thân thiện! Tôi không thể đổ lỗi
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Phần hiển thị tất cả với dialog */}
+        <div className='mt-10'>
+          <Button
+            variant={'outline'}
+            size={'lg'}
+            onClick={openCommentRatingDialogOpen}
+            className='border-foreground w-full md:w-fit'
+          >
+            Hiển thị tất cả bình luận đánh giá
+          </Button>
+
+          <CommentRatingDialogDialog
+            open={isCommentRatingDialogOpen}
+            onOpenChange={setIsCommentRatingDialogOpen}
+            onClose={closeCommentRatingDialogOpen}
+          />
+        </div>
+        {/* Phần POST bình luận (TODO: Tạm thời làm post public - API chưa có ràng buộc) */}
+      </section>
 
       <Separator className='my-7' />
 
