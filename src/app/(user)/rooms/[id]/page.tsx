@@ -600,11 +600,61 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
       <Separator className='my-7' />
 
-      <section>{/* Profile Chủ Nhà */}</section>
+      <section>
+        {/* Profile Chủ Nhà */}
+        <h1 className='text-base md:text-xl font-bold mb-5'>Gặp gỡ Chủ nhà</h1>
+      </section>
 
       <Separator className='my-7' />
 
-      <section>{/* Quy định */}</section>
+      <section>
+        {/* Quy định */}
+        {/* TODO: Data cứng */}
+        <h1 className='text-base md:text-xl font-bold mb-5'>Những điều cần biết</h1>
+        <div className='grid grid-cols-1 gap-4 divide-y md:divide-y-0 md:grid-cols-3 text-sm md:text-base'>
+          <div className='space-y-2 py-4'>
+            <h4 className='font-semibold'>Nội quy nhà</h4>
+            <p>Nhận phòng: 14:00 – 21:00</p>
+            <p>Trả phòng trước 12:00</p>
+            <p>Tối đa 2 khách</p>
+            <Button
+              variant={'link'}
+              className='p-0 text-base font-semibold underline text-foreground hover:text-primary'
+            >
+              Hiển thị thêm
+              <ChevronRight className='w-5 h-5' />
+            </Button>
+          </div>
+          <div className='space-y-2 py-4'>
+            <h4 className='font-semibold'>An toàn và chỗ ở</h4>
+            <p>Chỗ ở có camera an ninh ngoài nhà</p>
+            <p>Chưa có thông tin về việc có máy phát hiện khí CO</p>
+            <p>Chưa có thông tin về việc có máy báo khói</p>
+            <Button
+              variant={'link'}
+              className='p-0 text-base font-semibold underline text-foreground hover:text-primary'
+            >
+              Hiển thị thêm
+              <ChevronRight className='w-5 h-5' />
+            </Button>
+          </div>
+          <div className='space-y-2 py-4'>
+            <h4 className='font-semibold'>Chính sách hủy</h4>
+            <p>
+              Bạn được hủy miễn phí trước 22 thg 10. Bạn được hoàn tiền một phần nếu hủy trước khi nhận phòng/bắt đầu
+              trải nghiệm vào 23 thg 10.
+            </p>
+            <p>Xem toàn bộ chính sách của Chủ nhà này để biết chi tiết.</p>
+            <Button
+              variant={'link'}
+              className='p-0 text-base font-semibold underline text-foreground hover:text-primary'
+            >
+              Hiển thị thêm
+              <ChevronRight className='w-5 h-5' />
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
