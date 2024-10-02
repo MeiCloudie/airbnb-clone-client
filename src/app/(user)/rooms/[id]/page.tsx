@@ -2,19 +2,28 @@
 
 import AmenitiesDialog from '@/components/dialog/amenities-dialog'
 import RoomDescriptionDialog from '@/components/dialog/room-description-dialog'
+import AccuracyIcon from '@/components/icon/accuracy-icon'
 import AirConditionerIcon from '@/components/icon/air-conditioner-icon'
 import CameraIcon from '@/components/icon/camera-icon'
+import CheckInIcon from '@/components/icon/check-in-icon'
+import CleanlinessIcon from '@/components/icon/cleanliness-icon'
+import CommunicationIcon from '@/components/icon/communication-icon'
 import HygienProductsIcon from '@/components/icon/hygien-products-icon'
 import IronIcon from '@/components/icon/iron-icon'
 import KitchenIcon from '@/components/icon/kitchen-icon'
+import LocationIcon from '@/components/icon/location-icon'
 import ParkingSpaceIcon from '@/components/icon/parking-space-icon'
 import SuperhostIcon from '@/components/icon/superhost-icon'
 import SwimmingPoolIcon from '@/components/icon/swimming-pool-icon'
 import TiviIcon from '@/components/icon/tivi-icon'
+import ValueIcon from '@/components/icon/value-icon'
 import WashingMachineIcon from '@/components/icon/washing-machine-icon'
 import WifiIcon from '@/components/icon/wifi-icon'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Host, hosts, roomDescription } from '@/constants/data'
@@ -30,6 +39,7 @@ interface RoomDetailProps {
 
 export default function RoomDetail({ params }: RoomDetailProps) {
   const roomID = params.id
+  console.log(roomID)
 
   const [randomHost, setRandomHost] = useState<Host | null>(null) // TODO: Data cứng - Tạm thời (vì API chưa có)
 
@@ -114,6 +124,43 @@ export default function RoomDetail({ params }: RoomDetailProps) {
     }
   ]
 
+  const rating = [
+    {
+      id: 1,
+      rate: 5,
+      value: 100
+    },
+    {
+      id: 2,
+      rate: 4,
+      value: 80
+    },
+    {
+      id: 3,
+      rate: 3,
+      value: 60
+    },
+    {
+      id: 4,
+      rate: 2,
+      value: 40
+    },
+    {
+      id: 5,
+      rate: 1,
+      value: 20
+    }
+  ]
+
+  const ratingTypes = [
+    { id: 1, title: 'Mức độ sạch sẽ', rate: 4.7, icon: <CleanlinessIcon /> },
+    { id: 2, title: 'Độ chính xác', rate: 4.7, icon: <AccuracyIcon /> },
+    { id: 3, title: 'Nhận phòng', rate: 4.7, icon: <CheckInIcon /> },
+    { id: 4, title: 'Giao tiếp', rate: 4.9, icon: <CommunicationIcon /> },
+    { id: 5, title: 'Vị trí', rate: 4.7, icon: <LocationIcon /> },
+    { id: 6, title: 'Giá trị', rate: 4.8, icon: <ValueIcon /> }
+  ]
+
   return (
     <div>
       <section className='flex flex-col-reverse w-full gap-3 md:flex-col'>
@@ -165,10 +212,11 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             <h2 className='text-muted-foreground text-sm'>5 khách • 1 phòng ngủ • 2 giường • 1 phòng tắm</h2>
             <div className='mt-2 flex justify-between items-center'>
               {/* Tổng đánh giá */}
+              {/* TODO: Data cứng vì API chưa có phần đánh giá */}
               <p className='text-sm font-semibold flex items-center'>
                 <span className='flex items-center'>
                   <Star className='w-4 h-4 me-1 fill-foreground' />
-                  4.67
+                  4.75
                 </span>
                 <span className='mx-1'>•</span>
                 <span className='underline cursor-pointer'>120 đánh giá</span>
@@ -371,7 +419,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           {/* <Separator className='my-7' /> */}
 
           {/* Phần chọn ngày (Chung sự kiện với Form Đặt Phòng) */}
-          {/* ! Đã lược bỏ bớt so với trang chính */}
+          {/* TODO: Đã lược bỏ bớt so với trang chính */}
         </div>
         {/* Desktop & Tablet - Sticky Form Card đặt phòng */}
         <div className='sticky top-20 hidden lg:block lg:col-span-2'></div>
@@ -381,7 +429,89 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
       <Separator className='my-7' />
 
-      <section>{/* Đánh giá */}</section>
+      <section>
+        {/* Đánh giá */}
+        {/* TODO: Data cứng vì API chưa có phần đánh giá */}
+        <div className='mb-5'>
+          <h1 className='text-base md:text-xl font-bold flex items-center'>
+            <span className='flex items-center'>
+              <Star className='w-4 h-4 me-1 fill-foreground' />
+              4.75
+            </span>
+            <span className='mx-1'>•</span>
+            <span>120 đánh giá</span>
+          </h1>
+        </div>
+
+        {/* Desktop */}
+        <div className='hidden xl:block'>
+          <div className='grid grid-cols-7 divide-x'>
+            {/* Xếp hạng tổng thể */}
+            <div className='px-4'>
+              <h3 className='text-sm font-semibold mb-2'>Xếp hạng tổng thể</h3>
+              <div className='space-y-1 text-sm'>
+                {rating.map((rating) => (
+                  <div key={rating.id} className='w-full flex justify-center items-center gap-2'>
+                    <div className='pe-2 w-1/12'>
+                      <p className='text-xs'>{rating.rate}</p>
+                    </div>
+                    <Progress value={rating.value} className='h-1.5 w-11/12' />
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Chi tiết đánh giá */}
+            {ratingTypes.map((ratingType) => (
+              <div key={ratingType.id} className='px-4 flex flex-col justify-between items-start'>
+                <div>
+                  <h3 className='text-sm font-semibold mb-2'>{ratingType.title}</h3>
+                  <p className='text-lg font-semibold'>{ratingType.rate}</p>
+                </div>
+                <div>{ratingType.icon}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tablet & Mobile */}
+        <div className='block xl:hidden'>
+          <ScrollArea className='w-full whitespace-nowrap'>
+            <div className='flex w-max space-x-4 p-4'>
+              <div className='grid grid-cols-7 gap-4'>
+                {/* Xếp hạng tổng thể */}
+                <Card>
+                  <CardContent className='p-5'>
+                    <h3 className='text-sm font-semibold mb-2'>Xếp hạng tổng thể</h3>
+                    <div className='space-y-1 text-sm'>
+                      {rating.map((rating) => (
+                        <div key={rating.id} className='w-full flex justify-center items-center gap-2'>
+                          <div className='pe-2 w-1/12'>
+                            <p className='text-xs'>{rating.rate}</p>
+                          </div>
+                          <Progress value={rating.value} className='h-1.5 w-11/12' />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                {/* Chi tiết đánh giá */}
+                {ratingTypes.map((ratingType) => (
+                  <Card key={ratingType.id}>
+                    <CardContent className='p-5 h-full flex flex-col justify-between items-start'>
+                      <div>
+                        <h3 className='text-sm font-semibold mb-2'>{ratingType.title}</h3>
+                        <p className='text-lg font-semibold'>{ratingType.rate}</p>
+                      </div>
+                      <div>{ratingType.icon}</div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+            <ScrollBar orientation='horizontal' />
+          </ScrollArea>
+        </div>
+      </section>
 
       <Separator className='my-7' />
 
