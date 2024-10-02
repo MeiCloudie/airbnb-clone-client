@@ -4,6 +4,11 @@ import React, { useEffect, useState } from 'react'
 import GoogleMapReact from 'google-map-react'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
+
+interface SimpleMapProps {
+  className?: string
+}
 
 // interface MarkerProps {
 //   lat: number
@@ -15,7 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const MapBadge = () => <Badge variant={'default'}>Coming Soon</Badge>
 
-export default function SimpleMap() {
+export default function SimpleMap({ className }: SimpleMapProps) {
   const [loading, setLoading] = useState(true)
 
   const defaultProps = {
@@ -36,7 +41,7 @@ export default function SimpleMap() {
   }, [])
 
   return (
-    <div className='w-full h-[15vh] md:h-[30vh] xl:h-[90vh]'>
+    <div className={cn('w-full h-[15vh] md:h-[30vh] xl:h-[90vh]', className)}>
       {loading ? (
         // Hiển thị skeleton trong khi đang loading
         <Skeleton className='w-full h-full' />

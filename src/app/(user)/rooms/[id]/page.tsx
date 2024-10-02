@@ -20,6 +20,7 @@ import TiviIcon from '@/components/icon/tivi-icon'
 import ValueIcon from '@/components/icon/value-icon'
 import WashingMachineIcon from '@/components/icon/washing-machine-icon'
 import WifiIcon from '@/components/icon/wifi-icon'
+import SimpleMap from '@/components/map/map'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -580,12 +581,22 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             onClose={closeCommentRatingDialogOpen}
           />
         </div>
-        {/* Phần POST bình luận (TODO: Tạm thời làm post public - API chưa có ràng buộc) */}
       </section>
 
       <Separator className='my-7' />
 
-      <section>{/* Map */}</section>
+      <section>
+        {/* Map */}
+        {/* TODO: Map tĩnh */}
+        <h1 className='text-base md:text-xl font-bold mb-5'>Nơi bạn sẽ đến</h1>
+
+        {/* Vị trí */}
+        <p className='text-sm md:text-base mb-4'>Quận 1, Hồ Chí Minh, Việt Nam</p>
+
+        <div>
+          <SimpleMap className='h-[15vh] md:h-[20vh] xl:h-[30vh]' />
+        </div>
+      </section>
 
       <Separator className='my-7' />
 
