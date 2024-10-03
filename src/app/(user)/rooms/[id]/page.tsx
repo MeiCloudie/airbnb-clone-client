@@ -5,6 +5,7 @@ import CommentRatingDialogDialog from '@/components/dialog/comment-rating-dialog
 import RoomDescriptionDialog from '@/components/dialog/room-description-dialog'
 import AccuracyIcon from '@/components/icon/accuracy-icon'
 import AirConditionerIcon from '@/components/icon/air-conditioner-icon'
+import AirbnbSafetyIcon from '@/components/icon/airbnb-safety-icon'
 import CameraIcon from '@/components/icon/camera-icon'
 import CheckInIcon from '@/components/icon/check-in-icon'
 import CleanlinessIcon from '@/components/icon/cleanliness-icon'
@@ -18,6 +19,7 @@ import SuperhostIcon from '@/components/icon/superhost-icon'
 import SwimmingPoolIcon from '@/components/icon/swimming-pool-icon'
 import TiviIcon from '@/components/icon/tivi-icon'
 import ValueIcon from '@/components/icon/value-icon'
+import VerifiedIcon from '@/components/icon/verified-icon'
 import WashingMachineIcon from '@/components/icon/washing-machine-icon'
 import WifiIcon from '@/components/icon/wifi-icon'
 import SimpleMap from '@/components/map/map'
@@ -30,7 +32,18 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Host, hosts, roomDescription } from '@/constants/data'
-import { Calendar, Car, ChevronRight, DoorOpen, Heart, ImageIcon, Share, Star } from 'lucide-react'
+import {
+  Calendar,
+  Car,
+  ChevronRight,
+  DoorOpen,
+  Globe,
+  GraduationCap,
+  Heart,
+  ImageIcon,
+  Share,
+  Star
+} from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -603,6 +616,106 @@ export default function RoomDetail({ params }: RoomDetailProps) {
       <section>
         {/* Profile Chủ Nhà */}
         <h1 className='text-base md:text-xl font-bold mb-5'>Gặp gỡ Chủ nhà</h1>
+        <div className='w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-y-10 lg:gap-x-14 2xl:gap-x-24'>
+          {/* Card */}
+          <div className='col-span-1 w-full'>
+            <Card className='shadow-xl rounded-3xl w-full'>
+              <CardContent className='flex px-0 py-7 justify-between items-center'>
+                <div className='col-span-1 flex flex-col items-center justify-center w-2/3'>
+                  <div className='relative p-1'>
+                    <Avatar className='w-28 h-28'>
+                      <AvatarImage
+                        src={randomHost.avatar}
+                        alt={randomHost.fullname}
+                        className='object-cover object-top'
+                      />
+                      <AvatarFallback>{randomHost.fullname.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    {/* Icon Chủ nhà/Người tổ chức đã được xác minh */}
+                    <div className='absolute bottom-1 right-0'>
+                      <div className='bg-primary p-2 aspect-square rounded-full'>
+                        <VerifiedIcon />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='text-center mt-2'>
+                    <h1 className='text-xl font-bold'>{randomHost.fullname}</h1>
+                    <p className='text-sm font-semibold'>
+                      {randomHost.superhost ? 'Chủ nhà siêu cấp' : 'Chủ nhà/Người tổ chức'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className='col-span-1 lg:col-span-2 w-1/3 font-semibold'>
+                  <h5 className='font-bold text-xl'>326</h5>
+                  <p className='text-xs'>Đánh giá</p>
+                  <Separator className='my-4' />
+                  <h5 className='font-bold text-xl'>4.96</h5>
+                  <p className='text-xs'>Xếp hạng</p>
+                  <Separator className='my-4' />
+                  <h5 className='font-bold text-xl'>{randomHost.experience}</h5>
+                  <p className='text-xs'>Tháng kinh nghiệm đón tiếp khách</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 2 phần nổi bật trong info - TODO: Data cứng */}
+            <div className='mt-10 space-y-2'>
+              {/* phần 1 */}
+              <div className='flex gap-2 items-center justify-start text-pretty text-xs md:text-sm truncate'>
+                <GraduationCap className='w-5 h-5' />
+                <p>Nơi tôi từng theo học: Macquarie University</p>
+              </div>
+              {/* phần 2 */}
+              <div className='flex gap-2 items-center justify-start text-pretty text-xs md:text-sm truncate'>
+                <Globe className='w-5 h-5' />
+                <p>Nói Tiếng Anh và Tiếng Việt</p>
+              </div>
+              {/* button hiển thị thêm */}
+              <Button
+                variant={'link'}
+                className='p-0 text-base font-semibold underline text-foreground hover:text-primary'
+              >
+                Hiển thị thêm
+                <ChevronRight className='w-5 h-5' />
+              </Button>
+            </div>
+          </div>
+          {/* Information */}
+          {/* TODO: Data cứng */}
+          <div className='col-span-1 xl:col-span-2 space-y-8'>
+            {randomHost.superhost && (
+              <div className='space-y-4 text-pretty'>
+                <h3 className='mb-3 text-base md:text-lg font-semibold'>
+                  {randomHost.fullname} là một Chủ nhà siêu cấp
+                </h3>
+                <p className='text-xs md:text-base'>
+                  Chủ nhà siêu cấp là những người có kinh nghiệm, được đánh giá cao và cam kết mang lại kỳ nghỉ tuyệt
+                  vời cho khách.
+                </p>
+              </div>
+            )}
+            <div>
+              <h3 className='mb-3 text-base md:text-lg font-semibold'>Thông tin Chủ nhà</h3>
+              <p className='text-xs md:text-base'>Tỉ lệ phản hồi: 100%</p>
+              <p className='text-xs md:text-base'>Phản hồi trong vòng 1 giờ</p>
+            </div>
+            <Button variant={'default'} className='w-full md:w-fit' size={'lg'}>
+              Nhắn tin cho Chủ nhà
+            </Button>
+
+            <Separator className='my-7' />
+
+            <div className='flex items-center justify-start gap-3'>
+              <AirbnbSafetyIcon />
+              <p className='text-xs'>
+                Để bảo vệ khoản thanh toán của bạn, tuyệt đối không chuyển tiền hoặc liên lạc bên ngoài trang web hoặc
+                ứng dụng Airbnb.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <Separator className='my-7' />
