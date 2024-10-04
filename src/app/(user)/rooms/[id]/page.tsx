@@ -3,6 +3,7 @@
 import AmenitiesDialog from '@/components/dialog/amenities-dialog'
 import CommentRatingDialogDialog from '@/components/dialog/comment-rating-dialog'
 import RoomDescriptionDialog from '@/components/dialog/room-description-dialog'
+import ReservationForm from '@/components/form/reservation-form'
 import AccuracyIcon from '@/components/icon/accuracy-icon'
 import AirConditionerIcon from '@/components/icon/air-conditioner-icon'
 import AirbnbSafetyIcon from '@/components/icon/airbnb-safety-icon'
@@ -37,6 +38,7 @@ import {
   Car,
   ChevronRight,
   DoorOpen,
+  FlagIcon,
   Globe,
   GraduationCap,
   Heart,
@@ -223,7 +225,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
         </div>
       </section>
 
-      <section className='my-2 md:my-4 w-full grid grid-cols-1 lg:grid-cols-3 gap-5'>
+      <section className='my-2 md:my-4 w-full grid grid-cols-1 lg:grid-cols-3 gap-10'>
         {/* Nội dung chi tiết phòng */}
         <div className='col-span-1 lg:col-span-2'>
           {/* Thông tin cơ bản của phòng */}
@@ -443,10 +445,24 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           {/* Phần chọn ngày (Chung sự kiện với Form Đặt Phòng) */}
           {/* TODO: Đã lược bỏ bớt so với trang chính */}
         </div>
-        {/* Desktop & Tablet - Sticky Form Card đặt phòng */}
-        <div className='sticky top-20 hidden lg:block lg:col-span-2'></div>
-        {/* Mobile - Fixed Form Bottom đặt phòng */}
-        <div className='fixed bottom-0 left-0 w-full block lg:hidden'></div>
+        <div>
+          {/* Desktop & Tablet - Sticky Form Card đặt phòng */}
+          <div className='sticky top-32 z-30 hidden lg:block'>
+            <Card className='shadow-xl'>
+              <CardContent className='p-7'>
+                <ReservationForm roomId={roomID} />
+              </CardContent>
+            </Card>
+            <div className='flex items-center justify-center gap-2 w-full mt-4'>
+              <FlagIcon className='w-4 h-4 fill-foreground' />
+              <Button variant={'link'} className='text-foreground p-0'>
+                Báo cáo nhà/phòng cho thuê này
+              </Button>
+            </div>
+          </div>
+          {/* Mobile - Fixed Form Bottom đặt phòng */}
+          <div className='fixed bottom-0 left-0 w-full block lg:hidden'></div>
+        </div>
       </section>
 
       <Separator className='my-7' />

@@ -82,7 +82,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
       }
 
       // Log kết quả sau khi thay đổi
-      console.log('Selected Guests:', updatedGuests)
+      // console.log('Selected Guests:', updatedGuests)
 
       return updatedGuests
     })
@@ -117,7 +117,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
   }, [open, getAllLocations, initialStep])
 
   const handleDateRangeChange = (dateRange: DateRange | undefined) => {
-    console.log('Selected Date Range:', dateRange)
+    // console.log('Selected Date Range:', dateRange)
     setSelectedDateRange(dateRange)
   }
 
@@ -134,7 +134,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
       id: location.id,
       label: `${location.tenViTri}, ${location.tinhThanh}, ${location.quocGia}`
     }
-    console.log('Selected Location:', newSelectedLocation)
+    // console.log('Selected Location:', newSelectedLocation)
 
     setSelectedLocation(newSelectedLocation)
     setOpenCombobox(false)
@@ -151,7 +151,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
 
   // Xử lý khi chọn từ lịch sử tìm kiếm
   const handleSelectFromHistory = (location: { id: number; label: string }) => {
-    console.log('Selected Location:', location)
+    // console.log('Selected Location:', location)
 
     setSelectedLocation(location)
     setOpenCombobox(false)
