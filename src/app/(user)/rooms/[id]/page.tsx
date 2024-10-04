@@ -1,7 +1,8 @@
 'use client'
 
 import AmenitiesDialog from '@/components/dialog/amenities-dialog'
-import CommentRatingDialogDialog from '@/components/dialog/comment-rating-dialog'
+import CommentRatingDialog from '@/components/dialog/comment-rating-dialog'
+import ReservationDialog from '@/components/dialog/reservation-dialog'
 import RoomDescriptionDialog from '@/components/dialog/room-description-dialog'
 import ReservationForm from '@/components/form/reservation-form'
 import AccuracyIcon from '@/components/icon/accuracy-icon'
@@ -33,6 +34,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Host, hosts, roomDescription } from '@/constants/data'
+import { convertUSDToVND } from '@/format/currency'
 import {
   Calendar,
   Car,
@@ -56,14 +58,15 @@ interface RoomDetailProps {
 }
 
 export default function RoomDetail({ params }: RoomDetailProps) {
-  const roomID = params.id
-  console.log(roomID)
+  const roomId = params.id
+  console.log(roomId)
 
   const [randomHost, setRandomHost] = useState<Host | null>(null) // TODO: Data cứng - Tạm thời (vì API chưa có)
 
   const [isRoomDesDialogOpen, setIsRoomDesDialogOpen] = useState(false)
   const [isAmenitiesDialogOpen, setIsAmenitiesDialogOpen] = useState(false)
   const [isCommentRatingDialogOpen, setIsCommentRatingDialogOpen] = useState(false)
+  const [isReservationDialogOpen, setIsReservationDialogOpen] = useState(false)
 
   const openRoomDesDialogOpen = () => {
     setIsRoomDesDialogOpen(true)
@@ -79,6 +82,11 @@ export default function RoomDetail({ params }: RoomDetailProps) {
     setIsCommentRatingDialogOpen(true)
   }
   const closeCommentRatingDialogOpen = () => setIsCommentRatingDialogOpen(false)
+
+  const openReservationDialogOpen = () => {
+    setIsReservationDialogOpen(true)
+  }
+  const closeReservationDialogOpen = () => setIsReservationDialogOpen(false)
 
   useEffect(() => {
     setRandomHost(hosts[Math.floor(Math.random() * hosts.length)])
@@ -450,7 +458,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           <div className='sticky top-32 z-30 hidden lg:block'>
             <Card className='shadow-xl'>
               <CardContent className='p-7'>
-                <ReservationForm roomId={roomID} />
+                <ReservationForm roomId={roomId} />
               </CardContent>
             </Card>
             <div className='flex items-center justify-center gap-2 w-full mt-4'>
@@ -461,7 +469,23 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             </div>
           </div>
           {/* Mobile - Fixed Form Bottom đặt phòng */}
-          <div className='fixed bottom-0 left-0 w-full block lg:hidden'></div>
+          {/* TODO: Cách fixed này làm đè lên footer (Xử lý sau) */}
+          <div className='fixed z-50 bottom-0 left-0 w-full block lg:hidden bg-background border-t px-5 md:px-10 py-4'>
+            <div className='flex justify-between items-center'>
+              <h2 className='text-lg'>
+                <span className='text-xl font-bold'>₫{convertUSDToVND(127)}</span> / đêm
+              </h2>
+              <Button variant={'default'} size={'lg'} onClick={openReservationDialogOpen}>
+                Đặt phòng
+              </Button>
+              <ReservationDialog
+                open={isReservationDialogOpen}
+                onOpenChange={setIsReservationDialogOpen}
+                onClose={closeReservationDialogOpen}
+                roomId={roomId}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -604,7 +628,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             Hiển thị tất cả bình luận đánh giá
           </Button>
 
-          <CommentRatingDialogDialog
+          <CommentRatingDialog
             open={isCommentRatingDialogOpen}
             onOpenChange={setIsCommentRatingDialogOpen}
             onClose={closeCommentRatingDialogOpen}

@@ -14,7 +14,7 @@ interface CommentRatingDialogProps {
   onClose: () => void
 }
 
-const CommentRatingDialogDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenChange, onClose }) => {
+const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenChange, onClose }) => {
   const [openPopover, setOpenPopover] = useState(false)
 
   const filters = [
@@ -122,4 +122,4 @@ const CommentRatingDialogDialog: React.FC<CommentRatingDialogProps> = ({ open, o
   )
 }
 
-export default CommentRatingDialogDialog
+export default CommentRatingDialog

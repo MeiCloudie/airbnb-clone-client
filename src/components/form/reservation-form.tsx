@@ -81,7 +81,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
             <Popover>
               <PopoverTrigger asChild>
                 <div className='cursor-pointer w-full flex gap-4 justify-center items-center'>
-                  <div>
+                  <div className='w-full'>
                     <p className='text-sm mb-2 font-semibold flex items-center'>
                       <CalendarIcon className='mr-2 h-4 w-4' />
                       Nhận phòng
@@ -94,7 +94,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
                       value={selectedDateRange?.from ? format(selectedDateRange.from, "dd 'thg' MM, yyyy") : ''}
                     />
                   </div>
-                  <div>
+                  <div className='w-full'>
                     <p className='text-sm mb-2 font-semibold flex items-center'>
                       <CalendarIcon className='mr-2 h-4 w-4' />
                       Trả phòng
