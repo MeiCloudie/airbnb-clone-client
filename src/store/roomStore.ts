@@ -5,7 +5,9 @@ import {
   RoomPaginationResponse,
   RoomError,
   RoomByLocationPayload,
-  RoomByLocationResponse
+  RoomByLocationResponse,
+  RoomByIdResponse,
+  RoomByIdPayload
 } from '@/types/room.type'
 
 interface RoomState {
@@ -13,8 +15,10 @@ interface RoomState {
   error: RoomError | null
   data: RoomPaginationResponse | null
   roomsByLocation: RoomByLocationResponse | null
+  roomsById: RoomByIdResponse | null
   getRoomPagination: (payload: RoomPaginationPayload) => Promise<void>
   getRoomByLocation: (payload: RoomByLocationPayload) => Promise<void>
+  getRoomById: (payload: RoomByIdPayload) => Promise<void>
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -22,6 +26,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   error: null,
   data: null,
   roomsByLocation: null,
+  roomsById: null,
 
   getRoomPagination: async (payload: RoomPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -57,6 +62,30 @@ export const useRoomStore = create<RoomState>((set) => ({
         set({ isLoading: false, error: response as RoomError, roomsByLocation: null })
       } else {
         set({ isLoading: false, roomsByLocation: response as RoomByLocationResponse, error: null })
+      }
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: {
+          statusCode: 500,
+          message: 'Internal Server Error',
+          content: 'Unknown error',
+          dateTime: new Date().toISOString()
+        } as RoomError
+      })
+    }
+  },
+
+  getRoomById: async (payload: RoomByIdPayload) => {
+    set({ isLoading: true, error: null })
+
+    try {
+      const response = await roomService.getRoomById(payload)
+
+      if (response && typeof response === 'object' && 'statusCode' in response && response.statusCode >= 400) {
+        set({ isLoading: false, error: response as RoomError, roomsById: null })
+      } else {
+        set({ isLoading: false, roomsById: response as RoomByIdResponse, error: null })
       }
     } catch (error) {
       set({

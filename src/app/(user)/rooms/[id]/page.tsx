@@ -35,6 +35,9 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Host, hosts, roomDescription } from '@/constants/data'
 import { convertUSDToVND } from '@/format/currency'
+import { useLocation } from '@/hooks/useLocation'
+import { useRoom } from '@/hooks/useRoom'
+import { useSwalAlert } from '@/hooks/useSwalAlert'
 import {
   Calendar,
   Car,
@@ -60,6 +63,13 @@ interface RoomDetailProps {
 export default function RoomDetail({ params }: RoomDetailProps) {
   const roomId = params.id
   console.log(roomId)
+
+  const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
+  const { isLoading, roomsById, error, getRoomById } = useRoom()
+  const { dataAllLocations, getAllLocations } = useLocation()
+
+  const { showAlert } = useSwalAlert()
+  const [hasShownError, setHasShownError] = useState(false) // Flag để theo dõi nếu lỗi đã được hiển thị
 
   const [randomHost, setRandomHost] = useState<Host | null>(null) // TODO: Data cứng - Tạm thời (vì API chưa có)
 
@@ -89,8 +99,36 @@ export default function RoomDetail({ params }: RoomDetailProps) {
   const closeReservationDialogOpen = () => setIsReservationDialogOpen(false)
 
   useEffect(() => {
+    getAllLocations()
+  }, [getAllLocations])
+
+  useEffect(() => {
+    // Gọi API room id khi component mount
+    if (params?.id) {
+      getRoomById({ id: parseInt(params.id, 10) }).finally(() => setIsFirstLoading(false))
+    }
+
+    // Random Host
     setRandomHost(hosts[Math.floor(Math.random() * hosts.length)])
-  }, [])
+  }, [params?.id, getRoomById])
+
+  useEffect(() => {
+    if (error && !hasShownError) {
+      // Chỉ hiển thị thông báo lỗi 1 lần
+      // console.log(error.content)
+      showAlert({
+        title: 'Phát hiện lỗi',
+        text: 'Đã có lỗi xảy ra khi tải dữ liệu, vui lòng thử lại sau',
+        icon: 'question',
+        confirmButtonText: 'Đã hiểu'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload()
+        }
+      })
+      setHasShownError(true) // Đánh dấu đã hiển thị lỗi
+    }
+  }, [error, hasShownError, showAlert])
 
   const [isTranslated, setIsTranslated] = useState(false)
 
@@ -98,63 +136,97 @@ export default function RoomDetail({ params }: RoomDetailProps) {
     setIsTranslated(!isTranslated)
   }
 
-  // Điều kiện kèm với loading sẽ update sau
-  if (!randomHost) {
+  if (isFirstLoading || isLoading || !randomHost) {
     return <Skeleton className='w-full h-5' />
   }
 
-  const amenities = [
+  if (error) {
+    return null
+  }
+
+  if (!roomsById || !roomsById.content) {
+    return (
+      <div className='text-center'>
+        <p>No room data found.</p>
+      </div>
+    )
+  }
+
+  const room = roomsById.content
+  const location = dataAllLocations?.content.find((loc) => loc.id === room.maViTri)
+
+  // Tạo mảng chứa thông tin khách, phòng ngủ, giường, phòng tắm
+  const roomDetails = [
+    room.khach > 0 && `${room.phongNgu} khách`,
+    room.phongNgu > 0 && `${room.phongNgu} phòng ngủ`,
+    room.giuong > 0 && `${room.giuong} giường`,
+    room.phongTam > 0 && `${room.phongTam} phòng tắm`
+  ].filter(Boolean) // Lọc ra các giá trị hợp lệ
+
+  const allAmenities = [
     {
       id: 1,
       icon: <CameraIcon />,
-      description: 'Chỗ ở có camera an ninh ngoài nhà'
+      description: 'Chỗ ở có camera an ninh ngoài nhà',
+      isAvailable: true // Always available
     },
     {
       id: 2,
       icon: <HygienProductsIcon />,
-      description: 'Sản phẩm vệ sinh'
+      description: 'Sản phẩm vệ sinh',
+      isAvailable: true // Always available
     },
     {
       id: 3,
       icon: <WashingMachineIcon />,
-      description: 'Máy giặt'
+      description: 'Máy giặt',
+      isAvailable: room.mayGiat
     },
     {
       id: 4,
       icon: <TiviIcon />,
-      description: 'Tivi'
+      description: 'Tivi',
+      isAvailable: room.tivi
     },
     {
       id: 5,
       icon: <AirConditionerIcon />,
-      description: 'Điều hoà nhiệt độ'
+      description: 'Điều hòa nhiệt độ',
+      isAvailable: room.dieuHoa
     },
     {
       id: 6,
       icon: <WifiIcon />,
-      description: 'Wi-fi'
+      description: 'Wi-Fi',
+      isAvailable: room.wifi
     },
     {
       id: 7,
       icon: <KitchenIcon />,
-      description: 'Bếp'
+      description: 'Bếp',
+      isAvailable: room.bep
     },
     {
       id: 8,
       icon: <ParkingSpaceIcon />,
-      description: 'Chỗ đỗ xe miễn phí'
+      description: 'Chỗ đỗ xe miễn phí',
+      isAvailable: room.doXe
     },
     {
       id: 9,
       icon: <SwimmingPoolIcon />,
-      description: 'Hồ bơi'
+      description: 'Hồ bơi',
+      isAvailable: room.hoBoi
     },
     {
       id: 10,
       icon: <IronIcon />,
-      description: 'Bàn ủi'
+      description: 'Bàn ủi',
+      isAvailable: room.banUi || room.banLa
     }
   ]
+
+  const amenities = allAmenities.filter((amenity) => amenity.isAvailable)
 
   const rating = [
     {
@@ -200,9 +272,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
         <div className='w-full flex gap-10 flex-row justify-between items-start'>
           {/* Tên phòng */}
           <div className=''>
-            <h1 className='font-bold text-pretty text-xl lg:text-2xl'>
-              Tên phòng Nhà trên bầu trời Khu phố 3 tuổi/Tạ Hiện/Hồ Hoàn Kiếm
-            </h1>
+            <h1 className='font-bold text-pretty text-xl lg:text-2xl'>{room.tenPhong}</h1>
           </div>
           {/* Desktop - Nút chia sẻ và nút lưu */}
           <div className='hidden md:flex md:flex-row md:justify-end md:items-center gap-2'>
@@ -220,11 +290,13 @@ export default function RoomDetail({ params }: RoomDetailProps) {
         {/* Hình ảnh */}
         <div className='relative'>
           <Image
-            src={'/images/image-alternative.jpg'}
+            loader={({ src }) => src}
+            src={room.hinhAnh}
             alt='image-alternative'
             width={500}
             height={500}
-            className='w-full h-96 object-cover object-center rounded-xl'
+            unoptimized
+            className='w-full h-full object-cover object-center rounded-xl'
           />
           <Button variant={'secondary'} className='absolute bottom-3 right-3 rounded-sm shadow-md'>
             <ImageIcon className='w-4 h-4 me-2' />
@@ -239,9 +311,11 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           {/* Thông tin cơ bản của phòng */}
           <div className='w-full'>
             {/* Vị trí */}
-            <h1 className='font-semibold text-base lg:text-xl'>Phòng cho thuê tại Quận 1, Hồ Chí Minh, Việt Nam</h1>
+            <h1 className='font-semibold text-base lg:text-xl'>{`Phòng cho thuê tại ${location?.tenViTri}, ${location?.tinhThanh}, ${location?.quocGia}`}</h1>
             {/* SL khách, phòng ngủ, giường, phòng tắm */}
-            <h2 className='text-muted-foreground text-sm'>5 khách • 1 phòng ngủ • 2 giường • 1 phòng tắm</h2>
+            <h2 className='text-muted-foreground text-sm'>
+              {roomDetails.length > 0 ? roomDetails.join(' • ') : 'Chưa cập nhật thông tin phòng'}
+            </h2>
             <div className='mt-2 flex justify-between items-center'>
               {/* Tổng đánh giá */}
               {/* TODO: Data cứng vì API chưa có phần đánh giá */}
@@ -267,7 +341,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
           <Separator className='my-7' />
 
-          {/* Thông tin chủ nhà */}
+          {/* Thông tin chủ nhà (Data cứng vì API chưa có thông tin chủ nhà) */}
           <div className='flex justify-start items-center gap-4'>
             <div className='relative p-1'>
               <Avatar className='w-12 h-12'>
@@ -347,7 +421,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
           <Separator className='my-7' />
 
-          {/* Mô tả phòng */}
+          {/* Mô tả phòng (Data cứng) */}
           <div className='space-y-5'>
             <div className='flex flex-col items-start md:flex-row md:justify-start md:items-center py-2 px-4 rounded-md bg-muted'>
               <p className='text-xs md:text-base'>
@@ -408,7 +482,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
                 className='w-1/2 md:w-1/4 aspect-square object-cover object-center rounded-xl'
               />
               <h3 className='mt-2 text-sm md:text-base font-semibold'>Phòng ngủ</h3>
-              <p className='text-xs md:text-sm text-muted-foreground'>2 giường king</p>
+              <p className='text-xs md:text-sm text-muted-foreground'>{`${room.giuong > 0 ? room.giuong : '2'} giường king`}</p>
             </div>
           </div>
 
@@ -453,6 +527,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           {/* Phần chọn ngày (Chung sự kiện với Form Đặt Phòng) */}
           {/* TODO: Đã lược bỏ bớt so với trang chính */}
         </div>
+
         <div>
           {/* Desktop & Tablet - Sticky Form Card đặt phòng */}
           <div className='sticky top-32 z-30 hidden lg:block'>
@@ -644,7 +719,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
         <h1 className='text-base md:text-xl font-bold mb-5'>Nơi bạn sẽ đến</h1>
 
         {/* Vị trí */}
-        <p className='text-sm md:text-base mb-4'>Quận 1, Hồ Chí Minh, Việt Nam</p>
+        <p className='text-sm md:text-base mb-4'>{`${location?.tenViTri}, ${location?.tinhThanh}, ${location?.quocGia}`}</p>
 
         <div>
           <SimpleMap className='h-[15vh] md:h-[20vh] xl:h-[30vh]' />

@@ -42,3 +42,13 @@ export interface RoomByLocationResponse {
   content: Room[]
   dateTime: string
 }
+
+export interface RoomByIdPayload {
+  id: number
+}
+
+export interface RoomByIdResponse {
+  statusCode: number
+  content: Room
+  dateTime: string
+}
