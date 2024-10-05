@@ -35,6 +35,7 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Host, hosts, roomDescription } from '@/constants/data'
 import { convertUSDToVND } from '@/format/currency'
+import { useComment } from '@/hooks/useComment'
 import { useLocation } from '@/hooks/useLocation'
 import { useRoom } from '@/hooks/useRoom'
 import { useSwalAlert } from '@/hooks/useSwalAlert'
@@ -48,10 +49,12 @@ import {
   GraduationCap,
   Heart,
   ImageIcon,
+  MessageCircleMore,
   Share,
   Star
 } from 'lucide-react'
 import Image from 'next/image'
+import { notFound } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 interface RoomDetailProps {
@@ -62,10 +65,10 @@ interface RoomDetailProps {
 
 export default function RoomDetail({ params }: RoomDetailProps) {
   const roomId = params.id
-  console.log(roomId)
 
   const [isFirstLoading, setIsFirstLoading] = useState(true) // Kiểm soát UI khi lần đầu load trang
   const { isLoading, roomsById, error, getRoomById } = useRoom()
+  const { isLoading: isCommentLoading, dataCommentByRoomId, error: commentError, getCommentByRoomId } = useComment()
   const { dataAllLocations, getAllLocations } = useLocation()
 
   const { showAlert } = useSwalAlert()
@@ -105,7 +108,9 @@ export default function RoomDetail({ params }: RoomDetailProps) {
   useEffect(() => {
     // Gọi API room id khi component mount
     if (params?.id) {
-      getRoomById({ id: parseInt(params.id, 10) }).finally(() => setIsFirstLoading(false))
+      getRoomById({ id: parseInt(params.id, 10) })
+        .finally(() => setIsFirstLoading(false))
+        .catch(() => notFound())
     }
 
     // Random Host
@@ -113,9 +118,16 @@ export default function RoomDetail({ params }: RoomDetailProps) {
   }, [params?.id, getRoomById])
 
   useEffect(() => {
-    if (error && !hasShownError) {
-      // Chỉ hiển thị thông báo lỗi 1 lần
-      // console.log(error.content)
+    if (params?.id) {
+      getCommentByRoomId({ roomId: params.id })
+    }
+  }, [params?.id, getCommentByRoomId])
+
+  useEffect(() => {
+    if (error && error.statusCode === 404) {
+      notFound() // Nếu lỗi là 404 thì chuyển đến trang không tìm thấy
+    } else if (error && !hasShownError) {
+      // Nếu là lỗi khác, hiển thị thông báo lỗi
       showAlert({
         title: 'Phát hiện lỗi',
         text: 'Đã có lỗi xảy ra khi tải dữ liệu, vui lòng thử lại sau',
@@ -136,20 +148,18 @@ export default function RoomDetail({ params }: RoomDetailProps) {
     setIsTranslated(!isTranslated)
   }
 
-  if (isFirstLoading || isLoading || !randomHost) {
+  // Tạm thời gôm chung tất cả trạng thái loading
+  if (isFirstLoading || isLoading || !randomHost || isCommentLoading) {
     return <Skeleton className='w-full h-5' />
   }
 
-  if (error) {
+  // Tạm thời gôm chung tất cả trạng thái error
+  if (error || commentError) {
     return null
   }
 
   if (!roomsById || !roomsById.content) {
-    return (
-      <div className='text-center'>
-        <p>No room data found.</p>
-      </div>
-    )
+    notFound()
   }
 
   const room = roomsById.content
@@ -659,35 +669,47 @@ export default function RoomDetail({ params }: RoomDetailProps) {
         {/* TODO: Có một số điều chỉnh so với bản gốc */}
 
         {/* Nếu chưa có bình luận nào (SL bình luận = 0) */}
-        {/* <p className='flex gap-1 items-center text-xs md:text-sm lg:text-base font-semibold'>
-          <MessageCircleMore /> Phòng này chưa có bình luận đánh giá nào. Hãy cho chúng tôi biết cảm nhận của bạn nhé!
-        </p> */}
+        {dataCommentByRoomId?.content.length === 0 && (
+          <p className='flex gap-1 items-center text-xs md:text-sm lg:text-base font-semibold'>
+            <MessageCircleMore /> Phòng này chưa có bình luận đánh giá nào. Hãy cho chúng tôi biết cảm nhận của bạn nhé!
+          </p>
+        )}
         {/* Danh sách bình luận (hiển thị tối đa 4 items đầu) */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-16'>
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className='space-y-4'>
+          {dataCommentByRoomId?.content.slice(0, 4).map((comment) => (
+            <div key={comment.id} className='space-y-4'>
               <div className='flex w-full gap-4 justify-start item-center'>
                 <Avatar className='w-12 h-12'>
-                  <AvatarImage src={'/avatars/avatar-girl.jpg'} alt='avatar' className='object-cover object-top' />
-                  <AvatarFallback>G</AvatarFallback>
+                  <AvatarImage src={comment.avatar} alt='avatar' className='object-cover object-top' />
+                  <AvatarFallback className='bg-primary text-background font-bold'>
+                    {comment.tenNguoiBinhLuan.toString().charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h4 className='text-base font-semibold'>Rose Thompson</h4>
+                  <h4 className='text-base font-semibold'>{comment.tenNguoiBinhLuan}</h4>
                   <div className='flex items-center text-sm text-muted-foreground'>
-                    <Ratings rating={2.5} totalStars={5} size={12} variant='default' interactive={false} />
+                    <Ratings
+                      rating={comment.saoBinhLuan}
+                      totalStars={5}
+                      size={12}
+                      variant='default'
+                      interactive={false}
+                    />
                     <p className='mx-2'>•</p>
-                    <p>08/23/2024, 04:24:58 PM</p>
+                    <p>
+                      {new Date(comment.ngayBinhLuan).toLocaleDateString('en-US')},{' '}
+                      {new Date(comment.ngayBinhLuan).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                      })}
+                    </p>
                   </div>
                 </div>
               </div>
               <div className='w-full'>
-                <p className='text-sm text-pretty w-full leading-relaxed'>
-                  nơi tuyệt vời với phong cách tuyệt vời. cảm thấy rất tốt khi ở đây. khu vực này là trung tâm và chìa
-                  khóa thấp. khu phố siêu an toàn đầy đủ các đại sứ quán. ẩm thực đường phố tuyệt vời và tôi yêu thích
-                  quán cà phê gần đó. rất khuyên dùng!! một điều tôi không thích là khi tôi hỏi bao nhiêu để giặt quần
-                  áo của tôi họ trích dẫn gấp 5 lần giá địa phương. nhưng đó là quyền của họ. các quý cô siêu chuyên
-                  nghiệp và rất thân thiện! Tôi không thể đổ lỗi
-                </p>
+                <p className='text-sm text-pretty w-full leading-relaxed'>{comment.noiDung}</p>
               </div>
             </div>
           ))}
@@ -707,6 +729,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             open={isCommentRatingDialogOpen}
             onOpenChange={setIsCommentRatingDialogOpen}
             onClose={closeCommentRatingDialogOpen}
+            comments={dataCommentByRoomId?.content || []}
           />
         </div>
       </section>

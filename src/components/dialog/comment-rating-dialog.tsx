@@ -5,6 +5,7 @@ import { Ratings } from '@/components/ui/custom-rating'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
+import { CommentByRoomId } from '@/types/comment.type'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -12,9 +13,10 @@ interface CommentRatingDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onClose: () => void
+  comments: CommentByRoomId[]
 }
 
-const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenChange, onClose }) => {
+const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenChange, onClose, comments }) => {
   const [openPopover, setOpenPopover] = useState(false)
 
   const filters = [
@@ -88,33 +90,49 @@ const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenC
         <div className='overflow-auto'>
           {/* Danh sách tất cả bình luận */}
           <div className='mt-2 grid grid-cols-1 gap-16'>
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className='space-y-4'>
-                <div className='flex w-full gap-4 justify-start item-center'>
-                  <Avatar className='w-12 h-12'>
-                    <AvatarImage src={'/avatars/avatar-girl.jpg'} alt='avatar' className='object-cover object-top' />
-                    <AvatarFallback>G</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h4 className='text-base font-semibold'>Rose Thompson</h4>
-                    <div className='flex items-center text-sm text-muted-foreground'>
-                      <Ratings rating={2.5} totalStars={5} size={12} variant='default' interactive={false} />
-                      <p className='mx-2'>•</p>
-                      <p>08/23/2024, 04:24:58 PM</p>
+            {comments.length === 0 ? (
+              <p className='text-sm text-center'>
+                Chưa có bình luận đánh giá nào. Hãy là người đầu tiên để lại đánh giá!
+              </p>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id} className='space-y-4'>
+                  <div className='flex w-full gap-4 justify-start item-center'>
+                    <Avatar className='w-12 h-12'>
+                      <AvatarImage src={comment.avatar} alt='avatar' className='object-cover object-top' />
+                      <AvatarFallback className='bg-primary text-background font-bold'>
+                        {comment.tenNguoiBinhLuan.toString().charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h4 className='text-base font-semibold'>{comment.tenNguoiBinhLuan}</h4>
+                      <div className='flex items-center text-sm text-muted-foreground'>
+                        <Ratings
+                          rating={comment.saoBinhLuan}
+                          totalStars={5}
+                          size={12}
+                          variant='default'
+                          interactive={false}
+                        />
+                        <p className='mx-2'>•</p>
+                        <p>
+                          {new Date(comment.ngayBinhLuan).toLocaleDateString('en-US')},{' '}
+                          {new Date(comment.ngayBinhLuan).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true
+                          })}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                  <div className='w-full'>
+                    <p className='text-sm text-pretty w-full leading-relaxed'>{comment.noiDung}</p>
+                  </div>
                 </div>
-                <div className='w-full'>
-                  <p className='text-sm text-pretty w-full leading-relaxed'>
-                    nơi tuyệt vời với phong cách tuyệt vời. cảm thấy rất tốt khi ở đây. khu vực này là trung tâm và chìa
-                    khóa thấp. khu phố siêu an toàn đầy đủ các đại sứ quán. ẩm thực đường phố tuyệt vời và tôi yêu thích
-                    quán cà phê gần đó. rất khuyên dùng!! một điều tôi không thích là khi tôi hỏi bao nhiêu để giặt quần
-                    áo của tôi họ trích dẫn gấp 5 lần giá địa phương. nhưng đó là quyền của họ. các quý cô siêu chuyên
-                    nghiệp và rất thân thiện! Tôi không thể đổ lỗi
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </DialogContent>
