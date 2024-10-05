@@ -11,13 +11,27 @@ import { Calendar } from '@/components/ui/calendar'
 import { CalendarIcon, Minus, Plus } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
+import { useSession } from 'next-auth/react'
+import { useReservation } from '@/hooks/useReservation'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
+import { useToastifyNotification } from '@/hooks/useToastifyNotification'
+import { useSwalAlert } from '@/hooks/useSwalAlert'
 
 interface ReservationFormProps {
   roomId: string
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
-  console.log('roomId in Form:' + roomId)
+  const { data: session } = useSession()
+  const router = useRouter()
+  const { showNotification } = useToastifyNotification()
+  const { showAlert } = useSwalAlert()
+
+  const maPhong = parseInt(roomId, 10)
+  const maNguoiDung = session?.user?.id ? parseInt(session.user.id, 10) : 0
+
+  const { isLoading, error, response, postReservation } = useReservation()
 
   const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>({
     from: new Date(),
@@ -49,9 +63,12 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
     setGuests((prevGuests) => {
       const value = prevGuests[type as keyof typeof guests]
 
+      // Kiểm tra tổng số khách
+      const totalGuests = prevGuests.adults + prevGuests.children + prevGuests.infants
+
       // Kiểm tra điều kiện tăng/giảm số lượng
       const updatedGuests = { ...prevGuests }
-      if (action === 'increase') {
+      if (action === 'increase' && totalGuests < 5 && type !== 'pets') {
         updatedGuests[type as keyof typeof guests] = value + 1
       } else if (action === 'decrease' && value > 0 && (type !== 'adults' || value > 1)) {
         updatedGuests[type as keyof typeof guests] = value - 1
@@ -64,6 +81,60 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
     })
   }
 
+  const handleReservation = async () => {
+    // Kiểm tra người dùng đã đăng nhập hay chưa
+    if (!maNguoiDung) {
+      showAlert({
+        title: 'Lưu ý',
+        text: 'Bạn cần đăng nhập để có thể Đặt Phòng!',
+        icon: 'warning',
+        confirmButtonText: 'Đăng Nhập'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push(ROUTES.AUTH.SIGNIN)
+        }
+      })
+      return
+    }
+
+    // Kiểm tra đầy đủ thông tin đặt phòng
+    if (!selectedDateRange?.from || !selectedDateRange?.to) {
+      showNotification('Vui lòng điền đầy đủ thông tin ngày nhận phòng và ngày trả phòng.', 'warning')
+      return
+    }
+
+    const payload = {
+      maPhong,
+      ngayDen: selectedDateRange.from.toISOString(),
+      ngayDi: selectedDateRange.to.toISOString(),
+      soLuongKhach: totalGuests,
+      maNguoiDung: maNguoiDung
+    }
+
+    try {
+      await postReservation(payload)
+      if (response && response.statusCode === 201) {
+        showAlert({
+          title: 'Thành công',
+          text: 'Bạn đã đặt phòng thành công. Hãy liên hệ chủ nhà để trao đổi thêm thông tin nhé!',
+          icon: 'success',
+          confirmButtonText: 'Đã hiểu'
+        })
+      }
+    } catch (err) {
+      showAlert({
+        title: 'Thất bại',
+        text: 'Đã xảy ra lỗi khi đặt phòng. Hãy thử lại sau nhé!',
+        icon: 'success',
+        confirmButtonText: 'Đã hiểu'
+      })
+    }
+  }
+
+  if (error) {
+    showNotification('Đã có lỗi xảy ra khi đặt phòng. Hãy thử lại sau nhé!', 'error')
+  }
+
   return (
     <div>
       {/* Giá phòng (tính theo đêm) */}
@@ -72,7 +143,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
       </h2>
 
       {/* Form đặt phòng */}
-      {/* Bao gồm ngày nhận phòng, ngày trả phòng (disable before và api ngày đã được đặt) 
+      {/* Bao gồm ngày nhận phòng, ngày trả phòng (disable before và api ngày đã được đặt - api chưa có đặt phòng theo mã phòng) 
             và số lượng khách (Ràng buộc cứng: Tối đa 5 khách và disable thú cưng) */}
       <div>
         {/* Các input field */}
@@ -155,7 +226,8 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
                           onClick={() => updateGuests(customer.type, 'decrease')}
                           disabled={
                             guests[customer.type as keyof typeof guests] === 0 ||
-                            (customer.type === 'adults' && guests.adults === 1)
+                            (customer.type === 'adults' && guests.adults === 1) ||
+                            customer.type === 'pets'
                           }
                         >
                           <Minus className='w-4 h-4' />
@@ -166,6 +238,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
                           className='rounded-full'
                           size={'icon'}
                           onClick={() => updateGuests(customer.type, 'increase')}
+                          disabled={customer.type === 'pets' || totalGuests >= 5}
                         >
                           <Plus className='w-4 h-4' />
                         </Button>
@@ -187,10 +260,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
           </div>
         </div>
 
-        {/* Button submit (2 trạng thái đặt phòng và đặt thành công) */}
+        {/* Button submit */}
         <div className='mt-5'>
-          <Button variant={'default'} size={'lg'} className='w-full'>
-            Đặt phòng
+          <Button variant={'default'} size={'lg'} className='w-full' onClick={handleReservation} disabled={isLoading}>
+            {isLoading ? 'Đang xử lý...' : 'Đặt phòng'}
           </Button>
           <p className='mt-3 text-sm text-center'>Bạn vẫn chưa bị trừ tiền</p>
         </div>

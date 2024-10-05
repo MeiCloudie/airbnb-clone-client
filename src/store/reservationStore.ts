@@ -1,0 +1,39 @@
+import { ReservationError, ReservationPayload, ReservationResponse } from '@/types/reservation.type'
+import { reservationService } from '@/services/reservation.service'
+import { create } from 'zustand'
+
+interface ReservationState {
+  isLoading: boolean
+  error: ReservationError | null
+  response: ReservationResponse | null
+  postReservation: (payload: ReservationPayload) => Promise<void>
+}
+
+export const useReservationStore = create<ReservationState>((set) => ({
+  isLoading: false,
+  error: null,
+  response: null,
+
+  postReservation: async (payload: ReservationPayload) => {
+    set({ isLoading: true, error: null, response: null })
+
+    try {
+      const response = await reservationService.postReservation(payload)
+      if (response && response.statusCode === 201) {
+        set({ response: response as ReservationResponse, isLoading: false, error: null })
+      } else {
+        set({ isLoading: false, error: response as ReservationError, response: null })
+      }
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: {
+          statusCode: 500,
+          message: 'Internal Server Error',
+          content: 'Unknown error',
+          dateTime: new Date().toISOString()
+        } as ReservationError
+      })
+    }
+  }
+}))

@@ -538,6 +538,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           {/* TODO: Đã lược bỏ bớt so với trang chính */}
         </div>
 
+        {/* Đặt phòng */}
         <div>
           {/* Desktop & Tablet - Sticky Form Card đặt phòng */}
           <div className='sticky top-32 z-30 hidden lg:block'>
