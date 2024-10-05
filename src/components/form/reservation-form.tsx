@@ -41,7 +41,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, roomPrice, on
   })
 
   const handleDateRangeChange = (dateRange: DateRange | undefined) => {
-    console.log('Selected Date Range:', dateRange)
+    // console.log('Selected Date Range:', dateRange)
     setSelectedDateRange(dateRange)
   }
 
