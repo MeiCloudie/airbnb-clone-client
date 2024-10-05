@@ -20,9 +20,10 @@ import { useSwalAlert } from '@/hooks/useSwalAlert'
 
 interface ReservationFormProps {
   roomId: string
+  onCloseReservationDialog?: () => void
 }
 
-const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
+const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReservationDialog }) => {
   const { data: session } = useSession()
   const router = useRouter()
   const { showNotification } = useToastifyNotification()
@@ -114,6 +115,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId }) => {
     try {
       await postReservation(payload)
       if (response && response.statusCode === 201) {
+        if (onCloseReservationDialog) {
+          onCloseReservationDialog()
+        }
+
         showAlert({
           title: 'Thành công',
           text: 'Bạn đã đặt phòng thành công. Hãy liên hệ chủ nhà để trao đổi thêm thông tin nhé!',

@@ -14,7 +14,7 @@ const ReservationDialog: React.FC<ReservationDialogProps> = ({ open, onOpenChang
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='h-full md:h-fit'>
         <div className='overflow-auto'>
-          <ReservationForm roomId={roomId} />
+          <ReservationForm roomId={roomId} onCloseReservationDialog={onClose} />
         </div>
       </DialogContent>
     </Dialog>
