@@ -50,7 +50,7 @@ const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenC
 
           {/* Tổng và bộ lọc */}
           <div className='pt-4 flex gap-2 justify-between items-center'>
-            <h3 className='text-sm md:text-lg font-semibold'>146 lượt đánh giá</h3>
+            <h3 className='text-sm md:text-lg font-semibold'>{comments.length} lượt đánh giá</h3>
             <Popover open={openPopover} onOpenChange={setOpenPopover}>
               <PopoverTrigger asChild>
                 <Button
