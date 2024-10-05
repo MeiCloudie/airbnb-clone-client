@@ -6,7 +6,7 @@ export const signUpSchema = z
       .string()
       .min(1, { message: 'Họ Tên là bắt buộc' })
       .max(50, { message: 'Họ Tên không được vượt quá 50 ký tự' })
-      .regex(/^[a-zA-Z\s]+$/, { message: 'Họ Tên chỉ có thể chứa các chữ cái' })
+      .regex(/^[A-Za-zÀ-ỹ\s]+$/, { message: 'Họ Tên chỉ có thể chứa các chữ cái' })
       .refine((value) => value.trim().length > 0, { message: 'Tên không thể chỉ chứa khoảng trắng' }),
     email: z.string().email({ message: 'Địa chỉ email không hợp lệ' }),
     password: z
