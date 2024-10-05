@@ -150,7 +150,47 @@ export default function RoomDetail({ params }: RoomDetailProps) {
 
   // Tạm thời gôm chung tất cả trạng thái loading
   if (isFirstLoading || isLoading || !randomHost || isCommentLoading) {
-    return <Skeleton className='w-full h-5' />
+    return (
+      <div>
+        <section className='flex flex-col-reverse w-full gap-3 md:flex-col'>
+          {/* Nội dung tiêu đề - Skeleton */}
+          <div className='w-full flex gap-10 flex-row justify-between items-start'>
+            <Skeleton className='h-6 w-2/3 md:w-1/2 lg:w-1/3' />
+            {/* Desktop - Nút chia sẻ và nút lưu */}
+            <div className='hidden md:flex md:flex-row md:justify-end md:items-center gap-2'>
+              <Skeleton className='h-6 w-20' />
+              <Skeleton className='h-6 w-20' />
+            </div>
+          </div>
+
+          {/* Hình ảnh - Skeleton */}
+          <div className='relative'>
+            <Skeleton className='w-full h-[50vh] object-cover object-center rounded-xl' />
+          </div>
+        </section>
+
+        <section className='my-2 md:my-4 w-full grid grid-cols-1 lg:grid-cols-3 gap-10'>
+          {/* Nội dung chi tiết phòng - Skeleton */}
+          <div className='col-span-1 lg:col-span-2'>
+            <Skeleton className='h-6 w-1/2' />
+            <Skeleton className='h-6 w-1/3 my-2' />
+            <Skeleton className='h-6 w-1/4' />
+          </div>
+
+          {/* Đặt phòng */}
+          <div>
+            <div className='sticky top-32 z-30 hidden lg:block'>
+              <Card className='shadow-xl'>
+                <CardContent className='p-7'>
+                  <Skeleton className='h-6 w-1/2' />
+                  <Skeleton className='h-12 w-full mt-4' />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </div>
+    )
   }
 
   // Tạm thời gôm chung tất cả trạng thái error
