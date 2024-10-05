@@ -1,4 +1,4 @@
-# Airbnb Clone Client
+# Airbnb Clone Client (Vẫn đang trong quá trình phát triển)
 
 <p align="center">
   <img src="public/logo/favicon.ico" alt="Logo" width="150" height="150">
