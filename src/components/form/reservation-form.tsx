@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
-import { addDays, format } from 'date-fns'
+import { addDays, differenceInDays, format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { Calendar } from '@/components/ui/calendar'
 import { CalendarIcon, Minus, Plus } from 'lucide-react'
@@ -20,10 +20,11 @@ import { useSwalAlert } from '@/hooks/useSwalAlert'
 
 interface ReservationFormProps {
   roomId: string
+  roomPrice: number
   onCloseReservationDialog?: () => void
 }
 
-const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReservationDialog }) => {
+const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, roomPrice, onCloseReservationDialog }) => {
   const { data: session } = useSession()
   const router = useRouter()
   const { showNotification } = useToastifyNotification()
@@ -81,6 +82,23 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
       return updatedGuests
     })
   }
+
+  // Tính toán số đêm khách đã chọn
+  const numberOfNights =
+    selectedDateRange?.from && selectedDateRange?.to
+      ? differenceInDays(selectedDateRange.to, selectedDateRange.from)
+      : 0
+
+  // Tính toán tổng giá dựa trên số đêm và giá phòng mỗi đêm
+  const totalRoomPrice = numberOfNights * roomPrice
+  const roomPriceConvertUSDToVND = convertUSDToVND(totalRoomPrice)
+
+  // Phí vệ sinh và dịch vụ
+  const cleaningFee = convertUSDToVND(roomPrice / 2) // Ví dụ phí vệ sinh
+  const serviceFee = convertUSDToVND(roomPrice * 2) // Ví dụ phí dịch vụ
+
+  // Tính tổng trước thuế
+  const totalBeforeTax = convertUSDToVND(totalRoomPrice + roomPrice / 2 + roomPrice * 2) // Giá phòng + Phí vệ sinh + Phí dịch vụ
 
   const handleReservation = async () => {
     // Kiểm tra người dùng đã đăng nhập hay chưa
@@ -144,7 +162,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
     <div>
       {/* Giá phòng (tính theo đêm) */}
       <h2 className='text-lg mb-5'>
-        <span className='text-xl font-bold'>₫{convertUSDToVND(127)}</span> / đêm
+        <span className='text-xl font-bold'>₫{convertUSDToVND(roomPrice)}</span> / đêm
       </h2>
 
       {/* Form đặt phòng */}
@@ -281,7 +299,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
           <HoverCard>
             <HoverCardTrigger asChild>
               <Button variant='link' className='text-base p-0 text-foreground'>
-                ₫664.587 x 4 đêm
+                ₫{convertUSDToVND(roomPrice)} x {numberOfNights} đêm
               </Button>
             </HoverCardTrigger>
             <HoverCardContent className='w-80'>
@@ -292,7 +310,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
             </HoverCardContent>
           </HoverCard>
           <div>
-            <p>₫2.658.346</p>
+            <p>₫{roomPriceConvertUSDToVND}</p>
           </div>
         </div>
         {/* Phí vệ sinh */}
@@ -312,7 +330,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
             </HoverCard>
           </div>
           <div>
-            <p>₫73.843</p>
+            <p>₫{cleaningFee}</p>
           </div>
         </div>
         {/* Phí dịch vụ Airbnb */}
@@ -335,7 +353,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
             </HoverCard>
           </div>
           <div>
-            <p>₫238.266</p>
+            <p>₫{serviceFee}</p>
           </div>
         </div>
       </div>
@@ -345,7 +363,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, onCloseReserv
       {/* Tổng trước thuế */}
       <div className='text-base font-bold flex justify-between items-center'>
         <h4>Tổng trước thuế</h4>
-        <p>₫15.827.007</p>
+        <p>₫{totalBeforeTax}</p>
       </div>
     </div>
   )

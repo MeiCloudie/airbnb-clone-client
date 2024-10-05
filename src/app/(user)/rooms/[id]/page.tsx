@@ -306,7 +306,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             width={500}
             height={500}
             unoptimized
-            className='w-full h-full object-cover object-center rounded-xl'
+            className='w-full h-full max-h-[50vh] object-cover object-center rounded-xl'
           />
           <Button variant={'secondary'} className='absolute bottom-3 right-3 rounded-sm shadow-md'>
             <ImageIcon className='w-4 h-4 me-2' />
@@ -544,7 +544,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           <div className='sticky top-32 z-30 hidden lg:block'>
             <Card className='shadow-xl'>
               <CardContent className='p-7'>
-                <ReservationForm roomId={roomId} />
+                <ReservationForm roomId={roomId} roomPrice={room.giaTien} />
               </CardContent>
             </Card>
             <div className='flex items-center justify-center gap-2 w-full mt-4'>
@@ -569,6 +569,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
                 onOpenChange={setIsReservationDialogOpen}
                 onClose={closeReservationDialogOpen}
                 roomId={roomId}
+                roomPrice={room.giaTien}
               />
             </div>
           </div>
