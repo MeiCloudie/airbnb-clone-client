@@ -4,11 +4,11 @@ import React from 'react'
 interface RoomDescriptionProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onClose: () => void
+  // onClose: () => void
   description: string
 }
 
-const RoomDescriptionDialog: React.FC<RoomDescriptionProps> = ({ open, onOpenChange, onClose, description }) => {
+const RoomDescriptionDialog: React.FC<RoomDescriptionProps> = ({ open, onOpenChange, description }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='h-full md:max-h-[80vh]'>

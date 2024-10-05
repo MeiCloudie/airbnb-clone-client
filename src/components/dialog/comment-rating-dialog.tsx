@@ -12,11 +12,11 @@ import React, { useState } from 'react'
 interface CommentRatingDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onClose: () => void
+  // onClose: () => void
   comments: CommentByRoomId[]
 }
 
-const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenChange, onClose, comments }) => {
+const CommentRatingDialog: React.FC<CommentRatingDialogProps> = ({ open, onOpenChange, comments }) => {
   const [openPopover, setOpenPopover] = useState(false)
 
   const filters = [

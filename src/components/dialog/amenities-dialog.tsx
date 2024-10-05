@@ -27,10 +27,10 @@ import React from 'react'
 interface AmenitiesProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onClose: () => void
+  // onClose: () => void
 }
 
-const AmenitiesDialog: React.FC<AmenitiesProps> = ({ open, onOpenChange, onClose }) => {
+const AmenitiesDialog: React.FC<AmenitiesProps> = ({ open, onOpenChange }) => {
   const bathroomAmenities = [
     {
       id: 1,

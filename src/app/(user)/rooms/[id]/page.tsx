@@ -84,17 +84,17 @@ export default function RoomDetail({ params }: RoomDetailProps) {
   const openRoomDesDialogOpen = () => {
     setIsRoomDesDialogOpen(true)
   }
-  const closeRoomDesDialogOpen = () => setIsRoomDesDialogOpen(false)
+  // const closeRoomDesDialogOpen = () => setIsRoomDesDialogOpen(false)
 
   const openAmenitiesDialogOpen = () => {
     setIsAmenitiesDialogOpen(true)
   }
-  const closeAmenitiesDialogOpen = () => setIsAmenitiesDialogOpen(false)
+  // const closeAmenitiesDialogOpen = () => setIsAmenitiesDialogOpen(false)
 
   const openCommentRatingDialogOpen = () => {
     setIsCommentRatingDialogOpen(true)
   }
-  const closeCommentRatingDialogOpen = () => setIsCommentRatingDialogOpen(false)
+  // const closeCommentRatingDialogOpen = () => setIsCommentRatingDialogOpen(false)
 
   const openReservationDialogOpen = () => {
     setIsReservationDialogOpen(true)
@@ -513,7 +513,6 @@ export default function RoomDetail({ params }: RoomDetailProps) {
             <RoomDescriptionDialog
               open={isRoomDesDialogOpen}
               onOpenChange={setIsRoomDesDialogOpen}
-              onClose={closeRoomDesDialogOpen}
               description={isTranslated ? roomDescription.english : roomDescription.vietnamese}
             />
           </div>
@@ -564,11 +563,7 @@ export default function RoomDetail({ params }: RoomDetailProps) {
                 Hiển thị tất cả 20 tiện nghi
               </Button>
 
-              <AmenitiesDialog
-                open={isAmenitiesDialogOpen}
-                onOpenChange={setIsAmenitiesDialogOpen}
-                onClose={closeAmenitiesDialogOpen}
-              />
+              <AmenitiesDialog open={isAmenitiesDialogOpen} onOpenChange={setIsAmenitiesDialogOpen} />
             </div>
           </div>
 
@@ -770,7 +765,6 @@ export default function RoomDetail({ params }: RoomDetailProps) {
           <CommentRatingDialog
             open={isCommentRatingDialogOpen}
             onOpenChange={setIsCommentRatingDialogOpen}
-            onClose={closeCommentRatingDialogOpen}
             comments={dataCommentByRoomId?.content || []}
           />
         </div>
