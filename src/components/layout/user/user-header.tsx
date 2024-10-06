@@ -238,8 +238,12 @@ const UserHeader: React.FC<UserHeaderProps> = ({ CategoryHeader }) => {
                     <MenubarItem>Cho thuê chỗ ở qua Airbnb</MenubarItem>
                     <MenubarItem>Tổ chức trải nghiệm</MenubarItem>
                     <MenubarItem>Giới thiệu chủ nhà</MenubarItem>
-                    <Link href={ROUTES.USER.ACCOUNT_SETTINGS}>
+                    {/* TODO: Tạm thời đổi thành Đường dẫn Hồ Sơ */}
+                    {/* <Link href={ROUTES.USER.ACCOUNT_SETTINGS}>
                       <MenubarItem>Tài khoản</MenubarItem>
+                    </Link> */}
+                    <Link href={session?.user?.id ? ROUTES.USER.USER_PROFILE.SHOW(session.user.id) : '#'}>
+                      <MenubarItem>Hồ sơ cá nhân</MenubarItem>
                     </Link>
                     <MenubarSeparator />
                     <MenubarItem>Trung tâm trợ giúp</MenubarItem>

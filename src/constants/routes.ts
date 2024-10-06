@@ -18,7 +18,7 @@ export const ROUTES = {
       LOCATION: '/rooms/location'
     },
     USER_PROFILE: {
-      SHOW: (id: string) => `/users/show/${id}`
+      SHOW: (id: string) => `/user/show/${id}`
     }
   }
 }
