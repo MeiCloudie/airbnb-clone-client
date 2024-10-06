@@ -24,6 +24,23 @@ export interface User {
   role: string
 }
 
+export interface UserByIdPayload {
+  id: number
+}
+
+export interface UserByIdResponse {
+  statusCode: number
+  content: User
+  dateTime: string
+}
+
+export interface UserError {
+  statusCode: number
+  message: string
+  content: string
+  dateTime: string
+}
+
 export interface UserWithToken extends User {
   token: string
 }
