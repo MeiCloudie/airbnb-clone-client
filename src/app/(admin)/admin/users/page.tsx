@@ -1,9 +1,19 @@
-import PageContainer from '@/components/layout/page-container'
+import UserViewPage from '@/components/section/admin/user/user-views/user-view-page'
+import { searchParamsCache } from '@/lib/searchparams'
+import { SearchParams } from 'nuqs/parsers'
+import React from 'react'
 
-export default function UserManagement() {
-  return (
-    <PageContainer scrollable={true}>
-      <h1>UserManagement Page</h1>
-    </PageContainer>
-  )
+type pageProps = {
+  searchParams: SearchParams
+}
+
+export const metadata = {
+  title: 'Dashboard : Users'
+}
+
+export default async function Page({ searchParams }: pageProps) {
+  // Allow nested RSCs to access the search params (in a type-safe way)
+  searchParamsCache.parse(searchParams)
+
+  return <UserViewPage />
 }
