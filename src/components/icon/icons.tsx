@@ -24,11 +24,13 @@ import {
   Settings,
   SunMedium,
   Trash,
-  Twitter,
   User,
   User2Icon,
   UserX2Icon,
-  X
+  X,
+  MapPin,
+  House,
+  MapPinHouse
 } from 'lucide-react'
 
 export type Icon = LucideIcon
@@ -60,6 +62,9 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  location: MapPin,
+  room: House,
+  reservation: MapPinHouse,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden='true'
@@ -77,6 +82,5 @@ export const Icons = {
       ></path>
     </svg>
   ),
-  twitter: Twitter,
   check: Check
 }

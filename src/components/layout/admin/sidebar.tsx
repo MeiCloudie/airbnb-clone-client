@@ -6,6 +6,9 @@ import { cn } from '@/lib/utils'
 import { ChevronLeft } from 'lucide-react'
 import { useSidebar } from '@/hooks/useSidebar'
 import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
+import AirbnbLogo from '@/components/icon/airbnb-logo'
+import AirbnbIcon from '@/components/icon/airbnb-icon'
 
 type SidebarProps = {
   className?: string
@@ -27,19 +30,14 @@ export default function Sidebar({ className }: SidebarProps) {
       )}
     >
       <div className='hidden p-5 pt-10 lg:block'>
-        <Link href={'https://github.com/Kiranism/next-shadcn-dashboard-starter'} target='_blank'>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            className='mr-2 h-6 w-6'
-          >
-            <path d='M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3' />
-          </svg>
+        <Link href={ROUTES.ADMIN.HOME}>
+          {isMinimized ? (
+            <div className='w-7 h-auto'>
+              <AirbnbIcon />
+            </div>
+          ) : (
+            <AirbnbLogo />
+          )}
         </Link>
       </div>
       <ChevronLeft

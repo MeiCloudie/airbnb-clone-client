@@ -1,3 +1,4 @@
+import { ROUTES } from '@/constants/routes'
 import { Category } from '@/types/category.type'
 import { NavItem } from '@/types/sidebar.type'
 
@@ -468,39 +469,33 @@ export type Employee = {
 
 export const navItems: NavItem[] = [
   {
-    title: 'Dashboard',
-    href: '/dashboard',
+    title: 'Tổng quan',
+    href: ROUTES.ADMIN.HOME,
     icon: 'dashboard',
     label: 'Dashboard'
   },
   {
-    title: 'User',
-    href: '/dashboard/user',
+    title: 'Quản lý người dùng',
+    href: ROUTES.ADMIN.USERS,
     icon: 'user',
     label: 'user'
   },
   {
-    title: 'Employee',
-    href: '/dashboard/employee',
-    icon: 'employee',
-    label: 'employee'
+    title: 'Quản lý thông tin vị trí',
+    href: ROUTES.ADMIN.LOCATIONS,
+    icon: 'location',
+    label: 'location'
   },
   {
-    title: 'Profile',
-    href: '/dashboard/profile',
-    icon: 'profile',
-    label: 'profile'
+    title: 'Quản lý thông tin phòng',
+    href: ROUTES.ADMIN.ROOMS,
+    icon: 'room',
+    label: 'room'
   },
   {
-    title: 'Kanban',
-    href: '/dashboard/kanban',
-    icon: 'kanban',
-    label: 'kanban'
-  },
-  {
-    title: 'Login',
-    href: '/',
-    icon: 'login',
-    label: 'login'
+    title: 'Quản lý đặt phòng',
+    href: ROUTES.ADMIN.RESERVATIONS,
+    icon: 'reservation',
+    label: 'reservation'
   }
 ]

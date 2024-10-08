@@ -1,6 +1,5 @@
 'use client'
 
-import AirbnbLogo from '@/components/icon/airbnb-logo'
 import Header from '@/components/layout/admin/header'
 import Sidebar from '@/components/layout/admin/sidebar'
 import { useSession } from 'next-auth/react'

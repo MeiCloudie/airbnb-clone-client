@@ -8,10 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
+  // DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { ROUTES } from '@/constants/routes'
 import { signOut, useSession } from 'next-auth/react'
+import Link from 'next/link'
 
 export function UserNav() {
   const { data: session } = useSession()
@@ -35,25 +37,17 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Billing
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>New Team</DropdownMenuItem>
+            <Link href={ROUTES.USER.HOME}>
+              <DropdownMenuItem>Trang người dùng</DropdownMenuItem>
+            </Link>
+            {session.user?.id && (
+              <Link href={ROUTES.USER.USER_PROFILE.SHOW(session.user.id.toString())}>
+                <DropdownMenuItem>Hồ sơ cá nhân</DropdownMenuItem>
+              </Link>
+            )}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut()}>
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => signOut()}>Đăng xuất</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     )

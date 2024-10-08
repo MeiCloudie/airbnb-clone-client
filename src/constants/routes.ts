@@ -5,10 +5,10 @@ export const ROUTES = {
   },
   ADMIN: {
     HOME: '/admin',
+    USERS: '/admin/users',
     LOCATIONS: '/admin/locations',
-    RESERVATIONS: '/admin/reservations',
     ROOMS: '/admin/rooms',
-    USERS: '/admin/users'
+    RESERVATIONS: '/admin/reservations'
   },
   USER: {
     HOME: '/',
