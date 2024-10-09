@@ -15,5 +15,11 @@ export default async function Page({ searchParams }: pageProps) {
   // Allow nested RSCs to access the search params (in a type-safe way)
   searchParamsCache.parse(searchParams)
 
-  return <UserViewPage />
+  const page = searchParamsCache.get('page')
+  const search = searchParamsCache.get('q')
+  const gender = searchParamsCache.get('gender')
+  const role = searchParamsCache.get('role')
+  const limit = searchParamsCache.get('limit')
+
+  return <UserViewPage page={page} search={search} gender={gender} role={role} limit={limit} />
 }

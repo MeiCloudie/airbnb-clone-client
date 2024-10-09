@@ -1,8 +1,10 @@
 'use client'
 import { CellAction } from '@/components/section/admin/user/user-tables/cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { User } from '@/types/auth.type'
 import { ColumnDef } from '@tanstack/react-table'
+import { FileWarning } from 'lucide-react'
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -38,12 +40,56 @@ export const columns: ColumnDef<User>[] = [
     header: 'EMAIL'
   },
   {
+    accessorKey: 'password',
+    header: 'PASSWORD',
+    cell: () => (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <FileWarning className='w-5 h-5' />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Không thể xem thông tin này tại đây</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  },
+  {
     accessorKey: 'phone',
-    header: 'PHONE'
+    header: 'PHONE',
+    cell: () => (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <FileWarning className='w-5 h-5' />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Không thể xem thông tin này tại đây</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
   },
   {
     accessorKey: 'birthday',
     header: 'BIRTHDAY'
+  },
+  {
+    accessorKey: 'avatar',
+    header: 'AVATAR',
+    cell: () => (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <FileWarning className='w-5 h-5' />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Không thể xem thông tin này tại đây</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
   },
   {
     accessorKey: 'gender',

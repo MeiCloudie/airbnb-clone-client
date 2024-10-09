@@ -5,8 +5,8 @@ import { useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
 
 export const ROLE_OPTIONS = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' }
+  { value: 'ADMIN', label: 'ADMIN' },
+  { value: 'USER', label: 'USER' }
 ]
 
 export const GENDER_OPTIONS = [

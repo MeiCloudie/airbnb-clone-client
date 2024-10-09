@@ -28,7 +28,12 @@ export default function UserTable({ data, totalData }: { data: User[]; totalData
   return (
     <div className='space-y-4'>
       <div className='flex flex-wrap items-center gap-4'>
-        <DataTableSearch searchKey='name' searchQuery={searchQuery} setSearchQuery={setSearchQuery} setPage={setPage} />
+        <DataTableSearch
+          searchKey='name or email'
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          setPage={setPage}
+        />
         <DataTableFilterBox
           filterKey='gender'
           title='Gender'

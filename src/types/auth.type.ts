@@ -24,6 +24,11 @@ export interface User {
   role: string
 }
 
+export interface GetAllUsersResponse {
+  statusCode: number
+  content: User[]
+  dateTime: string
+}
 export interface UserByIdPayload {
   id: number
 }
