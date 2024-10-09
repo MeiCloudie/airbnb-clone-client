@@ -11,7 +11,7 @@ import { Plus } from 'lucide-react'
 import React from 'react'
 
 const breadcrumbItems = [
-  { title: 'Dashboard', link: ROUTES.ADMIN.HOME },
+  { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
   { title: 'Quản lý người dùng', link: ROUTES.ADMIN.USERS }
 ]
 
@@ -22,14 +22,8 @@ export default async function UserViewPage({}: TUserListingPage) {
   const page = searchParamsCache.get('page')
   const search = searchParamsCache.get('q')
   const gender = searchParamsCache.get('gender')
+  const role = searchParamsCache.get('role')
   const pageLimit = searchParamsCache.get('limit')
-
-  //   const filters = {
-  //     page,
-  //     limit: pageLimit,
-  //     ...(search && { search }),
-  //     ...(gender && { genders: gender })
-  //   }
 
   // Dummy data for users
   const dummyUsers: User[] = [
@@ -278,21 +272,26 @@ export default async function UserViewPage({}: TUserListingPage) {
     }
   ]
 
-  const gendersArray = gender ? gender.split('.') : []
+  // Convert gender and role from strings
+  const genderAsBoolean = gender === 'male' ? true : gender === 'female' ? false : null
+  const rolesArray = role ? role.split('.') : []
+
+  // Filter users based on gender, role, and search
   const filteredUsers = dummyUsers.filter((user) => {
-    const matchesGender = gendersArray.length ? gendersArray.includes(user.gender ? 'true' : 'false') : true
+    const matchesGender = genderAsBoolean === null || user.gender === genderAsBoolean
+    const matchesRole = rolesArray.length ? rolesArray.includes(user.role) : true
     const matchesSearch = search
       ? user.name?.toLowerCase().includes(search.toLowerCase()) ||
         user.email.toLowerCase().includes(search.toLowerCase())
       : true
-    return matchesGender && matchesSearch
+    return matchesGender && matchesRole && matchesSearch
   })
 
   const totalUsers = filteredUsers.length
   const offset = (page ? page - 1 : 0) * (pageLimit ? pageLimit : 10)
   const paginatedUsers = filteredUsers.slice(offset, offset + (pageLimit ? pageLimit : 10))
 
-  const user = paginatedUsers
+  const users = paginatedUsers
 
   return (
     <PageContainer>
@@ -300,16 +299,16 @@ export default async function UserViewPage({}: TUserListingPage) {
         <Breadcrumbs items={breadcrumbItems} />
 
         <div className='flex items-start justify-between'>
-          <Heading title={`User (${totalUsers})`} description='Manage employees (Server side table functionalities.)' />
+          <Heading title={`Người dùng (${totalUsers})`} description='Danh sách NGƯỜI DÙNG trong hệ thống' />
 
           <Button variant={'default'}>
-            <Plus className='mr-2 h-4 w-4' /> Add New
+            <Plus className='mr-2 h-4 w-4' /> Thêm mới
           </Button>
         </div>
 
         <Separator />
 
-        <UserTable data={user} totalData={totalUsers} />
+        <UserTable data={users} totalData={totalUsers} />
       </div>
     </PageContainer>
   )

@@ -1,11 +1,14 @@
 import { createSearchParamsCache, createSerializer, parseAsInteger, parseAsString } from 'nuqs/server'
 
 export const searchParams = {
+  // Pagination
   page: parseAsInteger.withDefault(1),
   limit: parseAsInteger.withDefault(10),
+  // Search query
   q: parseAsString,
-  gender: parseAsString,
-  categories: parseAsString
+  // User filters
+  gender: parseAsString.withDefault(''),
+  role: parseAsString.withDefault('')
 }
 
 export const searchParamsCache = createSearchParamsCache(searchParams)

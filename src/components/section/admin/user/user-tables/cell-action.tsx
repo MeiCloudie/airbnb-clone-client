@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { User } from '@/types/auth.type'
-import { Edit, MoreHorizontal, Trash } from 'lucide-react'
+import { Edit, Info, MoreHorizontal, Trash } from 'lucide-react'
 import { useState } from 'react'
 
 interface CellActionProps {
@@ -41,6 +41,9 @@ export const CellAction: React.FC<CellActionProps> = ({}) => {
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
+          <DropdownMenuItem>
+            <Info className='mr-2 h-4 w-4' /> Details
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Edit className='mr-2 h-4 w-4' /> Update
           </DropdownMenuItem>
