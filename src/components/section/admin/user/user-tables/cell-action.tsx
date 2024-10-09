@@ -42,13 +42,13 @@ export const CellAction: React.FC<CellActionProps> = ({}) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem>
-            <Info className='mr-2 h-4 w-4' /> Details
+            <Info className='mr-2 h-4 w-4' /> Chi tiết
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Edit className='mr-2 h-4 w-4' /> Update
+            <Edit className='mr-2 h-4 w-4' /> Chỉnh sửa
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className='mr-2 h-4 w-4' /> Delete
+            <Trash className='mr-2 h-4 w-4' /> Xoá
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
