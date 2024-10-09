@@ -14,7 +14,7 @@ import React, { useEffect, useMemo } from 'react'
 
 const breadcrumbItems = [
   { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
-  { title: 'Quản lý phòng', link: ROUTES.ADMIN.ROOMS }
+  { title: 'Quản lý thông tin phòng', link: ROUTES.ADMIN.ROOMS }
 ]
 
 type RoomViewPageProps = {

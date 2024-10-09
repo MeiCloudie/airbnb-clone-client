@@ -32,9 +32,9 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, location, isInWishlist, ratin
     room.banUi && 'Bàn ủi'
   ].filter(Boolean) // Lọc ra các giá trị 'true'
 
-  // Tạo mảng chứa thông tin phòng ngủ, giường, phòng tắm
+  // Tạo mảng chứa thông tin khách, giường, phòng tắm
   const roomDetails = [
-    room.phongNgu > 0 && `${room.phongNgu} phòng ngủ`,
+    room.khach > 0 && `${room.khach} khách`,
     room.giuong > 0 && `${room.giuong} giường`,
     room.phongTam > 0 && `${room.phongTam} phòng tắm`
   ].filter(Boolean) // Lọc ra các giá trị hợp lệ

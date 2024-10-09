@@ -143,6 +143,7 @@ export const columns: ColumnDef<Room>[] = [
         alt={row.original.tenPhong}
         width={50}
         height={50}
+        className='aspect-square object-cover object-center rounded-sm'
         unoptimized
       />
     )
