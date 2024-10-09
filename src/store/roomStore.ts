@@ -7,7 +7,8 @@ import {
   RoomByLocationPayload,
   RoomByLocationResponse,
   RoomByIdResponse,
-  RoomByIdPayload
+  RoomByIdPayload,
+  GetAllRoomsResponse
 } from '@/types/room.type'
 
 interface RoomState {
@@ -16,9 +17,11 @@ interface RoomState {
   data: RoomPaginationResponse | null
   roomsByLocation: RoomByLocationResponse | null
   roomsById: RoomByIdResponse | null
+  allRooms: GetAllRoomsResponse | null
   getRoomPagination: (payload: RoomPaginationPayload) => Promise<void>
   getRoomByLocation: (payload: RoomByLocationPayload) => Promise<void>
   getRoomById: (payload: RoomByIdPayload) => Promise<void>
+  getAllRooms: () => Promise<void>
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -27,6 +30,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   data: null,
   roomsByLocation: null,
   roomsById: null,
+  allRooms: null,
 
   getRoomPagination: async (payload: RoomPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -86,6 +90,30 @@ export const useRoomStore = create<RoomState>((set) => ({
         set({ isLoading: false, error: response as RoomError, roomsById: null })
       } else {
         set({ isLoading: false, roomsById: response as RoomByIdResponse, error: null })
+      }
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: {
+          statusCode: 500,
+          message: 'Internal Server Error',
+          content: 'Unknown error',
+          dateTime: new Date().toISOString()
+        } as RoomError
+      })
+    }
+  },
+
+  getAllRooms: async () => {
+    set({ isLoading: true, error: null })
+
+    try {
+      const response = await roomService.getAllRooms()
+
+      if (response && typeof response === 'object' && 'statusCode' in response && response.statusCode >= 400) {
+        set({ isLoading: false, error: response as RoomError, allRooms: null })
+      } else {
+        set({ isLoading: false, allRooms: response as GetAllRoomsResponse, error: null })
       }
     } catch (error) {
       set({

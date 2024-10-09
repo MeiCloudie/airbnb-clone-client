@@ -4,7 +4,6 @@ export interface Room {
   id: number
   tenPhong: string
   khach: number
-  phongNgu: number
   giuong: number
   phongTam: number
   moTa: string
@@ -20,6 +19,12 @@ export interface Room {
   banUi: boolean
   maViTri: number
   hinhAnh: string
+}
+
+export interface GetAllRoomsResponse {
+  statusCode: number
+  content: Room[]
+  dateTime: string
 }
 
 export interface RoomPaginationPayload extends PaginationPayload {}

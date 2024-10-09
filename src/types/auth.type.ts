@@ -29,6 +29,7 @@ export interface GetAllUsersResponse {
   content: User[]
   dateTime: string
 }
+
 export interface UserByIdPayload {
   id: number
 }

@@ -8,7 +8,9 @@ export const searchParams = {
   q: parseAsString,
   // User filters
   gender: parseAsString.withDefault(''),
-  role: parseAsString.withDefault('')
+  role: parseAsString.withDefault(''),
+  // Room filters
+  maViTri: parseAsString.withDefault('')
 }
 
 export const searchParamsCache = createSearchParamsCache(searchParams)

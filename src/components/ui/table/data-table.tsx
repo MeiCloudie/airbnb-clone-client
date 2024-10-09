@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-2'>
       {/* Column Visibility Dropdown */}
       <div className=''>
         <DropdownMenu>
@@ -91,7 +91,9 @@ export function DataTable<TData, TValue>({
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {column.id}
+                  {typeof column.columnDef.header === 'string'
+                    ? column.columnDef.header // Display the header if it's a string
+                    : column.id}
                 </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
