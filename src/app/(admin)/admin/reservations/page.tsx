@@ -1,9 +1,24 @@
-import PageContainer from '@/components/layout/page-container'
+import ReservationViewPage from '@/components/section/admin/reservation/reservation-views/reservation-view-page'
+import UserViewPage from '@/components/section/admin/user/user-views/user-view-page'
+import { searchParamsCache } from '@/lib/searchparams'
+import { SearchParams } from 'nuqs/parsers'
+import React from 'react'
 
-export default function ReservationManagement() {
-  return (
-    <PageContainer scrollable={true}>
-      <h1>ReservationManagement Page</h1>
-    </PageContainer>
-  )
+type pageProps = {
+  searchParams: SearchParams
+}
+
+export const metadata = {
+  title: 'Dashboard : Reservations'
+}
+
+export default async function Page({ searchParams }: pageProps) {
+  // Allow nested RSCs to access the search params (in a type-safe way)
+  searchParamsCache.parse(searchParams)
+
+  const page = searchParamsCache.get('page')
+  const search = searchParamsCache.get('q')
+  const limit = searchParamsCache.get('limit')
+
+  return <ReservationViewPage page={page} search={search} limit={limit} />
 }

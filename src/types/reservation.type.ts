@@ -7,6 +7,12 @@ export interface Reservation {
   maNguoiDung: number
 }
 
+export interface GetAllReservationsResponse {
+  statusCode: number
+  content: Reservation[]
+  dateTime: string
+}
+
 export interface ReservationPayload {
   maPhong: number
   ngayDen: string

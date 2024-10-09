@@ -1,4 +1,8 @@
-import { ReservationByUserIdPayload, ReservationByUserIdResponse } from './../types/reservation.type'
+import {
+  GetAllReservationsResponse,
+  ReservationByUserIdPayload,
+  ReservationByUserIdResponse
+} from './../types/reservation.type'
 import { ReservationError, ReservationPayload, ReservationResponse } from '@/types/reservation.type'
 import { http } from './http.service'
 import axios from 'axios'
@@ -21,6 +25,19 @@ export const reservationService = {
     const { userId } = data
     try {
       const response = await http.get<ReservationByUserIdResponse>(`/dat-phong/lay-theo-nguoi-dung/${userId}`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as ReservationError
+        }
+      }
+      throw error
+    }
+  },
+  getAllReservations: async () => {
+    try {
+      const response = await http.get<GetAllReservationsResponse>(`/dat-phong`)
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

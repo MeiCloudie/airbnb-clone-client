@@ -1,4 +1,5 @@
 import {
+  GetAllReservationsResponse,
   ReservationByUserIdPayload,
   ReservationByUserIdResponse,
   ReservationError,
@@ -13,8 +14,10 @@ interface ReservationState {
   error: ReservationError | null
   response: ReservationResponse | null
   reservationByUserId: ReservationByUserIdResponse | null
+  allReservations: GetAllReservationsResponse | null
   postReservation: (payload: ReservationPayload) => Promise<void>
   getReservationByUserId: (payload: ReservationByUserIdPayload) => Promise<void>
+  getAllReservations: () => Promise<void>
 }
 
 export const useReservationStore = create<ReservationState>((set) => ({
@@ -22,6 +25,7 @@ export const useReservationStore = create<ReservationState>((set) => ({
   error: null,
   response: null,
   reservationByUserId: null,
+  allReservations: null,
 
   postReservation: async (payload: ReservationPayload) => {
     set({ isLoading: true, error: null, response: null })
@@ -55,6 +59,29 @@ export const useReservationStore = create<ReservationState>((set) => ({
         set({ reservationByUserId: response as ReservationByUserIdResponse, isLoading: false, error: null })
       } else {
         set({ isLoading: false, error: response as ReservationError, reservationByUserId: null })
+      }
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: {
+          statusCode: 500,
+          message: 'Internal Server Error',
+          content: 'Unknown error',
+          dateTime: new Date().toISOString()
+        } as ReservationError
+      })
+    }
+  },
+
+  getAllReservations: async () => {
+    set({ isLoading: true, error: null, allReservations: null })
+
+    try {
+      const response = await reservationService.getAllReservations()
+      if (response && response.statusCode === 200) {
+        set({ allReservations: response as GetAllReservationsResponse, isLoading: false, error: null })
+      } else {
+        set({ isLoading: false, error: response as ReservationError, allReservations: null })
       }
     } catch (error) {
       set({
