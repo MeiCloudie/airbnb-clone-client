@@ -15,7 +15,7 @@ interface ReservationState {
   response: ReservationResponse | null
   reservationByUserId: ReservationByUserIdResponse | null
   allReservations: GetAllReservationsResponse | null
-  postReservation: (payload: ReservationPayload) => Promise<void>
+  postReservation: (payload: ReservationPayload) => Promise<ReservationError | null>
   getReservationByUserId: (payload: ReservationByUserIdPayload) => Promise<void>
   getAllReservations: () => Promise<void>
 }
@@ -27,26 +27,28 @@ export const useReservationStore = create<ReservationState>((set) => ({
   reservationByUserId: null,
   allReservations: null,
 
-  postReservation: async (payload: ReservationPayload) => {
+  postReservation: async (payload: ReservationPayload): Promise<ReservationError | null> => {
     set({ isLoading: true, error: null, response: null })
 
     try {
       const response = await reservationService.postReservation(payload)
       if (response && response.statusCode === 201) {
         set({ response: response as ReservationResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
       } else {
-        set({ isLoading: false, error: response as ReservationError, response: null })
+        const errorResponse = response as ReservationError
+        set({ isLoading: false, error: errorResponse, response: null })
+        return errorResponse // Trả về lỗi
       }
     } catch (error) {
-      set({
-        isLoading: false,
-        error: {
-          statusCode: 500,
-          message: 'Internal Server Error',
-          content: 'Unknown error',
-          dateTime: new Date().toISOString()
-        } as ReservationError
-      })
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as ReservationError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
     }
   },
 

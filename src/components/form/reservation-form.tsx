@@ -33,7 +33,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, roomPrice, on
   const maPhong = parseInt(roomId, 10)
   const maNguoiDung = session?.user?.id ? parseInt(session.user.id, 10) : 0
 
-  const { isLoading, error, response, postReservation } = useReservation()
+  const { isLoading, error, postReservation } = useReservation()
 
   const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>({
     from: new Date(),
@@ -131,8 +131,16 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, roomPrice, on
     }
 
     try {
-      await postReservation(payload)
-      if (response && response.statusCode === 201) {
+      const error = await postReservation(payload)
+
+      if (error) {
+        showAlert({
+          title: 'Thất bại',
+          text: `Đặt phòng thất bại: ${error.content}`,
+          icon: 'error',
+          confirmButtonText: 'Đã hiểu'
+        })
+      } else {
         if (onCloseReservationDialog) {
           onCloseReservationDialog()
         }
@@ -148,7 +156,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({ roomId, roomPrice, on
       showAlert({
         title: 'Thất bại',
         text: 'Đã xảy ra lỗi khi đặt phòng. Hãy thử lại sau nhé!',
-        icon: 'success',
+        icon: 'error',
         confirmButtonText: 'Đã hiểu'
       })
     }
