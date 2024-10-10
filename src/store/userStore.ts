@@ -1,5 +1,12 @@
 import { userService } from '@/services/user.service'
-import { GetAllUsersResponse, UserByIdPayload, UserByIdResponse, UserError } from '@/types/auth.type'
+import {
+  GetAllUsersResponse,
+  PostUserPayload,
+  PostUserResponse,
+  UserByIdPayload,
+  UserByIdResponse,
+  UserError
+} from '@/types/auth.type'
 import { create } from 'zustand'
 
 interface UserState {
@@ -7,8 +14,10 @@ interface UserState {
   error: UserError | null
   userById: UserByIdResponse | null
   allUsers: GetAllUsersResponse | null
+  postUserResponse: PostUserResponse | null
   getUserById: (payload: UserByIdPayload) => Promise<void>
   getAllUsers: () => Promise<void>
+  postUser: (payload: PostUserPayload) => Promise<UserError | null>
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -16,6 +25,7 @@ export const useUserStore = create<UserState>((set) => ({
   error: null,
   userById: null,
   allUsers: null,
+  postUserResponse: null,
 
   getUserById: async (payload: UserByIdPayload) => {
     set({ isLoading: true, error: null })
@@ -62,6 +72,32 @@ export const useUserStore = create<UserState>((set) => ({
           dateTime: new Date().toISOString()
         } as UserError
       })
+    }
+  },
+
+  postUser: async (payload: PostUserPayload): Promise<UserError | null> => {
+    set({ isLoading: true, error: null, postUserResponse: null })
+
+    try {
+      const response = await userService.postUser(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ postUserResponse: response as PostUserResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as UserError
+        set({ isLoading: false, error: errorResponse, postUserResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as UserError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
     }
   }
 }))

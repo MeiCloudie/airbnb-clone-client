@@ -30,6 +30,22 @@ export interface GetAllUsersResponse {
   dateTime: string
 }
 
+export interface PostUserPayload {
+  name: string
+  email: string
+  password: string
+  phone?: string | null
+  birthday?: string | null
+  gender: boolean
+  role: string
+}
+
+export interface PostUserResponse {
+  statusCode: number
+  content: User
+  dateTime: string
+}
+
 export interface UserByIdPayload {
   id: number
 }

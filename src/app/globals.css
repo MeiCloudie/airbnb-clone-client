@@ -93,3 +93,7 @@
 .Toastify__toast {
   width: fit-content !important;
 }
+
+.rdp-vhidden {
+  @apply hidden;
+}

@@ -3,13 +3,14 @@
 import { Breadcrumbs } from '@/components/custom/custom-breadcrumbs'
 import { Heading } from '@/components/custom/custom-heading'
 import PageContainer from '@/components/layout/page-container'
+import AddUserDialog from '@/components/section/admin/user/user-actions/add-user-dialog'
 import UserTable from '@/components/section/admin/user/user-tables/user-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ROUTES } from '@/constants/routes'
 import { useUser } from '@/hooks/useUser'
 import { Plus } from 'lucide-react'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const breadcrumbItems = [
   { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
@@ -26,6 +27,7 @@ type UserViewPageProps = {
 
 export default function UserViewPage({ page, search, gender, role, limit }: UserViewPageProps) {
   const { getAllUsers, allUsers, isLoading } = useUser()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   // Gọi API để lấy danh sách người dùng
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function UserViewPage({ page, search, gender, role, limit }: User
         <div className='flex items-start justify-between'>
           <Heading title={`Người dùng (${totalUsers})`} description='Danh sách NGƯỜI DÙNG trong hệ thống' />
 
-          <Button variant={'default'}>
+          <Button variant={'default'} onClick={() => setIsDialogOpen(true)}>
             <Plus className='mr-2 h-4 w-4' /> Thêm mới
           </Button>
         </div>
@@ -70,6 +72,8 @@ export default function UserViewPage({ page, search, gender, role, limit }: User
         <Separator />
 
         {isLoading ? <p>Loading...</p> : <UserTable data={paginatedUsers} totalData={totalUsers} />}
+
+        <AddUserDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
       </div>
     </PageContainer>
   )

@@ -1,4 +1,11 @@
-import { GetAllUsersResponse, UserByIdPayload, UserByIdResponse, UserError } from '@/types/auth.type'
+import {
+  GetAllUsersResponse,
+  PostUserPayload,
+  PostUserResponse,
+  UserByIdPayload,
+  UserByIdResponse,
+  UserError
+} from '@/types/auth.type'
 import { http } from './http.service'
 import axios from 'axios'
 
@@ -21,6 +28,19 @@ export const userService = {
   getAllUsers: async () => {
     try {
       const response = await http.get<GetAllUsersResponse>(`/users`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as UserError
+        }
+      }
+      throw error
+    }
+  },
+  postUser: async (data: PostUserPayload) => {
+    try {
+      const response = await http.post<PostUserResponse>(`/users`, data)
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

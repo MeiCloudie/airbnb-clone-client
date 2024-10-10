@@ -17,7 +17,7 @@ interface CellActionProps {
   data: Reservation
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: React.FC<CellActionProps> = ({}) => {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
 
