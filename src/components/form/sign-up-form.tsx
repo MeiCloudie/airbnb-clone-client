@@ -49,7 +49,12 @@ const SignUpForm = () => {
             <FormItem>
               <FormLabel>Họ Tên</FormLabel>
               <FormControl>
-                <Input placeholder='Nhập họ tên của bạn' {...field} hasError={!!form.formState.errors.name} />
+                <Input
+                  placeholder='Nhập họ tên của bạn'
+                  {...field}
+                  value={field.value || ''}
+                  hasError={!!form.formState.errors.name}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,6 +74,7 @@ const SignUpForm = () => {
                   placeholder='Nhập email của bạn'
                   autoComplete='email'
                   {...field}
+                  value={field.value || ''}
                   hasError={!!form.formState.errors.email}
                 />
               </FormControl>
@@ -89,6 +95,7 @@ const SignUpForm = () => {
                   placeholder='Nhập mật khẩu của bạn'
                   autoComplete='new-password'
                   {...field}
+                  value={field.value || ''}
                   hasError={!!form.formState.errors.password}
                 />
               </FormControl>
@@ -109,6 +116,7 @@ const SignUpForm = () => {
                   placeholder='Nhập lại mật khẩu của bạn'
                   autoComplete='new-password'
                   {...field}
+                  value={field.value || ''}
                   hasError={!!form.formState.errors.confirmPassword}
                 />
               </FormControl>

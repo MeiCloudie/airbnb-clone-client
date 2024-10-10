@@ -53,6 +53,7 @@ const SignInForm = () => {
                   placeholder='Nhập email của bạn đã đăng ký'
                   autoComplete='email'
                   {...field}
+                  value={field.value || ''}
                   hasError={!!form.formState.errors.email}
                 />
               </FormControl>
@@ -73,6 +74,7 @@ const SignInForm = () => {
                   placeholder='Nhập mật khẩu của bạn'
                   autoComplete='current-password'
                   {...field}
+                  value={field.value || ''}
                   hasError={!!form.formState.errors.password}
                 />
               </FormControl>
