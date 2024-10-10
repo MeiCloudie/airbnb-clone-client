@@ -31,7 +31,7 @@ interface AddUserDialogProps {
 }
 
 export default function AddUserDialog({ isOpen, onClose }: AddUserDialogProps) {
-  const { postUser } = useUser()
+  const { postUser, getAllUsers } = useUser()
   const { showNotification } = useToastifyNotification()
 
   const form = useZodForm(addUserSchema)
@@ -43,6 +43,7 @@ export default function AddUserDialog({ isOpen, onClose }: AddUserDialogProps) {
       showNotification(`Thêm người dùng thất bại: ${error.content}`, 'error')
     } else {
       showNotification('Người dùng đã được thêm thành công!', 'success')
+      await getAllUsers()
       onClose()
     }
   }
