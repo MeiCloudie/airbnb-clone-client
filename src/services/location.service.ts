@@ -2,10 +2,13 @@ import {
   LocationPaginationPayload,
   LocationPaginationResponse,
   LocationError,
-  LocationResponse
+  LocationResponse,
+  PostLocationPayload,
+  PostLocationResponse
 } from '@/types/location.type'
 import { http } from './http.service'
 import axios from 'axios'
+import { getSession } from 'next-auth/react'
 
 export const locationService = {
   getLocationPagination: async (data: LocationPaginationPayload) => {
@@ -33,6 +36,32 @@ export const locationService = {
   getAllLocations: async () => {
     try {
       const response = await http.get<LocationResponse>(`/vi-tri`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as LocationError
+        }
+      }
+      throw error
+    }
+  },
+
+  postLocation: async (data: PostLocationPayload) => {
+    try {
+      const session = await getSession()
+      const userToken = session?.accessToken
+
+      if (!userToken) {
+        throw new Error('User is not authenticated')
+      }
+
+      const response = await http.post<PostLocationResponse>(`/vi-tri`, data, {
+        headers: {
+          token: `${userToken}`
+        }
+      })
+
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

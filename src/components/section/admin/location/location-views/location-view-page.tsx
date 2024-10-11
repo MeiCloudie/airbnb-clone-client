@@ -3,13 +3,14 @@
 import { Breadcrumbs } from '@/components/custom/custom-breadcrumbs'
 import { Heading } from '@/components/custom/custom-heading'
 import PageContainer from '@/components/layout/page-container'
+import AddLocationDialog from '@/components/section/admin/location/location-actions/add-location-dialog'
 import LocationTable from '@/components/section/admin/location/location-tables/location-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ROUTES } from '@/constants/routes'
 import { useLocation } from '@/hooks/useLocation'
 import { Plus } from 'lucide-react'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const breadcrumbItems = [
   { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
@@ -26,6 +27,7 @@ type LocationViewPageProps = {
 
 export default function LocationViewPage({ page, search, tinhThanh, quocGia, limit }: LocationViewPageProps) {
   const { getAllLocations, dataAllLocations, isLoading } = useLocation()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   useEffect(() => {
     getAllLocations()
@@ -58,7 +60,7 @@ export default function LocationViewPage({ page, search, tinhThanh, quocGia, lim
 
         <div className='flex items-start justify-between'>
           <Heading title={`Vị trí (${totalLocations})`} description='Danh sách VỊ TRÍ trong hệ thống' />
-          <Button variant='default'>
+          <Button variant='default' onClick={() => setIsDialogOpen(true)}>
             <Plus className='mr-2 h-4 w-4' /> Thêm mới
           </Button>
         </div>
@@ -66,6 +68,8 @@ export default function LocationViewPage({ page, search, tinhThanh, quocGia, lim
         <Separator />
 
         {isLoading ? <p>Loading...</p> : <LocationTable data={paginatedLocations} totalData={totalLocations} />}
+
+        <AddLocationDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
       </div>
     </PageContainer>
   )

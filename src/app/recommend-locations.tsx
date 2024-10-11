@@ -99,13 +99,16 @@ const RecommendLocations = () => {
             {/* Image */}
             <Image
               loader={({ src }) => src}
-              src={location.hinhAnh}
+              src={location.hinhAnh || '/images/image-alternative.jpg'}
               alt={`location-${index}`}
               width={500}
               height={500}
               loading='lazy'
               unoptimized
               className='w-20 h-auto rounded-md aspect-square object-cover object-center'
+              onError={(e) => {
+                e.currentTarget.src = '/images/image-alternative.jpg' // Thay thế bằng ảnh khác khi xảy ra lỗi
+              }}
             />
             {/* Content */}
             <div>

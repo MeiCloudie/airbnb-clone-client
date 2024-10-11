@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+// AUTHENTICATION SCHEMAS
 export const signUpSchema = z
   .object({
     name: z
@@ -31,6 +32,7 @@ export const signInSchema = z.object({
   password: z.string().min(6, { message: 'Mật khẩu phải chứa ít nhất 6 ký tự' })
 })
 
+// USER SCHEMAS
 export const addUserSchema = z.object({
   name: z
     .string()
@@ -53,4 +55,26 @@ export const addUserSchema = z.object({
   birthday: z.string().optional(),
   gender: z.boolean(), // true = Male, false = Female
   role: z.string()
+})
+
+// LOCATION SCHEMAS
+export const addLocationSchema = z.object({
+  tenViTri: z
+    .string()
+    .min(1, { message: 'Tên vị trí là bắt buộc' })
+    .max(100, { message: 'Tên vị trí không được vượt quá 100 ký tự' }),
+  tinhThanh: z
+    .string()
+    .min(1, { message: 'Tỉnh thành là bắt buộc' })
+    .max(100, { message: 'Tỉnh thành không được vượt quá 100 ký tự' }),
+  quocGia: z
+    .string()
+    .min(1, { message: 'Quốc gia là bắt buộc' })
+    .max(100, { message: 'Quốc gia không được vượt quá 100 ký tự' }),
+  hinhAnh: z
+    .string()
+    .optional()
+    .refine((value) => !value || z.string().url().safeParse(value).success, {
+      message: 'Đường dẫn hình ảnh không hợp lệ'
+    })
 })
