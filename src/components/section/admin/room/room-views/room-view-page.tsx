@@ -3,6 +3,7 @@
 import { Breadcrumbs } from '@/components/custom/custom-breadcrumbs'
 import { Heading } from '@/components/custom/custom-heading'
 import PageContainer from '@/components/layout/page-container'
+import AddRoomDialog from '@/components/section/admin/room/room-actions/add-room-dialog'
 import RoomTable from '@/components/section/admin/room/room-tables/room-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -10,7 +11,7 @@ import { ROUTES } from '@/constants/routes'
 import { useLocation } from '@/hooks/useLocation'
 import { useRoom } from '@/hooks/useRoom'
 import { Plus } from 'lucide-react'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const breadcrumbItems = [
   { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
@@ -27,6 +28,7 @@ type RoomViewPageProps = {
 export default function RoomViewPage({ page, search, maViTri, limit }: RoomViewPageProps) {
   const { getAllRooms, allRooms, isLoading } = useRoom()
   const { getAllLocations, dataAllLocations } = useLocation()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   useEffect(() => {
     getAllRooms()
@@ -58,7 +60,7 @@ export default function RoomViewPage({ page, search, maViTri, limit }: RoomViewP
         <div className='flex items-start justify-between'>
           <Heading title={`Phòng (${totalRooms})`} description='Danh sách PHÒNG trong hệ thống' />
 
-          <Button variant={'default'}>
+          <Button variant={'default'} onClick={() => setIsDialogOpen(true)}>
             <Plus className='mr-2 h-4 w-4' /> Thêm mới
           </Button>
         </div>
@@ -66,6 +68,8 @@ export default function RoomViewPage({ page, search, maViTri, limit }: RoomViewP
         <Separator />
 
         {isLoading ? <p>Loading...</p> : <RoomTable data={paginatedRooms} totalData={totalRooms} />}
+
+        <AddRoomDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
       </div>
     </PageContainer>
   )

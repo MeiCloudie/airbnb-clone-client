@@ -152,12 +152,15 @@ export const columns: ColumnDef<Room>[] = [
     cell: ({ row }) => (
       <Image
         loader={({ src }) => src}
-        src={row.original.hinhAnh}
+        src={row.original.hinhAnh || '/images/image-alternative.jpg'}
         alt={row.original.tenPhong}
         width={50}
         height={50}
         className='aspect-square object-cover object-center rounded-sm'
         unoptimized
+        onError={(e) => {
+          e.currentTarget.src = '/images/image-alternative.jpg' // Thay thế bằng ảnh khác khi xảy ra lỗi
+        }}
       />
     )
   },

@@ -35,8 +35,8 @@ export default function AddLocationDialog({ isOpen, onClose }: AddLocationDialog
       showNotification(`Thêm vị trí thất bại: ${error.content}`, 'error')
     } else {
       showNotification('Vị trí đã được thêm thành công!', 'success')
-      await getAllLocations() // Làm mới danh sách location
-      form.reset() // Reset form
+      await getAllLocations()
+      form.reset()
       onClose()
     }
   }
