@@ -44,6 +44,7 @@ export default function AddUserDialog({ isOpen, onClose }: AddUserDialogProps) {
     } else {
       showNotification('Người dùng đã được thêm thành công!', 'success')
       await getAllUsers()
+      form.reset()
       onClose()
     }
   }
