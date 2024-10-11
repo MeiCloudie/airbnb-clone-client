@@ -33,7 +33,7 @@ export const signInSchema = z.object({
 })
 
 // USER SCHEMAS
-export const addUserSchema = z.object({
+export const userSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'Họ Tên là bắt buộc' })
@@ -58,7 +58,7 @@ export const addUserSchema = z.object({
 })
 
 // LOCATION SCHEMAS
-export const addLocationSchema = z.object({
+export const locationSchema = z.object({
   tenViTri: z
     .string()
     .min(1, { message: 'Tên vị trí là bắt buộc' })
@@ -71,6 +71,46 @@ export const addLocationSchema = z.object({
     .string()
     .min(1, { message: 'Quốc gia là bắt buộc' })
     .max(100, { message: 'Quốc gia không được vượt quá 100 ký tự' }),
+  hinhAnh: z
+    .string()
+    .optional()
+    .refine((value) => !value || z.string().url().safeParse(value).success, {
+      message: 'Đường dẫn hình ảnh không hợp lệ'
+    })
+})
+
+// ROOM SCHEMAS
+export const roomSchema = z.object({
+  tenPhong: z
+    .string()
+    .min(1, { message: 'Tên phòng là bắt buộc' })
+    .max(100, { message: 'Tên phòng không được vượt quá 100 ký tự' }),
+
+  khach: z.number().min(0, { message: 'Số lượng khách không được nhỏ hơn 0' }).default(0),
+
+  giuong: z.number().min(0, { message: 'Số giường không được nhỏ hơn 0' }).default(0),
+
+  phongTam: z.number().min(0, { message: 'Số phòng tắm không được nhỏ hơn 0' }).default(0),
+
+  moTa: z
+    .string()
+    .min(1, { message: 'Mô tả là bắt buộc' })
+    .max(500, { message: 'Mô tả không được vượt quá 500 ký tự' }),
+
+  giaTien: z.number().min(0, { message: 'Giá tiền không được nhỏ hơn 0' }).default(0),
+
+  mayGiat: z.boolean().default(true),
+  banLa: z.boolean().default(true),
+  tivi: z.boolean().default(true),
+  dieuHoa: z.boolean().default(true),
+  wifi: z.boolean().default(true),
+  bep: z.boolean().default(true),
+  doXe: z.boolean().default(true),
+  hoBoi: z.boolean().default(true),
+  banUi: z.boolean().default(true),
+
+  maViTri: z.number().min(0, { message: 'Mã vị trí không hợp lệ' }),
+
   hinhAnh: z
     .string()
     .optional()

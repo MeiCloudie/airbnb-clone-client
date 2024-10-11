@@ -8,7 +8,9 @@ import {
   RoomByLocationResponse,
   RoomByIdResponse,
   RoomByIdPayload,
-  GetAllRoomsResponse
+  GetAllRoomsResponse,
+  PostRoomResponse,
+  PostRoomPayload
 } from '@/types/room.type'
 
 interface RoomState {
@@ -22,6 +24,8 @@ interface RoomState {
   getRoomByLocation: (payload: RoomByLocationPayload) => Promise<void>
   getRoomById: (payload: RoomByIdPayload) => Promise<void>
   getAllRooms: () => Promise<void>
+  postRoomResponse: PostRoomResponse | null
+  postRoom: (payload: PostRoomPayload) => Promise<RoomError | null>
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -31,6 +35,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   roomsByLocation: null,
   roomsById: null,
   allRooms: null,
+  postRoomResponse: null,
 
   getRoomPagination: async (payload: RoomPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -125,6 +130,32 @@ export const useRoomStore = create<RoomState>((set) => ({
           dateTime: new Date().toISOString()
         } as RoomError
       })
+    }
+  },
+
+  postRoom: async (payload: PostRoomPayload): Promise<RoomError | null> => {
+    set({ isLoading: true, error: null, postRoomResponse: null })
+
+    try {
+      const response = await roomService.postRoom(payload)
+
+      if (response && response.statusCode === 201) {
+        set({ postRoomResponse: response as PostRoomResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as RoomError
+        set({ isLoading: false, error: errorResponse, postRoomResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as RoomError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
     }
   }
 }))

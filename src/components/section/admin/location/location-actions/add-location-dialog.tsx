@@ -15,7 +15,7 @@ import {
   DialogDescription
 } from '@/components/ui/dialog'
 import { useToastifyNotification } from '@/hooks/useToastifyNotification'
-import { addLocationSchema } from '@/lib/zodSchemas'
+import { locationSchema } from '@/lib/zodSchemas'
 
 interface AddLocationDialogProps {
   isOpen: boolean
@@ -26,7 +26,7 @@ export default function AddLocationDialog({ isOpen, onClose }: AddLocationDialog
   const { postLocation, getAllLocations } = useLocation()
   const { showNotification } = useToastifyNotification()
 
-  const form = useZodForm(addLocationSchema)
+  const form = useZodForm(locationSchema)
 
   const onSubmit = async (data: PostLocationPayload) => {
     const error = await postLocation(data)

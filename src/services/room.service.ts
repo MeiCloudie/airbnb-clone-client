@@ -6,10 +6,13 @@ import {
   RoomByLocationResponse,
   RoomByIdPayload,
   RoomByIdResponse,
-  GetAllRoomsResponse
+  GetAllRoomsResponse,
+  PostRoomPayload,
+  PostRoomResponse
 } from '@/types/room.type'
 import { http } from './http.service'
 import axios from 'axios'
+import { getSession } from 'next-auth/react'
 
 export const roomService = {
   getRoomPagination: async (data: RoomPaginationPayload) => {
@@ -71,6 +74,32 @@ export const roomService = {
   getAllRooms: async () => {
     try {
       const response = await http.get<GetAllRoomsResponse>(`/phong-thue`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as RoomError
+        }
+      }
+      throw error
+    }
+  },
+
+  postRoom: async (data: PostRoomPayload) => {
+    try {
+      const session = await getSession()
+      const userToken = session?.accessToken
+
+      if (!userToken) {
+        throw new Error('User is not authenticated')
+      }
+
+      const response = await http.post<PostRoomResponse>(`/phong-thue`, data, {
+        headers: {
+          token: `${userToken}`
+        }
+      })
+
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

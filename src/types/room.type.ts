@@ -27,6 +27,33 @@ export interface GetAllRoomsResponse {
   dateTime: string
 }
 
+export interface PostRoomPayload {
+  tenPhong: string
+  khach: number
+  giuong: number
+  phongTam: number
+  moTa: string
+  giaTien: number // đơn vị $/đêm
+  mayGiat: boolean
+  banLa: boolean
+  tivi: boolean
+  dieuHoa: boolean
+  wifi: boolean
+  bep: boolean
+  doXe: boolean
+  hoBoi: boolean
+  banUi: boolean
+  maViTri: number
+  hinhAnh?: string | null
+}
+
+export interface PostRoomResponse {
+  statusCode: number // 201 => Thêm Thành công
+  message: string
+  content: Room
+  dateTime: string
+}
+
 export interface RoomPaginationPayload extends PaginationPayload {}
 
 export interface RoomPaginationResponse extends PaginationResponse<Room> {}

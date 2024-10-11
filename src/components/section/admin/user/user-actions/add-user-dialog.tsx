@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/dialog'
 import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from '@/components/ui/select'
-import { addUserSchema } from '@/lib/zodSchemas'
 import { Controller } from 'react-hook-form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
@@ -24,6 +23,7 @@ import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { PasswordInput } from '@/components/ui/password-input'
+import { userSchema } from '@/lib/zodSchemas'
 
 interface AddUserDialogProps {
   isOpen: boolean
@@ -34,7 +34,7 @@ export default function AddUserDialog({ isOpen, onClose }: AddUserDialogProps) {
   const { postUser, getAllUsers } = useUser()
   const { showNotification } = useToastifyNotification()
 
-  const form = useZodForm(addUserSchema)
+  const form = useZodForm(userSchema)
 
   const onSubmit = async (data: PostUserPayload) => {
     const error = await postUser(data)
