@@ -96,6 +96,19 @@ export const columns: ColumnDef<Room>[] = [
     header: 'AMENITIES',
     cell: ({ row }) => {
       const { mayGiat, banLa, tivi, dieuHoa, wifi, bep, doXe, hoBoi, banUi } = row.original
+
+      const amenitiesMapping = {
+        mayGiat: 'Máy Giặt',
+        banLa: 'Bàn Là',
+        tivi: 'Tivi',
+        dieuHoa: 'Điều Hòa',
+        wifi: 'Wi-Fi',
+        bep: 'Bếp',
+        doXe: 'Đỗ Xe',
+        hoBoi: 'Hồ Bơi',
+        banUi: 'Bàn Ủi'
+      }
+
       const amenities = { mayGiat, banLa, tivi, dieuHoa, wifi, bep, doXe, hoBoi, banUi }
 
       return (
@@ -103,7 +116,7 @@ export const columns: ColumnDef<Room>[] = [
           {Object.keys(amenities).map((key) =>
             amenities[key as keyof typeof amenities] ? (
               <Badge key={key} variant='secondary'>
-                {key.toUpperCase()}
+                {amenitiesMapping[key as keyof typeof amenitiesMapping]}
               </Badge>
             ) : null
           )}
