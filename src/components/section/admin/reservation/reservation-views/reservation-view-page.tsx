@@ -3,13 +3,14 @@
 import { Breadcrumbs } from '@/components/custom/custom-breadcrumbs'
 import { Heading } from '@/components/custom/custom-heading'
 import PageContainer from '@/components/layout/page-container'
+import AddReservationDialog from '@/components/section/admin/reservation/reservation-actions/add-reservation-dialog'
 import ReservationTable from '@/components/section/admin/reservation/reservation-tables/reservation-table'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ROUTES } from '@/constants/routes'
 import { useReservation } from '@/hooks/useReservation'
 import { Plus } from 'lucide-react'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const breadcrumbItems = [
   { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
@@ -24,6 +25,7 @@ type ReservationViewPageProps = {
 
 export default function ReservationViewPage({ page, search, limit }: ReservationViewPageProps) {
   const { getAllReservations, allReservations, isLoading } = useReservation()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   useEffect(() => {
     getAllReservations() // Fetch all reservations on component mount
@@ -32,11 +34,7 @@ export default function ReservationViewPage({ page, search, limit }: Reservation
   const filteredReservations = useMemo(() => {
     if (!allReservations || !allReservations.content) return []
 
-    return allReservations.content.filter((reservation) =>
-      search
-        ? reservation.maPhong.toString().includes(search) || reservation.maNguoiDung.toString().includes(search)
-        : true
-    )
+    return allReservations.content.filter((reservation) => (search ? reservation.id.toString().includes(search) : true))
   }, [allReservations, search])
 
   const totalReservations = filteredReservations.length
@@ -48,7 +46,7 @@ export default function ReservationViewPage({ page, search, limit }: Reservation
         <Breadcrumbs items={breadcrumbItems} />
         <div className='flex items-start justify-between'>
           <Heading title={`Đặt phòng (${totalReservations})`} description='Danh sách ĐẶT PHÒNG trong hệ thống' />
-          <Button variant='default'>
+          <Button variant='default' onClick={() => setIsDialogOpen(true)}>
             <Plus className='mr-2 h-4 w-4' /> Thêm mới
           </Button>
         </div>
@@ -58,6 +56,8 @@ export default function ReservationViewPage({ page, search, limit }: Reservation
         ) : (
           <ReservationTable data={paginatedReservations} totalData={totalReservations} />
         )}
+
+        <AddReservationDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
       </div>
     </PageContainer>
   )

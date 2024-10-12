@@ -14,7 +14,7 @@ export default function ReservationTable({ data, totalData }: { data: Reservatio
     <div className='space-y-4'>
       <div className='flex flex-wrap items-center gap-4'>
         <DataTableSearch
-          searchKey='Room ID or User ID'
+          searchKey='Reservation ID'
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           setPage={setPage}

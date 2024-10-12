@@ -47,6 +47,8 @@ export const columns: ColumnDef<Reservation>[] = [
     enableSorting: true,
     cell: ({ row }) => {
       const date = new Date(row.original.ngayDen)
+      date.setDate(date.getDate() + 1)
+
       return format(date, 'dd/MM/yyyy')
     }
   },
@@ -56,9 +58,12 @@ export const columns: ColumnDef<Reservation>[] = [
     enableSorting: true,
     cell: ({ row }) => {
       const date = new Date(row.original.ngayDi)
+      date.setDate(date.getDate() + 1)
+
       return format(date, 'dd/MM/yyyy')
     }
   },
+
   {
     accessorKey: 'soLuongKhach',
     header: 'GUESTS',

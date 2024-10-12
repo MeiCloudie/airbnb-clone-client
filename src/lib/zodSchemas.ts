@@ -118,3 +118,18 @@ export const roomSchema = z.object({
       message: 'Đường dẫn hình ảnh không hợp lệ'
     })
 })
+
+// RESERVATION SCHEMAS
+export const reservationSchema = z.object({
+  maPhong: z.number().default(0),
+  ngayDen: z
+    .string()
+    .datetime()
+    .default(() => new Date().toISOString()),
+  ngayDi: z
+    .string()
+    .datetime()
+    .default(() => new Date().toISOString()),
+  soLuongKhach: z.number().min(1, { message: 'Số lượng khách phải lớn hơn 0' }).default(0),
+  maNguoiDung: z.number().default(0)
+})

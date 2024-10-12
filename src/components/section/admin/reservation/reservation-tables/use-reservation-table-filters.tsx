@@ -5,7 +5,7 @@ import { useQueryState } from 'nuqs'
 import { useCallback, useMemo } from 'react'
 
 export function useReservationTableFilters() {
-  // Query state for search filter (room ID or user ID)
+  // Query state for search filter (Reservation ID)
   const [searchQuery, setSearchQuery] = useQueryState(
     'q',
     searchParams.q.withOptions({ shallow: false, throttleMs: 1000 }).withDefault('')
