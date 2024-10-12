@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ColumnDef } from '@tanstack/react-table'
 import { Reservation } from '@/types/reservation.type'
 import { CellAction } from '@/components/section/admin/reservation/reservation-tables/cell-action'
+import { format } from 'date-fns'
 
 export const columns: ColumnDef<Reservation>[] = [
   {
@@ -43,12 +44,20 @@ export const columns: ColumnDef<Reservation>[] = [
   {
     accessorKey: 'ngayDen',
     header: 'CHECK-IN',
-    enableSorting: true
+    enableSorting: true,
+    cell: ({ row }) => {
+      const date = new Date(row.original.ngayDen)
+      return format(date, 'dd/MM/yyyy')
+    }
   },
   {
     accessorKey: 'ngayDi',
     header: 'CHECK-OUT',
-    enableSorting: true
+    enableSorting: true,
+    cell: ({ row }) => {
+      const date = new Date(row.original.ngayDi)
+      return format(date, 'dd/MM/yyyy')
+    }
   },
   {
     accessorKey: 'soLuongKhach',

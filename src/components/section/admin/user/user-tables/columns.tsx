@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { User } from '@/types/auth.type'
 import { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
 import { FileWarning } from 'lucide-react'
 
 export const columns: ColumnDef<User>[] = [
@@ -73,7 +74,17 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'birthday',
-    header: 'BIRTHDAY'
+    header: 'BIRTHDAY',
+    cell: ({ row }) => {
+      const birthday = row.original.birthday
+
+      if (birthday && !isNaN(Date.parse(birthday))) {
+        const date = new Date(birthday)
+        return format(date, 'dd/MM/yyyy')
+      } else {
+        return 'N/A'
+      }
+    }
   },
   {
     accessorKey: 'avatar',
