@@ -1,5 +1,7 @@
 import {
   GetAllReservationsResponse,
+  PutReservationPayload,
+  PutReservationResponse,
   ReservationByUserIdPayload,
   ReservationByUserIdResponse,
   ReservationError,
@@ -18,6 +20,8 @@ interface ReservationState {
   postReservation: (payload: ReservationPayload) => Promise<ReservationError | null>
   getReservationByUserId: (payload: ReservationByUserIdPayload) => Promise<void>
   getAllReservations: () => Promise<void>
+  putReservationResponse: PutReservationResponse | null
+  putReservation: (payload: PutReservationPayload) => Promise<ReservationError | null>
 }
 
 export const useReservationStore = create<ReservationState>((set) => ({
@@ -26,6 +30,7 @@ export const useReservationStore = create<ReservationState>((set) => ({
   response: null,
   reservationByUserId: null,
   allReservations: null,
+  putReservationResponse: null,
 
   postReservation: async (payload: ReservationPayload): Promise<ReservationError | null> => {
     set({ isLoading: true, error: null, response: null })
@@ -95,6 +100,32 @@ export const useReservationStore = create<ReservationState>((set) => ({
           dateTime: new Date().toISOString()
         } as ReservationError
       })
+    }
+  },
+
+  putReservation: async (payload: PutReservationPayload): Promise<ReservationError | null> => {
+    set({ isLoading: true, error: null, putReservationResponse: null })
+
+    try {
+      const response = await reservationService.putReservation(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ putReservationResponse: response as PutReservationResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as ReservationError
+        set({ isLoading: false, error: errorResponse, putReservationResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as ReservationError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
     }
   }
 }))

@@ -12,14 +12,16 @@ import {
 import { Edit, Info, MoreHorizontal, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Reservation } from '@/types/reservation.type'
+import UpdateReservationDialog from '@/components/section/admin/reservation/reservation-actions/update-reservation-dialog'
 
 interface CellActionProps {
   data: Reservation
 }
 
-export const CellAction: React.FC<CellActionProps> = ({}) => {
+export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
 
   const onConfirm = async () => {
     setLoading(true)
@@ -31,6 +33,13 @@ export const CellAction: React.FC<CellActionProps> = ({}) => {
   return (
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
+
+      <UpdateReservationDialog
+        isOpen={isUpdateDialogOpen}
+        onClose={() => setIsUpdateDialogOpen(false)}
+        reservationData={data}
+      />
+
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='h-8 w-8 p-0'>
@@ -43,7 +52,7 @@ export const CellAction: React.FC<CellActionProps> = ({}) => {
           <DropdownMenuItem>
             <Info className='mr-2 h-4 w-4' /> Chi tiết
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
             <Edit className='mr-2 h-4 w-4' /> Chỉnh sửa
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>

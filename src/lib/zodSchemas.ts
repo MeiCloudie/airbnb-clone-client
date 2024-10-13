@@ -200,3 +200,7 @@ export const reservationSchema = z.object({
   soLuongKhach: z.number().min(1, { message: 'Số lượng khách phải lớn hơn 0' }).default(0),
   maNguoiDung: z.number().default(0)
 })
+
+export const reservationUpdateSchema = reservationSchema.extend({
+  id: z.number()
+})

@@ -9,7 +9,9 @@ export const useReservation = () => {
     postReservation,
     getReservationByUserId,
     allReservations,
-    getAllReservations
+    getAllReservations,
+    putReservationResponse,
+    putReservation
   } = useReservationStore((state) => ({
     isLoading: state.isLoading,
     error: state.error,
@@ -18,7 +20,9 @@ export const useReservation = () => {
     postReservation: state.postReservation,
     getReservationByUserId: state.getReservationByUserId,
     allReservations: state.allReservations,
-    getAllReservations: state.getAllReservations
+    getAllReservations: state.getAllReservations,
+    putReservationResponse: state.putReservationResponse,
+    putReservation: state.putReservation
   }))
 
   return {
@@ -29,6 +33,8 @@ export const useReservation = () => {
     postReservation,
     getReservationByUserId,
     allReservations,
-    getAllReservations
+    getAllReservations,
+    putReservationResponse,
+    putReservation
   }
 }

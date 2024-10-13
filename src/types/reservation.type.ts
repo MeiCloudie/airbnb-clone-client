@@ -28,6 +28,22 @@ export interface ReservationResponse {
   dateTime: string
 }
 
+export interface PutReservationPayload {
+  id: number // type number theo PUT api cung cấp
+  maPhong: number
+  ngayDen: string
+  ngayDi: string
+  soLuongKhach: number
+  maNguoiDung: number
+}
+
+export interface PutReservationResponse {
+  statusCode: number // 200 - Thành Công
+  message: string
+  content: Reservation
+  dateTime: string
+}
+
 export interface ReservationByUserIdPayload {
   userId: string
 }

@@ -1,5 +1,7 @@
 import {
   GetAllReservationsResponse,
+  PutReservationPayload,
+  PutReservationResponse,
   ReservationByUserIdPayload,
   ReservationByUserIdResponse
 } from './../types/reservation.type'
@@ -38,6 +40,21 @@ export const reservationService = {
   getAllReservations: async () => {
     try {
       const response = await http.get<GetAllReservationsResponse>(`/dat-phong`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as ReservationError
+        }
+      }
+      throw error
+    }
+  },
+  putReservation: async (data: PutReservationPayload) => {
+    const { id } = data
+
+    try {
+      const response = await http.put<PutReservationResponse>(`/dat-phong/${id}`, data)
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {
