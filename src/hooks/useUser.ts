@@ -11,7 +11,9 @@ export const useUser = () => {
     postUserResponse,
     postUser,
     putUserResponse,
-    putUser
+    putUser,
+    deleteUserResponse,
+    deleteUser
   } = useUserStore((state) => ({
     isLoading: state.isLoading,
     userById: state.userById,
@@ -22,7 +24,9 @@ export const useUser = () => {
     postUserResponse: state.postUserResponse,
     postUser: state.postUser,
     putUserResponse: state.putUserResponse,
-    putUser: state.putUser
+    putUser: state.putUser,
+    deleteUserResponse: state.deleteUserResponse,
+    deleteUser: state.deleteUser
   }))
 
   return {
@@ -35,6 +39,8 @@ export const useUser = () => {
     postUserResponse,
     postUser,
     putUserResponse,
-    putUser
+    putUser,
+    deleteUserResponse,
+    deleteUser
   }
 }

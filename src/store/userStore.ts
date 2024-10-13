@@ -1,5 +1,7 @@
 import { userService } from '@/services/user.service'
 import {
+  DeleteUserPayload,
+  DeleteUserResponse,
   GetAllUsersResponse,
   PostUserPayload,
   PostUserResponse,
@@ -22,6 +24,8 @@ interface UserState {
   postUser: (payload: PostUserPayload) => Promise<UserError | null>
   putUserResponse: PutUserResponse | null
   putUser: (payload: PutUserPayload) => Promise<UserError | null>
+  deleteUserResponse: DeleteUserResponse | null
+  deleteUser: (payload: DeleteUserPayload) => Promise<UserError | null>
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -31,6 +35,7 @@ export const useUserStore = create<UserState>((set) => ({
   allUsers: null,
   postUserResponse: null,
   putUserResponse: null,
+  deleteUserResponse: null,
 
   getUserById: async (payload: UserByIdPayload) => {
     set({ isLoading: true, error: null })
@@ -118,6 +123,32 @@ export const useUserStore = create<UserState>((set) => ({
       } else {
         const errorResponse = response as UserError
         set({ isLoading: false, error: errorResponse, putUserResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as UserError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  deleteUser: async (payload: DeleteUserPayload): Promise<UserError | null> => {
+    set({ isLoading: true, error: null, deleteUserResponse: null })
+
+    try {
+      const response = await userService.deleteUser(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ deleteUserResponse: response as unknown as DeleteUserResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as UserError
+        set({ isLoading: false, error: errorResponse, deleteUserResponse: null })
         return errorResponse // Trả về lỗi
       }
     } catch (error) {

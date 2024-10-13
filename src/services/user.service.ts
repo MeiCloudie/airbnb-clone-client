@@ -27,6 +27,7 @@ export const userService = {
       throw error
     }
   },
+
   getAllUsers: async () => {
     try {
       const response = await http.get<GetAllUsersResponse>(`/users`)
@@ -40,6 +41,7 @@ export const userService = {
       throw error
     }
   },
+
   postUser: async (data: PostUserPayload) => {
     try {
       const response = await http.post<PostUserResponse>(`/users`, data)
@@ -53,11 +55,28 @@ export const userService = {
       throw error
     }
   },
+
   putUser: async (data: PutUserPayload) => {
     const { id } = data
 
     try {
       const response = await http.put<PutUserResponse>(`/users/${id}`, data)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as UserError
+        }
+      }
+      throw error
+    }
+  },
+
+  deleteUser: async (data: UserByIdPayload) => {
+    const { id } = data
+
+    try {
+      const response = await http.delete<UserError>(`/users`, { params: { id } })
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

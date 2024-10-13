@@ -62,6 +62,17 @@ export interface PutUserResponse {
   dateTime: string
 }
 
+export interface DeleteUserPayload {
+  id: number
+}
+
+export interface DeleteUserResponse {
+  statusCode: number // 200 - Thành Công
+  message: string
+  content: User | null
+  dateTime: string
+}
+
 export interface UserByIdPayload {
   id: number
 }
