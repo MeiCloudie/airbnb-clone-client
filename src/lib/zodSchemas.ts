@@ -1,5 +1,35 @@
 import { z } from 'zod'
 
+// Định nghĩa các đầu số hợp lệ của nhà mạng Việt Nam
+const vietnamPhonePrefixes = [
+  // Viettel
+  '032',
+  '033',
+  '034',
+  '035',
+  '036',
+  '037',
+  '038',
+  '039',
+  // Mobifone
+  '070',
+  '076',
+  '077',
+  '078',
+  '079',
+  // Vinaphone
+  '083',
+  '084',
+  '085',
+  '081',
+  '082',
+  // Vietnamobile
+  '056',
+  '058',
+  // Gmobile
+  '059'
+]
+
 // AUTHENTICATION SCHEMAS
 export const signUpSchema = z
   .object({
@@ -51,7 +81,36 @@ export const userSchema = z.object({
     .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
       message: 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt'
     }),
-  phone: z.string().optional(),
+  phone: z
+    .string()
+    .length(10, { message: 'Số điện thoại phải có đúng 10 chữ số.' })
+    .regex(/^\d+$/, { message: 'Số điện thoại chỉ được chứa ký tự số.' })
+    .refine((phone) => vietnamPhonePrefixes.includes(phone.substring(0, 3)), {
+      message: 'Số điện thoại không hợp lệ. Vui lòng nhập số của nhà mạng Việt Nam.'
+    })
+    .optional(),
+  birthday: z.string().optional(),
+  gender: z.boolean(), // true = Male, false = Female
+  role: z.string()
+})
+
+export const userUpdateSchema = z.object({
+  id: z.number(),
+  name: z
+    .string()
+    .min(1, { message: 'Họ Tên là bắt buộc' })
+    .max(50, { message: 'Họ Tên không được vượt quá 50 ký tự' })
+    .regex(/^[A-Za-zÀ-ỹ\s]+$/, { message: 'Họ Tên chỉ có thể chứa các chữ cái' })
+    .refine((value) => value.trim().length > 0, { message: 'Tên không thể chỉ chứa khoảng trắng' }),
+  email: z.string().email({ message: 'Địa chỉ email không hợp lệ' }),
+  phone: z
+    .string()
+    .length(10, { message: 'Số điện thoại phải có đúng 10 chữ số.' })
+    .regex(/^\d+$/, { message: 'Số điện thoại chỉ được chứa ký tự số.' })
+    .refine((phone) => vietnamPhonePrefixes.includes(phone.substring(0, 3)), {
+      message: 'Số điện thoại không hợp lệ. Vui lòng nhập số của nhà mạng Việt Nam.'
+    })
+    .optional(),
   birthday: z.string().optional(),
   gender: z.boolean(), // true = Male, false = Female
   role: z.string()

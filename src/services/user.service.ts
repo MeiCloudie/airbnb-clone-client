@@ -2,6 +2,8 @@ import {
   GetAllUsersResponse,
   PostUserPayload,
   PostUserResponse,
+  PutUserPayload,
+  PutUserResponse,
   UserByIdPayload,
   UserByIdResponse,
   UserError
@@ -41,6 +43,21 @@ export const userService = {
   postUser: async (data: PostUserPayload) => {
     try {
       const response = await http.post<PostUserResponse>(`/users`, data)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as UserError
+        }
+      }
+      throw error
+    }
+  },
+  putUser: async (data: PutUserPayload) => {
+    const { id } = data
+
+    try {
+      const response = await http.put<PutUserResponse>(`/users/${id}`, data)
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {
