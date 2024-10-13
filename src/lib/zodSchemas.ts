@@ -138,6 +138,10 @@ export const locationSchema = z.object({
     })
 })
 
+export const locationUpdateSchema = locationSchema.extend({
+  id: z.number()
+})
+
 // ROOM SCHEMAS
 export const roomSchema = z.object({
   tenPhong: z

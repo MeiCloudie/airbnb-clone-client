@@ -28,6 +28,20 @@ export interface PostLocationResponse {
   dateTime: string
 }
 
+export interface PutLocationPayload {
+  id: number
+  tenViTri: string
+  tinhThanh: string
+  quocGia: string
+  hinhAnh?: string
+}
+
+export interface PutLocationResponse {
+  statusCode: number // 200 - Thành Công
+  content: Location
+  dateTime: string
+}
+
 export interface LocationPaginationPayload extends PaginationPayload {}
 
 export interface LocationPaginationResponse extends PaginationResponse<Location> {}

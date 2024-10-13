@@ -6,7 +6,9 @@ import {
   LocationResponse,
   LocationError,
   PostLocationResponse,
-  PostLocationPayload
+  PostLocationPayload,
+  PutLocationResponse,
+  PutLocationPayload
 } from '@/types/location.type'
 
 interface LocationState {
@@ -18,6 +20,8 @@ interface LocationState {
   getAllLocations: () => Promise<void>
   postLocationResponse: PostLocationResponse | null
   postLocation: (payload: PostLocationPayload) => Promise<LocationError | null>
+  putLocationResponse: PutLocationResponse | null
+  putLocation: (payload: PutLocationPayload) => Promise<LocationError | null>
 }
 
 export const useLocationStore = create<LocationState>((set) => ({
@@ -26,6 +30,7 @@ export const useLocationStore = create<LocationState>((set) => ({
   dataLocationPagination: null,
   dataAllLocations: null,
   postLocationResponse: null,
+  putLocationResponse: null,
 
   getLocationPagination: async (payload: LocationPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -87,6 +92,32 @@ export const useLocationStore = create<LocationState>((set) => ({
       } else {
         const errorResponse = response as LocationError
         set({ isLoading: false, error: errorResponse, postLocationResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as LocationError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  putLocation: async (payload: PutLocationPayload): Promise<LocationError | null> => {
+    set({ isLoading: true, error: null, putLocationResponse: null })
+
+    try {
+      const response = await locationService.putLocation(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ putLocationResponse: response as PutLocationResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as LocationError
+        set({ isLoading: false, error: errorResponse, putLocationResponse: null })
         return errorResponse // Trả về lỗi
       }
     } catch (error) {

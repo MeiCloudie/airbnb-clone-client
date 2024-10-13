@@ -1,5 +1,6 @@
 'use client'
 import { AlertModal } from '@/components/modal/alert-modal'
+import UpdateLocationDialog from '@/components/section/admin/location/location-actions/update-location-dialog'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -16,10 +17,10 @@ interface CellActionProps {
   data: Location
 }
 
-export const CellAction: React.FC<CellActionProps> = ({}) => {
-  // ! Remove data
+export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
 
   const onConfirm = async () => {
     setLoading(true)
@@ -31,6 +32,13 @@ export const CellAction: React.FC<CellActionProps> = ({}) => {
   return (
     <>
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
+
+      <UpdateLocationDialog
+        isOpen={isUpdateDialogOpen}
+        onClose={() => setIsUpdateDialogOpen(false)}
+        locationData={data}
+      />
+
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='h-8 w-8 p-0'>
@@ -44,7 +52,7 @@ export const CellAction: React.FC<CellActionProps> = ({}) => {
           <DropdownMenuItem>
             <Info className='mr-2 h-4 w-4' /> Chi tiết
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
             <Edit className='mr-2 h-4 w-4' /> Chỉnh sửa
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
