@@ -8,7 +8,9 @@ import {
   RoomByIdResponse,
   GetAllRoomsResponse,
   PostRoomPayload,
-  PostRoomResponse
+  PostRoomResponse,
+  PutRoomPayload,
+  PutRoomResponse
 } from '@/types/room.type'
 import { http } from './http.service'
 import axios from 'axios'
@@ -95,6 +97,33 @@ export const roomService = {
       }
 
       const response = await http.post<PostRoomResponse>(`/phong-thue`, data, {
+        headers: {
+          token: `${userToken}`
+        }
+      })
+
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as RoomError
+        }
+      }
+      throw error
+    }
+  },
+  putRoom: async (data: PutRoomPayload) => {
+    const { id } = data
+
+    try {
+      const session = await getSession()
+      const userToken = session?.accessToken
+
+      if (!userToken) {
+        throw new Error('User is not authenticated')
+      }
+
+      const response = await http.put<PutRoomResponse>(`/phong-thue/${id}`, data, {
         headers: {
           token: `${userToken}`
         }

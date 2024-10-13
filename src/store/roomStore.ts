@@ -10,7 +10,9 @@ import {
   RoomByIdPayload,
   GetAllRoomsResponse,
   PostRoomResponse,
-  PostRoomPayload
+  PostRoomPayload,
+  PutRoomResponse,
+  PutRoomPayload
 } from '@/types/room.type'
 
 interface RoomState {
@@ -26,6 +28,8 @@ interface RoomState {
   getAllRooms: () => Promise<void>
   postRoomResponse: PostRoomResponse | null
   postRoom: (payload: PostRoomPayload) => Promise<RoomError | null>
+  putRoomResponse: PutRoomResponse | null
+  putRoom: (payload: PutRoomPayload) => Promise<RoomError | null>
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -36,6 +40,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   roomsById: null,
   allRooms: null,
   postRoomResponse: null,
+  putRoomResponse: null,
 
   getRoomPagination: async (payload: RoomPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -145,6 +150,32 @@ export const useRoomStore = create<RoomState>((set) => ({
       } else {
         const errorResponse = response as RoomError
         set({ isLoading: false, error: errorResponse, postRoomResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as RoomError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  putRoom: async (payload: PutRoomPayload): Promise<RoomError | null> => {
+    set({ isLoading: true, error: null, putRoomResponse: null })
+
+    try {
+      const response = await roomService.putRoom(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ putRoomResponse: response as PutRoomResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as RoomError
+        set({ isLoading: false, error: errorResponse, putRoomResponse: null })
         return errorResponse // Trả về lỗi
       }
     } catch (error) {

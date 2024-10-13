@@ -13,7 +13,9 @@ export const useRoom = () => {
     allRooms,
     getAllRooms,
     postRoomResponse,
-    postRoom
+    postRoom,
+    putRoomResponse,
+    putRoom
   } = useRoomStore((state) => ({
     isLoading: state.isLoading,
     data: state.data,
@@ -26,7 +28,9 @@ export const useRoom = () => {
     allRooms: state.allRooms,
     getAllRooms: state.getAllRooms,
     postRoomResponse: state.postRoomResponse,
-    postRoom: state.postRoom
+    postRoom: state.postRoom,
+    putRoomResponse: state.putRoomResponse,
+    putRoom: state.putRoom
   }))
 
   return {
@@ -41,6 +45,8 @@ export const useRoom = () => {
     allRooms,
     getAllRooms,
     postRoomResponse,
-    postRoom
+    postRoom,
+    putRoomResponse,
+    putRoom
   }
 }

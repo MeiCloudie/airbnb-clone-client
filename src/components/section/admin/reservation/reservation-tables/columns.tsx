@@ -72,6 +72,6 @@ export const columns: ColumnDef<Reservation>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => <CellAction key={row.original.id} data={row.original} />
   }
 ]

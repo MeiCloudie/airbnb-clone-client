@@ -54,8 +54,8 @@ export default function UpdateLocationDialog({ isOpen, onClose, locationData }: 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className='uppercase'>Thêm Mới Vị Trí</DialogTitle>
-          <DialogDescription>Điền thông tin dưới đây và bấm nút hoàn thành để có thể thêm mới</DialogDescription>
+          <DialogTitle className='uppercase'>Cập Nhật Vị Trí</DialogTitle>
+          <DialogDescription>Điền thông tin dưới đây và bấm nút hoàn thành để có thể cập nhật</DialogDescription>
         </DialogHeader>
         <div className='overflow-auto'>
           <Form {...form}>

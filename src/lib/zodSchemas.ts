@@ -182,6 +182,10 @@ export const roomSchema = z.object({
     })
 })
 
+export const roomUpdateSchema = roomSchema.extend({
+  id: z.number()
+})
+
 // RESERVATION SCHEMAS
 export const reservationSchema = z.object({
   maPhong: z.number().default(0),
