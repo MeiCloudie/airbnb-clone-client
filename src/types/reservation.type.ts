@@ -44,6 +44,17 @@ export interface PutReservationResponse {
   dateTime: string
 }
 
+export interface DeleteReservationPayload {
+  id: number
+}
+
+export interface DeleteReservationResponse {
+  statusCode: number // 200 - Thành Công
+  message: string
+  content: Reservation | null
+  dateTime: string
+}
+
 export interface ReservationByUserIdPayload {
   userId: string
 }

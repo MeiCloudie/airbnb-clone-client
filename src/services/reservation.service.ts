@@ -1,4 +1,5 @@
 import {
+  DeleteReservationPayload,
   GetAllReservationsResponse,
   PutReservationPayload,
   PutReservationResponse,
@@ -55,6 +56,22 @@ export const reservationService = {
 
     try {
       const response = await http.put<PutReservationResponse>(`/dat-phong/${id}`, data)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as ReservationError
+        }
+      }
+      throw error
+    }
+  },
+
+  deleteReservation: async (data: DeleteReservationPayload) => {
+    const { id } = data
+
+    try {
+      const response = await http.delete<ReservationError>(`/dat-phong/${id}`)
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

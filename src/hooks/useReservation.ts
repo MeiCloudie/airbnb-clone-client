@@ -11,7 +11,9 @@ export const useReservation = () => {
     allReservations,
     getAllReservations,
     putReservationResponse,
-    putReservation
+    putReservation,
+    deleteReservationResponse,
+    deleteReservation
   } = useReservationStore((state) => ({
     isLoading: state.isLoading,
     error: state.error,
@@ -22,7 +24,9 @@ export const useReservation = () => {
     allReservations: state.allReservations,
     getAllReservations: state.getAllReservations,
     putReservationResponse: state.putReservationResponse,
-    putReservation: state.putReservation
+    putReservation: state.putReservation,
+    deleteReservationResponse: state.deleteReservationResponse,
+    deleteReservation: state.deleteReservation
   }))
 
   return {
@@ -35,6 +39,8 @@ export const useReservation = () => {
     allReservations,
     getAllReservations,
     putReservationResponse,
-    putReservation
+    putReservation,
+    deleteReservationResponse,
+    deleteReservation
   }
 }
