@@ -1,4 +1,5 @@
 import {
+  DeleteUserPayload,
   GetAllUsersResponse,
   PostUserPayload,
   PostUserResponse,
@@ -72,7 +73,7 @@ export const userService = {
     }
   },
 
-  deleteUser: async (data: UserByIdPayload) => {
+  deleteUser: async (data: DeleteUserPayload) => {
     const { id } = data
 
     try {

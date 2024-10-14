@@ -8,7 +8,9 @@ import {
   PostLocationResponse,
   PostLocationPayload,
   PutLocationResponse,
-  PutLocationPayload
+  PutLocationPayload,
+  DeleteLocationResponse,
+  DeleteLocationPayload
 } from '@/types/location.type'
 
 interface LocationState {
@@ -22,6 +24,8 @@ interface LocationState {
   postLocation: (payload: PostLocationPayload) => Promise<LocationError | null>
   putLocationResponse: PutLocationResponse | null
   putLocation: (payload: PutLocationPayload) => Promise<LocationError | null>
+  deleteLocationResponse: DeleteLocationResponse | null
+  deleteLocation: (payload: DeleteLocationPayload) => Promise<LocationError | null>
 }
 
 export const useLocationStore = create<LocationState>((set) => ({
@@ -31,6 +35,7 @@ export const useLocationStore = create<LocationState>((set) => ({
   dataAllLocations: null,
   postLocationResponse: null,
   putLocationResponse: null,
+  deleteLocationResponse: null,
 
   getLocationPagination: async (payload: LocationPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -118,6 +123,32 @@ export const useLocationStore = create<LocationState>((set) => ({
       } else {
         const errorResponse = response as LocationError
         set({ isLoading: false, error: errorResponse, putLocationResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as LocationError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  deleteLocation: async (payload: DeleteLocationPayload): Promise<LocationError | null> => {
+    set({ isLoading: true, error: null, deleteLocationResponse: null })
+
+    try {
+      const response = await locationService.deleteLocation(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ deleteLocationResponse: response as unknown as DeleteLocationResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as LocationError
+        set({ isLoading: false, error: errorResponse, deleteLocationResponse: null })
         return errorResponse // Trả về lỗi
       }
     } catch (error) {

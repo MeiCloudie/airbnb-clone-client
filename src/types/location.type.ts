@@ -42,6 +42,17 @@ export interface PutLocationResponse {
   dateTime: string
 }
 
+export interface DeleteLocationPayload {
+  id: number
+}
+
+export interface DeleteLocationResponse {
+  statusCode: number // 200 - Thành Công
+  message: string
+  content: Location | null
+  dateTime: string
+}
+
 export interface LocationPaginationPayload extends PaginationPayload {}
 
 export interface LocationPaginationResponse extends PaginationResponse<Location> {}

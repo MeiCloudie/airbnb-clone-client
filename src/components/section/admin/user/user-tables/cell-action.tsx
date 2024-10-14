@@ -1,5 +1,4 @@
 'use client'
-import { AlertModal } from '@/components/modal/alert-modal'
 import DeleteUserDialog from '@/components/section/admin/user/user-actions/delete-user-dialog'
 import UpdateUserDialog from '@/components/section/admin/user/user-actions/update-user-dialog'
 import { Button } from '@/components/ui/button'

@@ -1,5 +1,5 @@
 'use client'
-import { AlertModal } from '@/components/modal/alert-modal'
+import DeleteLocationDialog from '@/components/section/admin/location/location-actions/delete-location-dialog'
 import UpdateLocationDialog from '@/components/section/admin/location/location-actions/update-location-dialog'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,25 +18,20 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false)
-  const [open, setOpen] = useState(false)
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
-
-  const onConfirm = async () => {
-    setLoading(true)
-    // Perform delete operation
-    setLoading(false)
-    setOpen(false)
-  }
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
-
       <UpdateLocationDialog
         isOpen={isUpdateDialogOpen}
         onClose={() => setIsUpdateDialogOpen(false)}
         locationData={data}
+      />
+      <DeleteLocationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        locationId={Number(data.id)}
       />
 
       <DropdownMenu modal={false}>
@@ -55,7 +50,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
             <Edit className='mr-2 h-4 w-4' /> Chỉnh sửa
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
             <Trash className='mr-2 h-4 w-4' /> Xoá
           </DropdownMenuItem>
         </DropdownMenuContent>
