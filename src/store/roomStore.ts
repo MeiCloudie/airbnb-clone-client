@@ -12,7 +12,9 @@ import {
   PostRoomResponse,
   PostRoomPayload,
   PutRoomResponse,
-  PutRoomPayload
+  PutRoomPayload,
+  DeleteRoomResponse,
+  DeleteRoomPayload
 } from '@/types/room.type'
 
 interface RoomState {
@@ -30,6 +32,8 @@ interface RoomState {
   postRoom: (payload: PostRoomPayload) => Promise<RoomError | null>
   putRoomResponse: PutRoomResponse | null
   putRoom: (payload: PutRoomPayload) => Promise<RoomError | null>
+  deleteRoomResponse: DeleteRoomResponse | null
+  deleteRoom: (payload: DeleteRoomPayload) => Promise<RoomError | null>
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -41,6 +45,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   allRooms: null,
   postRoomResponse: null,
   putRoomResponse: null,
+  deleteRoomResponse: null,
 
   getRoomPagination: async (payload: RoomPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -176,6 +181,32 @@ export const useRoomStore = create<RoomState>((set) => ({
       } else {
         const errorResponse = response as RoomError
         set({ isLoading: false, error: errorResponse, putRoomResponse: null })
+        return errorResponse // Trả về lỗi
+      }
+    } catch (error) {
+      const unknownError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      } as RoomError
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  deleteRoom: async (payload: DeleteRoomPayload): Promise<RoomError | null> => {
+    set({ isLoading: true, error: null, deleteRoomResponse: null })
+
+    try {
+      const response = await roomService.deleteRoom(payload)
+
+      if (response && response.statusCode === 200) {
+        set({ deleteRoomResponse: response as unknown as DeleteRoomResponse, isLoading: false, error: null })
+        return null // Trả về null khi thành công
+      } else {
+        const errorResponse = response as RoomError
+        set({ isLoading: false, error: errorResponse, deleteRoomResponse: null })
         return errorResponse // Trả về lỗi
       }
     } catch (error) {

@@ -81,6 +81,17 @@ export interface PutRoomResponse {
   dateTime: string
 }
 
+export interface DeleteRoomPayload {
+  id: number
+}
+
+export interface DeleteRoomResponse {
+  statusCode: number // 200 - Thành Công
+  message: string
+  content: Room | null
+  dateTime: string
+}
+
 export interface RoomPaginationPayload extends PaginationPayload {}
 
 export interface RoomPaginationResponse extends PaginationResponse<Room> {}

@@ -10,7 +10,8 @@ import {
   PostRoomPayload,
   PostRoomResponse,
   PutRoomPayload,
-  PutRoomResponse
+  PutRoomResponse,
+  DeleteRoomPayload
 } from '@/types/room.type'
 import { http } from './http.service'
 import axios from 'axios'
@@ -124,6 +125,34 @@ export const roomService = {
       }
 
       const response = await http.put<PutRoomResponse>(`/phong-thue/${id}`, data, {
+        headers: {
+          token: `${userToken}`
+        }
+      })
+
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as RoomError
+        }
+      }
+      throw error
+    }
+  },
+
+  deleteRoom: async (data: DeleteRoomPayload) => {
+    const { id } = data
+
+    try {
+      const session = await getSession()
+      const userToken = session?.accessToken
+
+      if (!userToken) {
+        throw new Error('User is not authenticated')
+      }
+
+      const response = await http.delete<RoomError>(`/phong-thue/${id}`, {
         headers: {
           token: `${userToken}`
         }
