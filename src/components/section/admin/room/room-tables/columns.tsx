@@ -6,6 +6,9 @@ import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/comp
 import Image from 'next/image'
 import { CellAction } from '@/components/section/admin/room/room-tables/cell-action'
 import { LocationCell } from '@/components/section/admin/room/room-tables/location-cell'
+import { CopyButton } from '@/components/custom/custom-copy-button'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
 
 export const columns: ColumnDef<Room>[] = [
   {
@@ -30,7 +33,19 @@ export const columns: ColumnDef<Room>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
-    enableHiding: false
+    enableHiding: false,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <CopyButton value={String(row.original.id)} />
+
+        <Link
+          href={ROUTES.ADMIN.ROOM_DETAIL(String(row.original.id))}
+          className='text-foreground font-semibold duration-200 transition-colors hover:text-primary hover:underline'
+        >
+          {row.original.id}
+        </Link>
+      </div>
+    )
   },
   {
     accessorKey: 'tenPhong',

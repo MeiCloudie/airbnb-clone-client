@@ -5,6 +5,9 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Reservation } from '@/types/reservation.type'
 import { CellAction } from '@/components/section/admin/reservation/reservation-tables/cell-action'
 import { format } from 'date-fns'
+import { CopyButton } from '@/components/custom/custom-copy-button'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
 
 export const columns: ColumnDef<Reservation>[] = [
   {
@@ -29,7 +32,19 @@ export const columns: ColumnDef<Reservation>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
-    enableHiding: false
+    enableHiding: false,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <CopyButton value={String(row.original.id)} />
+
+        <Link
+          href={ROUTES.ADMIN.RESERVATION_DETAIL(String(row.original.id))}
+          className='text-foreground font-semibold duration-200 transition-colors hover:text-primary hover:underline'
+        >
+          {row.original.id}
+        </Link>
+      </div>
+    )
   },
   {
     accessorKey: 'maPhong',

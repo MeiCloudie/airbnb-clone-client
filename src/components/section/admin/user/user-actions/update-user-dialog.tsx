@@ -31,7 +31,7 @@ interface UpdateUserDialogProps {
 }
 
 export default function UpdateUserDialog({ isOpen, onClose, userData }: UpdateUserDialogProps) {
-  const { putUser, getAllUsers } = useUser()
+  const { putUser, getAllUsers, getUserById } = useUser()
   const { showNotification } = useToastifyNotification()
 
   const form = useZodForm(userUpdateSchema, {
@@ -56,6 +56,7 @@ export default function UpdateUserDialog({ isOpen, onClose, userData }: UpdateUs
       await getAllUsers()
       form.reset()
       onClose()
+      await getUserById({ id: Number(userData.id) })
     }
   }
 

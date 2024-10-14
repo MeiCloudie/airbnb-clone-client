@@ -3,6 +3,9 @@ import { Location } from '@/types/location.type'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
 import { CellAction } from '@/components/section/admin/location/location-tables/cell-action'
+import { CopyButton } from '@/components/custom/custom-copy-button'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
 
 export const columns: ColumnDef<Location>[] = [
   {
@@ -27,7 +30,19 @@ export const columns: ColumnDef<Location>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
-    enableSorting: true
+    enableHiding: false,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <CopyButton value={String(row.original.id)} />
+
+        <Link
+          href={ROUTES.ADMIN.LOCATION_DETAIL(String(row.original.id))}
+          className='text-foreground font-semibold duration-200 transition-colors hover:text-primary hover:underline'
+        >
+          {row.original.id}
+        </Link>
+      </div>
+    )
   },
   {
     accessorKey: 'tenViTri',

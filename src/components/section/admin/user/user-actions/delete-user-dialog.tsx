@@ -5,17 +5,21 @@ import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 import { useUser } from '@/hooks/useUser'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 interface DeleteUserDialogProps {
   isOpen: boolean
   onClose: () => void
   userId: number
+  redirectToList?: boolean
 }
 
-export default function DeleteUserDialog({ isOpen, onClose, userId }: DeleteUserDialogProps) {
+export default function DeleteUserDialog({ isOpen, onClose, userId, redirectToList = false }: DeleteUserDialogProps) {
   const { deleteUser, getAllUsers } = useUser()
   const { showNotification } = useToastifyNotification()
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const onConfirm = async () => {
     setLoading(true)
@@ -25,7 +29,11 @@ export default function DeleteUserDialog({ isOpen, onClose, userId }: DeleteUser
     if (!error) {
       showNotification('Xóa người dùng thành công!', 'success')
       onClose()
-      await getAllUsers() // Refresh the list after deletion
+      await getAllUsers()
+
+      if (redirectToList) {
+        router.push(ROUTES.ADMIN.USERS)
+      }
     } else {
       showNotification(`Xóa người dùng thất bại: ${error.message}`, 'error')
     }

@@ -5,17 +5,21 @@ import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 import { useRoom } from '@/hooks/useRoom'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 interface DeleteRoomDialogProps {
   isOpen: boolean
   onClose: () => void
   roomId: number
+  redirectToList?: boolean
 }
 
-export default function DeleteRoomDialog({ isOpen, onClose, roomId }: DeleteRoomDialogProps) {
+export default function DeleteRoomDialog({ isOpen, onClose, roomId, redirectToList }: DeleteRoomDialogProps) {
   const { deleteRoom, getAllRooms } = useRoom()
   const { showNotification } = useToastifyNotification()
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const onConfirm = async () => {
     setLoading(true)
@@ -25,7 +29,11 @@ export default function DeleteRoomDialog({ isOpen, onClose, roomId }: DeleteRoom
     if (!error) {
       showNotification('Xóa phòng thành công!', 'success')
       onClose()
-      await getAllRooms() // Refresh the list after deletion
+      await getAllRooms()
+
+      if (redirectToList) {
+        router.push(ROUTES.ADMIN.ROOMS)
+      }
     } else {
       showNotification(`Xóa phòng thất bại: ${error.message}`, 'error')
     }

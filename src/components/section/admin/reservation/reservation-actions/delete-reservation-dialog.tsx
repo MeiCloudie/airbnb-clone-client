@@ -5,17 +5,26 @@ import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 import { useReservation } from '@/hooks/useReservation'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 interface DeleteReservationDialogProps {
   isOpen: boolean
   onClose: () => void
   reservationId: number
+  redirectToList?: boolean
 }
 
-export default function DeleteReservationDialog({ isOpen, onClose, reservationId }: DeleteReservationDialogProps) {
+export default function DeleteReservationDialog({
+  isOpen,
+  onClose,
+  reservationId,
+  redirectToList
+}: DeleteReservationDialogProps) {
   const { deleteReservation, getAllReservations } = useReservation()
   const { showNotification } = useToastifyNotification()
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const onConfirm = async () => {
     setLoading(true)
@@ -25,7 +34,11 @@ export default function DeleteReservationDialog({ isOpen, onClose, reservationId
     if (!error) {
       showNotification('Xóa thông tin đặt phòng thành công!', 'success')
       onClose()
-      await getAllReservations() // Refresh the list after deletion
+      await getAllReservations()
+
+      if (redirectToList) {
+        router.push(ROUTES.ADMIN.RESERVATIONS)
+      }
     } else {
       showNotification(`Xóa thông tin đặt phòng thất bại: ${error.message}`, 'error')
     }

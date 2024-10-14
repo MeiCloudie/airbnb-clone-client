@@ -1,11 +1,14 @@
 'use client'
+import { CopyButton } from '@/components/custom/custom-copy-button'
 import { CellAction } from '@/components/section/admin/user/user-tables/cell-action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { ROUTES } from '@/constants/routes'
 import { User } from '@/types/auth.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { FileWarning } from 'lucide-react'
+import Link from 'next/link'
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -30,7 +33,19 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
-    enableHiding: false
+    enableHiding: false,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <CopyButton value={String(row.original.id)} />
+
+        <Link
+          href={ROUTES.ADMIN.USER_DETAIL(String(row.original.id))}
+          className='text-foreground font-semibold duration-200 transition-colors hover:text-primary hover:underline'
+        >
+          {row.original.id}
+        </Link>
+      </div>
+    )
   },
   {
     accessorKey: 'name',

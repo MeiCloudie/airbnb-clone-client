@@ -5,17 +5,26 @@ import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { useToastifyNotification } from '@/hooks/useToastifyNotification'
 import { useLocation } from '@/hooks/useLocation'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 interface DeleteLocationDialogProps {
   isOpen: boolean
   onClose: () => void
   locationId: number
+  redirectToList?: boolean
 }
 
-export default function DeleteLocationDialog({ isOpen, onClose, locationId }: DeleteLocationDialogProps) {
+export default function DeleteLocationDialog({
+  isOpen,
+  onClose,
+  locationId,
+  redirectToList
+}: DeleteLocationDialogProps) {
   const { deleteLocation, getAllLocations } = useLocation()
   const { showNotification } = useToastifyNotification()
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const onConfirm = async () => {
     setLoading(true)
@@ -25,7 +34,11 @@ export default function DeleteLocationDialog({ isOpen, onClose, locationId }: De
     if (!error) {
       showNotification('Xóa vị trí thành công!', 'success')
       onClose()
-      await getAllLocations() // Refresh the list after deletion
+      await getAllLocations()
+
+      if (redirectToList) {
+        router.push(ROUTES.ADMIN.LOCATIONS)
+      }
     } else {
       showNotification(`Xóa vị trí thất bại: ${error.message}`, 'error')
     }
