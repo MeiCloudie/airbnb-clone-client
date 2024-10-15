@@ -7,7 +7,9 @@ import {
   PostLocationResponse,
   PutLocationPayload,
   PutLocationResponse,
-  DeleteLocationPayload
+  DeleteLocationPayload,
+  LocationByIdPayload,
+  LocationByIdResponse
 } from '@/types/location.type'
 import { http } from './http.service'
 import axios from 'axios'
@@ -39,6 +41,22 @@ export const locationService = {
   getAllLocations: async () => {
     try {
       const response = await http.get<LocationResponse>(`/vi-tri`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as LocationError
+        }
+      }
+      throw error
+    }
+  },
+
+  getLocationById: async (data: LocationByIdPayload) => {
+    const { id } = data
+
+    try {
+      const response = await http.get<LocationByIdResponse>(`/vi-tri/${id}`)
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {

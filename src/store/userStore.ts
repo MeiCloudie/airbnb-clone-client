@@ -17,8 +17,8 @@ interface UserState {
   isLoading: boolean
   error: UserError | null
   userById: UserByIdResponse | null
-  allUsers: GetAllUsersResponse | null
   getUserById: (payload: UserByIdPayload) => Promise<void>
+  allUsers: GetAllUsersResponse | null
   getAllUsers: () => Promise<void>
   postUserResponse: PostUserResponse | null
   postUser: (payload: PostUserPayload) => Promise<UserError | null>

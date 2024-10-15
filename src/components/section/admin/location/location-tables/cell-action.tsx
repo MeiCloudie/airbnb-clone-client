@@ -9,8 +9,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { ROUTES } from '@/constants/routes'
 import { Location } from '@/types/location.type'
 import { Edit, Info, MoreHorizontal, Trash } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 interface CellActionProps {
@@ -44,9 +46,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem>
-            <Info className='mr-2 h-4 w-4' /> Chi tiết
-          </DropdownMenuItem>
+          <Link href={ROUTES.ADMIN.LOCATION_DETAIL(String(data.id))}>
+            <DropdownMenuItem>
+              <Info className='mr-2 h-4 w-4' /> Chi tiết
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
             <Edit className='mr-2 h-4 w-4' /> Chỉnh sửa
           </DropdownMenuItem>

@@ -24,7 +24,7 @@ interface UpdateLocationDialogProps {
 }
 
 export default function UpdateLocationDialog({ isOpen, onClose, locationData }: UpdateLocationDialogProps) {
-  const { putLocation, getAllLocations } = useLocation()
+  const { putLocation, getAllLocations, getLocationById } = useLocation()
   const { showNotification } = useToastifyNotification()
 
   const form = useZodForm(locationUpdateSchema, {
@@ -47,6 +47,7 @@ export default function UpdateLocationDialog({ isOpen, onClose, locationData }: 
       await getAllLocations()
       form.reset()
       onClose()
+      await getLocationById({ id: Number(locationData.id) })
     }
   }
 

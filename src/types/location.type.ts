@@ -14,6 +14,16 @@ export interface LocationResponse {
   dateTime: string
 }
 
+export interface LocationByIdPayload {
+  id: number
+}
+
+export interface LocationByIdResponse {
+  statusCode: number
+  content: Location
+  dateTime: string
+}
+
 export interface PostLocationPayload {
   tenViTri: string
   tinhThanh: string
