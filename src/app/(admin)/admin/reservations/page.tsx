@@ -1,5 +1,4 @@
 import ReservationViewPage from '@/components/section/admin/reservation/reservation-views/reservation-view-page'
-import UserViewPage from '@/components/section/admin/user/user-views/user-view-page'
 import { searchParamsCache } from '@/lib/searchparams'
 import { SearchParams } from 'nuqs/parsers'
 import React from 'react'
