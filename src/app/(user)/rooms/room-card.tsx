@@ -35,6 +35,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, location, isInWishlist, ratin
   // Tạo mảng chứa thông tin khách, giường, phòng tắm
   const roomDetails = [
     room.khach > 0 && `${room.khach} khách`,
+    room.phongNgu > 0 && `${room.phongTam} phòng ngủ`,
     room.giuong > 0 && `${room.giuong} giường`,
     room.phongTam > 0 && `${room.phongTam} phòng tắm`
   ].filter(Boolean) // Lọc ra các giá trị hợp lệ

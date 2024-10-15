@@ -103,6 +103,26 @@ export default function AddRoomDialog({ isOpen, onClose }: AddRoomDialogProps) {
               />
               <FormField
                 control={form.control}
+                name='phongNgu'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Số Phòng Ngủ</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Nhập số phòng ngủ'
+                        {...field}
+                        value={field.value || 0}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        hasError={!!form.formState.errors.phongNgu}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name='giuong'
                 render={({ field }) => (
                   <FormItem>

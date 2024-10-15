@@ -85,11 +85,12 @@ export const columns: ColumnDef<Room>[] = [
     id: 'roomDetails',
     header: 'DETAILS',
     cell: ({ row }) => {
-      const { khach, giuong, phongTam } = row.original
+      const { khach, phongNgu, giuong, phongTam } = row.original
       const details = [
-        { label: 'Guests', value: khach },
-        { label: 'Beds', value: giuong },
-        { label: 'Bathrooms', value: phongTam }
+        { label: 'Khách', value: khach },
+        { label: 'Phòng ngủ', value: phongNgu },
+        { label: 'Giường', value: giuong },
+        { label: 'Phòng tắm', value: phongTam }
       ]
 
       return (

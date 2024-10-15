@@ -4,6 +4,7 @@ export interface Room {
   id: number
   tenPhong: string
   khach: number
+  phongNgu: number
   giuong: number
   phongTam: number
   moTa: string
@@ -30,6 +31,7 @@ export interface GetAllRoomsResponse {
 export interface PostRoomPayload {
   tenPhong: string
   khach: number
+  phongNgu: number
   giuong: number
   phongTam: number
   moTa: string
@@ -58,6 +60,7 @@ export interface PutRoomPayload {
   id: number
   tenPhong: string
   khach: number
+  phongNgu: number
   giuong: number
   phongTam: number
   moTa: string

@@ -25,7 +25,7 @@ export default function LocationDetail({ params }: LocationDetailProps) {
   const locationId = params.id
   const breadcrumbItems = [
     { title: 'Tổng quan', link: ROUTES.ADMIN.HOME },
-    { title: 'Quản lý vị trí', link: ROUTES.ADMIN.LOCATIONS },
+    { title: 'Quản lý thông tin vị trí', link: ROUTES.ADMIN.LOCATIONS },
     { title: 'Chi tiết thông tin Vị Trí', link: ROUTES.ADMIN.LOCATION_DETAIL(locationId) }
   ]
 

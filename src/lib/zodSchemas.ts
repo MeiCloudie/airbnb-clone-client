@@ -156,6 +156,8 @@ export const roomSchema = z.object({
 
   khach: z.number().min(0, { message: 'Số lượng khách không được nhỏ hơn 0' }).default(0),
 
+  phongNgu: z.number().min(0, { message: 'Số phòng ngủ không được nhỏ hơn 0' }).default(0),
+
   giuong: z.number().min(0, { message: 'Số giường không được nhỏ hơn 0' }).default(0),
 
   phongTam: z.number().min(0, { message: 'Số phòng tắm không được nhỏ hơn 0' }).default(0),

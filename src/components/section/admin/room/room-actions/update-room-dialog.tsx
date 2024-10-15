@@ -30,7 +30,7 @@ interface UpdateRoomDialogProps {
 }
 
 export default function UpdateRoomDialog({ isOpen, onClose, roomData }: UpdateRoomDialogProps) {
-  const { putRoom, getAllRooms } = useRoom()
+  const { putRoom, getAllRooms, getRoomById } = useRoom()
   const { getAllLocations, dataAllLocations } = useLocation()
   const { showNotification } = useToastifyNotification()
 
@@ -39,6 +39,7 @@ export default function UpdateRoomDialog({ isOpen, onClose, roomData }: UpdateRo
       id: Number(roomData.id),
       tenPhong: roomData.tenPhong,
       khach: roomData.khach,
+      phongNgu: roomData.phongNgu,
       giuong: roomData.giuong,
       phongTam: roomData.phongTam,
       moTa: roomData.moTa,
@@ -71,6 +72,7 @@ export default function UpdateRoomDialog({ isOpen, onClose, roomData }: UpdateRo
       await getAllRooms()
       form.reset()
       onClose()
+      await getRoomById({ id: Number(roomData.id) })
     }
   }
 
@@ -139,6 +141,26 @@ export default function UpdateRoomDialog({ isOpen, onClose, roomData }: UpdateRo
                         value={field.value || 0}
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                         hasError={!!form.formState.errors.khach}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='phongNgu'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Số Phòng Ngủ</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Nhập số phòng ngủ'
+                        {...field}
+                        value={field.value || 0}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        hasError={!!form.formState.errors.phongNgu}
                       />
                     </FormControl>
                     <FormMessage />
