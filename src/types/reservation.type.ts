@@ -28,6 +28,16 @@ export interface ReservationResponse {
   dateTime: string
 }
 
+export interface ReservationByIdPayload {
+  id: number
+}
+
+export interface ReservationByIdResponse {
+  statusCode: number
+  content: Reservation
+  dateTime: string
+}
+
 export interface PutReservationPayload {
   id: number // type number theo PUT api cung cấp
   maPhong: number

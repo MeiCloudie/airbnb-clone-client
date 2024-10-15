@@ -3,6 +3,8 @@ import {
   GetAllReservationsResponse,
   PutReservationPayload,
   PutReservationResponse,
+  ReservationByIdPayload,
+  ReservationByIdResponse,
   ReservationByUserIdPayload,
   ReservationByUserIdResponse
 } from './../types/reservation.type'
@@ -24,6 +26,7 @@ export const reservationService = {
       throw error
     }
   },
+
   getReservationByUserId: async (data: ReservationByUserIdPayload) => {
     const { userId } = data
     try {
@@ -38,6 +41,7 @@ export const reservationService = {
       throw error
     }
   },
+
   getAllReservations: async () => {
     try {
       const response = await http.get<GetAllReservationsResponse>(`/dat-phong`)
@@ -51,6 +55,23 @@ export const reservationService = {
       throw error
     }
   },
+
+  getReservationById: async (data: ReservationByIdPayload) => {
+    const { id } = data
+
+    try {
+      const response = await http.get<ReservationByIdResponse>(`/dat-phong/${id}`)
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as ReservationError
+        }
+      }
+      throw error
+    }
+  },
+
   putReservation: async (data: PutReservationPayload) => {
     const { id } = data
 

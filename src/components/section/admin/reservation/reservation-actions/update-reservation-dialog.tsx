@@ -34,7 +34,7 @@ interface UpdateReservationDialogProps {
 }
 
 export default function UpdateReservationDialog({ isOpen, onClose, reservationData }: UpdateReservationDialogProps) {
-  const { putReservation, getAllReservations } = useReservation()
+  const { putReservation, getAllReservations, getReservationById } = useReservation()
   const { getAllRooms, allRooms } = useRoom()
   const { getAllUsers, allUsers } = useUser()
 
@@ -107,6 +107,7 @@ export default function UpdateReservationDialog({ isOpen, onClose, reservationDa
       form.reset()
       onClose()
       await getAllReservations()
+      await getReservationById({ id: Number(reservationData.id) })
     } else {
       showNotification(`Cập nhật đặt phòng thất bại: ${error.content}`, 'error')
     }

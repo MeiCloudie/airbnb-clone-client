@@ -4,6 +4,8 @@ import {
   GetAllReservationsResponse,
   PutReservationPayload,
   PutReservationResponse,
+  ReservationByIdPayload,
+  ReservationByIdResponse,
   ReservationByUserIdPayload,
   ReservationByUserIdResponse,
   ReservationError,
@@ -22,6 +24,8 @@ interface ReservationState {
   postReservation: (payload: ReservationPayload) => Promise<ReservationError | null>
   getReservationByUserId: (payload: ReservationByUserIdPayload) => Promise<void>
   getAllReservations: () => Promise<void>
+  reservationById: ReservationByIdResponse | null
+  getReservationById: (payload: ReservationByIdPayload) => Promise<void>
   putReservationResponse: PutReservationResponse | null
   putReservation: (payload: PutReservationPayload) => Promise<ReservationError | null>
   deleteReservationResponse: DeleteReservationResponse | null
@@ -34,6 +38,7 @@ export const useReservationStore = create<ReservationState>((set) => ({
   response: null,
   reservationByUserId: null,
   allReservations: null,
+  reservationById: null,
   putReservationResponse: null,
   deleteReservationResponse: null,
 
@@ -94,6 +99,30 @@ export const useReservationStore = create<ReservationState>((set) => ({
         set({ allReservations: response as GetAllReservationsResponse, isLoading: false, error: null })
       } else {
         set({ isLoading: false, error: response as ReservationError, allReservations: null })
+      }
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: {
+          statusCode: 500,
+          message: 'Internal Server Error',
+          content: 'Unknown error',
+          dateTime: new Date().toISOString()
+        } as ReservationError
+      })
+    }
+  },
+
+  getReservationById: async (payload: ReservationByIdPayload) => {
+    set({ isLoading: true, error: null })
+
+    try {
+      const response = await reservationService.getReservationById(payload)
+
+      if (response && typeof response === 'object' && 'statusCode' in response && response.statusCode >= 400) {
+        set({ isLoading: false, error: response as ReservationError, reservationById: null })
+      } else {
+        set({ isLoading: false, reservationById: response as ReservationByIdResponse, error: null })
       }
     } catch (error) {
       set({

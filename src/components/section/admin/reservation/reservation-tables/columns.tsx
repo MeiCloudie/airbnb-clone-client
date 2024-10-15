@@ -49,12 +49,32 @@ export const columns: ColumnDef<Reservation>[] = [
   {
     accessorKey: 'maPhong',
     header: 'ROOM ID',
-    enableSorting: true
+    enableSorting: true,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <Link
+          href={ROUTES.ADMIN.ROOM_DETAIL(String(row.original.maPhong))}
+          className='text-foreground duration-200 transition-colors hover:text-primary hover:underline'
+        >
+          {row.original.maPhong}
+        </Link>
+      </div>
+    )
   },
   {
     accessorKey: 'maNguoiDung',
     header: 'USER ID',
-    enableSorting: true
+    enableSorting: true,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <Link
+          href={ROUTES.ADMIN.USER_DETAIL(String(row.original.maNguoiDung))}
+          className='text-foreground duration-200 transition-colors hover:text-primary hover:underline'
+        >
+          {row.original.maNguoiDung}
+        </Link>
+      </div>
+    )
   },
   {
     accessorKey: 'ngayDen',

@@ -13,6 +13,8 @@ import { useState } from 'react'
 import { Reservation } from '@/types/reservation.type'
 import UpdateReservationDialog from '@/components/section/admin/reservation/reservation-actions/update-reservation-dialog'
 import DeleteReservationDialog from '@/components/section/admin/reservation/reservation-actions/delete-reservation-dialog'
+import Link from 'next/link'
+import { ROUTES } from '@/constants/routes'
 
 interface CellActionProps {
   data: Reservation
@@ -44,9 +46,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <Info className='mr-2 h-4 w-4' /> Chi tiết
-          </DropdownMenuItem>
+
+          <Link href={ROUTES.ADMIN.RESERVATION_DETAIL(String(data.id))}>
+            <DropdownMenuItem>
+              <Info className='mr-2 h-4 w-4' /> Chi tiết
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
             <Edit className='mr-2 h-4 w-4' /> Chỉnh sửa
           </DropdownMenuItem>
