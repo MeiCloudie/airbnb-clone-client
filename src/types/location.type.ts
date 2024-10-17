@@ -38,6 +38,16 @@ export interface PostLocationResponse {
   dateTime: string
 }
 
+export interface PostImageLocationPayload {
+  maViTri: string
+}
+
+export interface PostImageLocationResponse {
+  statusCode: number // 200 => Thêm Thành công
+  content: Location
+  dateTime: string
+}
+
 export interface PutLocationPayload {
   id: number
   tenViTri: string

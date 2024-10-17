@@ -9,7 +9,9 @@ import {
   PutLocationResponse,
   DeleteLocationPayload,
   LocationByIdPayload,
-  LocationByIdResponse
+  LocationByIdResponse,
+  PostImageLocationPayload,
+  PostImageLocationResponse
 } from '@/types/location.type'
 import { http } from './http.service'
 import axios from 'axios'
@@ -136,6 +138,42 @@ export const locationService = {
       const response = await http.delete<LocationError>(`/vi-tri/${id}`, {
         headers: {
           token: `${userToken}`
+        }
+      })
+
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as LocationError
+        }
+      }
+      throw error
+    }
+  },
+
+  postImageLocation: async (data: PostImageLocationPayload, file: File) => {
+    const { maViTri } = data
+
+    try {
+      const session = await getSession()
+      const userToken = session?.accessToken
+
+      if (!userToken) {
+        throw new Error('User is not authenticated')
+      }
+
+      const formData = new FormData()
+      formData.append('formFile', file)
+      formData.append('maViTri', maViTri)
+
+      const response = await http.post<PostImageLocationResponse>(`/vi-tri/upload-hinh-vitri`, formData, {
+        params: {
+          maViTri
+        },
+        headers: {
+          token: `${userToken}`,
+          'Content-Type': 'multipart/form-data'
         }
       })
 

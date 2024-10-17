@@ -12,7 +12,9 @@ import {
   DeleteLocationResponse,
   DeleteLocationPayload,
   LocationByIdResponse,
-  LocationByIdPayload
+  LocationByIdPayload,
+  PostImageLocationResponse,
+  PostImageLocationPayload
 } from '@/types/location.type'
 
 interface LocationState {
@@ -30,6 +32,8 @@ interface LocationState {
   putLocation: (payload: PutLocationPayload) => Promise<LocationError | null>
   deleteLocationResponse: DeleteLocationResponse | null
   deleteLocation: (payload: DeleteLocationPayload) => Promise<LocationError | null>
+  postImageLocationResponse: PostImageLocationResponse | null
+  postImageLocation: (payload: PostImageLocationPayload, file: File) => Promise<LocationError | null>
 }
 
 export const useLocationStore = create<LocationState>((set) => ({
@@ -41,6 +45,7 @@ export const useLocationStore = create<LocationState>((set) => ({
   postLocationResponse: null,
   putLocationResponse: null,
   deleteLocationResponse: null,
+  postImageLocationResponse: null,
 
   getLocationPagination: async (payload: LocationPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -189,6 +194,32 @@ export const useLocationStore = create<LocationState>((set) => ({
       } as LocationError
       set({ isLoading: false, error: unknownError })
       return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  postImageLocation: async (payload: PostImageLocationPayload, file: File): Promise<LocationError | null> => {
+    set({ isLoading: true, error: null, postImageLocationResponse: null })
+
+    try {
+      const response = await locationService.postImageLocation(payload, file)
+
+      if (response && response.statusCode === 200) {
+        set({ postImageLocationResponse: response as PostImageLocationResponse, isLoading: false, error: null })
+        return null // Trả về null nếu thành công
+      } else {
+        const errorResponse = response as LocationError
+        set({ isLoading: false, error: errorResponse, postImageLocationResponse: null })
+        return errorResponse // Trả về lỗi nếu có
+      }
+    } catch (error) {
+      const unknownError: LocationError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      }
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi trong trường hợp exception
     }
   }
 }))

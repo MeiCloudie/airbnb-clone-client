@@ -1,6 +1,7 @@
 'use client'
 import DeleteLocationDialog from '@/components/section/admin/location/location-actions/delete-location-dialog'
 import UpdateLocationDialog from '@/components/section/admin/location/location-actions/update-location-dialog'
+import UploadImageLocationDialog from '@/components/section/admin/location/location-actions/upload-image-location-dialog'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ROUTES } from '@/constants/routes'
 import { Location } from '@/types/location.type'
-import { Edit, Info, MoreHorizontal, Trash } from 'lucide-react'
+import { Edit, ImageIcon, Info, MoreHorizontal, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -22,6 +23,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isUploadImageDialogOpen, setIsUploadImageDialogOpen] = useState(false)
 
   return (
     <>
@@ -33,6 +35,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <DeleteLocationDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        locationId={Number(data.id)}
+      />
+      <UploadImageLocationDialog
+        isOpen={isUploadImageDialogOpen}
+        onClose={() => setIsUploadImageDialogOpen(false)}
         locationId={Number(data.id)}
       />
 
@@ -56,6 +63,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
             <Trash className='mr-2 h-4 w-4' /> Xoá
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsUploadImageDialogOpen(true)}>
+            <ImageIcon className='mr-2 h-4 w-4' /> Cập nhật Ảnh
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

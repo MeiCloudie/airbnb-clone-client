@@ -15,7 +15,9 @@ export const useLocation = () => {
     putLocationResponse,
     putLocation,
     deleteLocationResponse,
-    deleteLocation
+    deleteLocation,
+    postImageLocationResponse,
+    postImageLocation
   } = useLocationStore((state) => ({
     isLoading: state.isLoading,
     dataLocationPagination: state.dataLocationPagination,
@@ -30,7 +32,9 @@ export const useLocation = () => {
     putLocationResponse: state.putLocationResponse,
     putLocation: state.putLocation,
     deleteLocationResponse: state.deleteLocationResponse,
-    deleteLocation: state.deleteLocation
+    deleteLocation: state.deleteLocation,
+    postImageLocationResponse: state.postImageLocationResponse,
+    postImageLocation: state.postImageLocation
   }))
 
   return {
@@ -47,6 +51,8 @@ export const useLocation = () => {
     putLocationResponse,
     putLocation,
     deleteLocationResponse,
-    deleteLocation
+    deleteLocation,
+    postImageLocationResponse,
+    postImageLocation
   }
 }
