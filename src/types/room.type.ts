@@ -56,6 +56,16 @@ export interface PostRoomResponse {
   dateTime: string
 }
 
+export interface PostImageRoomPayload {
+  maPhong: string
+}
+
+export interface PostImageRoomResponse {
+  statusCode: number // 200 => Thêm Thành công
+  content: Room
+  dateTime: string
+}
+
 export interface PutRoomPayload {
   id: number
   tenPhong: string

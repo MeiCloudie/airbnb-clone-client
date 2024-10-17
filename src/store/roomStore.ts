@@ -14,7 +14,9 @@ import {
   PutRoomResponse,
   PutRoomPayload,
   DeleteRoomResponse,
-  DeleteRoomPayload
+  DeleteRoomPayload,
+  PostImageRoomResponse,
+  PostImageRoomPayload
 } from '@/types/room.type'
 
 interface RoomState {
@@ -34,6 +36,8 @@ interface RoomState {
   putRoom: (payload: PutRoomPayload) => Promise<RoomError | null>
   deleteRoomResponse: DeleteRoomResponse | null
   deleteRoom: (payload: DeleteRoomPayload) => Promise<RoomError | null>
+  postImageRoomResponse: PostImageRoomResponse | null
+  postImageRoom: (payload: PostImageRoomPayload, file: File) => Promise<RoomError | null>
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -46,6 +50,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   postRoomResponse: null,
   putRoomResponse: null,
   deleteRoomResponse: null,
+  postImageRoomResponse: null,
 
   getRoomPagination: async (payload: RoomPaginationPayload) => {
     set({ isLoading: true, error: null })
@@ -218,6 +223,32 @@ export const useRoomStore = create<RoomState>((set) => ({
       } as RoomError
       set({ isLoading: false, error: unknownError })
       return unknownError // Trả về lỗi khi có exception
+    }
+  },
+
+  postImageRoom: async (payload: PostImageRoomPayload, file: File): Promise<RoomError | null> => {
+    set({ isLoading: true, error: null, postImageRoomResponse: null })
+
+    try {
+      const response = await roomService.postImageRoom(payload, file)
+
+      if (response && response.statusCode === 200) {
+        set({ postImageRoomResponse: response as PostImageRoomResponse, isLoading: false, error: null })
+        return null // Trả về null nếu thành công
+      } else {
+        const errorResponse = response as RoomError
+        set({ isLoading: false, error: errorResponse, postImageRoomResponse: null })
+        return errorResponse // Trả về lỗi nếu có
+      }
+    } catch (error) {
+      const unknownError: RoomError = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        content: 'Unknown error',
+        dateTime: new Date().toISOString()
+      }
+      set({ isLoading: false, error: unknownError })
+      return unknownError // Trả về lỗi trong trường hợp exception
     }
   }
 }))

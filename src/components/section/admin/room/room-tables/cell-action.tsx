@@ -1,6 +1,7 @@
 'use client'
 import DeleteRoomDialog from '@/components/section/admin/room/room-actions/delete-room-dialog'
 import UpdateRoomDialog from '@/components/section/admin/room/room-actions/update-room-dialog'
+import UploadImageRoomDialog from '@/components/section/admin/room/room-actions/upload-image-location-dialog'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ROUTES } from '@/constants/routes'
 import { Room } from '@/types/room.type'
-import { Edit, Info, MoreHorizontal, Trash } from 'lucide-react'
+import { Edit, ImageIcon, Info, MoreHorizontal, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -22,6 +23,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isUploadImageDialogOpen, setIsUploadImageDialogOpen] = useState(false)
 
   return (
     <>
@@ -29,6 +31,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <DeleteRoomDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        roomId={Number(data.id)}
+      />
+      <UploadImageRoomDialog
+        isOpen={isUploadImageDialogOpen}
+        onClose={() => setIsUploadImageDialogOpen(false)}
         roomId={Number(data.id)}
       />
 
@@ -52,6 +59,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
             <Trash className='mr-2 h-4 w-4' /> Xoá
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsUploadImageDialogOpen(true)}>
+            <ImageIcon className='mr-2 h-4 w-4' /> Cập nhật Ảnh
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

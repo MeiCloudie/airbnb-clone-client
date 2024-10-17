@@ -11,7 +11,9 @@ import {
   PostRoomResponse,
   PutRoomPayload,
   PutRoomResponse,
-  DeleteRoomPayload
+  DeleteRoomPayload,
+  PostImageRoomPayload,
+  PostImageRoomResponse
 } from '@/types/room.type'
 import { http } from './http.service'
 import axios from 'axios'
@@ -155,6 +157,42 @@ export const roomService = {
       const response = await http.delete<RoomError>(`/phong-thue/${id}`, {
         headers: {
           token: `${userToken}`
+        }
+      })
+
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return error.response.data as RoomError
+        }
+      }
+      throw error
+    }
+  },
+
+  postImageRoom: async (data: PostImageRoomPayload, file: File) => {
+    const { maPhong } = data
+
+    try {
+      const session = await getSession()
+      const userToken = session?.accessToken
+
+      if (!userToken) {
+        throw new Error('User is not authenticated')
+      }
+
+      const formData = new FormData()
+      formData.append('formFile', file)
+      formData.append('maPhong', maPhong)
+
+      const response = await http.post<PostImageRoomResponse>(`/phong-thue/upload-hinh-phong`, formData, {
+        params: {
+          maPhong
+        },
+        headers: {
+          token: `${userToken}`,
+          'Content-Type': 'multipart/form-data'
         }
       })
 
