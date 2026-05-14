@@ -39,7 +39,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tanstack/react-table": "^8.20.5",
     "antd": "^5.20.6",
-    "axios": "^1.7.7",
+    "axios": "^1.16.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -48,8 +48,8 @@
     "google-map-react": "^2.2.1",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.439.0",
-    "next": "14.2.9",
-    "next-auth": "^5.0.0-beta.21",
+    "next": "14.2.35",
+    "next-auth": "^5.0.0-beta.31",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^3.6.15",
     "nuqs": "^1.20.0",
@@ -66,18 +66,27 @@
     "zod": "^3.23.8",
     "zustand": "^4.5.5"
   },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    },
+    "glob": "^10.4.6",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^9.0.8"
+    }
+  },
   "devDependencies": {
     "@types/google-map-react": "^2.1.10",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.9",
+    "eslint-config-next": "14.2.35",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.35.2",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "postcss": "^8",
+    "postcss": "^8.5.10",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
